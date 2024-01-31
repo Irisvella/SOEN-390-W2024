@@ -10,7 +10,7 @@ export default function SignupScreen() {
   return (
     <View style={tw`flex-1 bg-gray-100`}>
       <StatusBar style="auto" />
-      <SafeAreaView style={tw`flex-1 justify-center items-center relative`}>
+      <SafeAreaView style={tw`flex-1 relative`}>
         <Image
           source={require("../assets/cloud.png")}
           style={tw`absolute bottom-0`}
