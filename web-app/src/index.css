@@ -17,11 +17,124 @@
   scroll-behavior: smooth;
 }
 /**this is flex container from signup and login page*/
-.form-container {
-  display: flex;
-  margin: 0 auto;
 
+
+
+
+/****real navbar */
+
+.Login{
+  display: flex;
+  justify-content: flex-end;
 }
+
+a {
+  text-decoration: none;
+}
+li {
+  list-style-type: none;
+}
+
+.navbar {
+  display: flex;
+  justify-content:space-around;
+  align-items: center;
+
+  box-shadow: rgba(50, 50, 93, 0.23) 0px 30px 30px -20px;
+  width: 100%;
+
+  /*box-shadow: rgba(50, 50, 93, 0.23) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;*/
+}
+
+.logo{
+  display: flex;
+  justify-content:flex-start;
+}
+.logotext {
+  position: relative;
+  top: 20px;
+  font-size: 30px;
+}
+.nav-links {
+  display: flex;
+ 
+  
+}
+
+.nav-links li {
+  color: black;
+  font-size: 20px;
+  padding: 10px 20px;
+  margin: 0 10px;
+  cursor: pointer;
+  text-transform: capitalize;
+}
+.hero {
+  text-align: center;
+  margin-top: 15%;
+}
+.hero h1 {
+  text-align: center;
+  font-size: 80px;
+}
+.mobile-menu-icon {
+  display: none;
+}
+button {
+  border: none;
+  text-decoration: none;
+  font-size: 20px;
+  
+}
+@media (max-width: 768px) {
+  .logo {
+    display: flex;
+    position: absolute;
+    top: 15px;
+    left: 35px;
+  }
+  .nav-links {
+    display: none;
+  }
+  .nav-links-mobile {
+    position: absolute;
+    display: block;
+    list-style: none;
+    box-shadow: rgba(50, 50, 93, 0.23) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+    left: 0;
+    top: 10%;
+    transition: all 0.5s ease-in-out;
+    width: 100%;
+    background-color: white;
+  }
+  ul li {
+    padding: 32px;
+    width: 100%;
+    transition: all 0.5s ease-in-out;
+    text-align: center;
+  }
+  .mobile-menu-icon {
+    position: absolute;
+    display: block;
+    right: 20px;
+  }
+  .hero h1 {
+    font-size: 50px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*This is to remove the point on navbar**/
 

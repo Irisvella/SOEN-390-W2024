@@ -1,4 +1,4 @@
-import { LockOutlined } from "@mui/icons-material";
+
 import {
   Container,
   CssBaseline,
@@ -13,6 +13,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import FitbitIcon from '@mui/icons-material/Fitbit';
 
+
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,6 +23,8 @@ const Login = () => {
 
   return (
     <>
+ 
+
       <Container maxWidth="xs">
         <CssBaseline />
         <Box
@@ -73,7 +77,7 @@ const Login = () => {
             </Button>
             <Grid container justifyContent={"flex-end"}>
               <Grid item>
-                <Link to="/register">Don't have an account? Register</Link>
+                <Link to="/Signup">Don't have an account? Register</Link>
               </Grid>
             </Grid>
           </Box>
