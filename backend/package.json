@@ -8,6 +8,7 @@
     "dev": "nodemon app.ts"
   },
   "dependencies": {
+    "@prisma/client": "^5.9.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "dotenv": "^16.4.1",
@@ -23,6 +24,7 @@
     "eslint-config-prettier": "^9.1.0",
     "nodemon": "^3.0.3",
     "prettier": "3.2.5",
+    "prisma": "^5.9.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   }
