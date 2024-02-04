@@ -5,6 +5,7 @@ import SignUp from './components/Authentication/SignUp.jsx';
 import Login from './components/Authentication/Login.jsx';
 import ProfileDash from './components/ProfileDash.js';
 import './App.css';
+import Home from './pages/Home.jsx';
 
 function App() {
   return (
@@ -13,7 +14,9 @@ function App() {
         <Route path="/Signup" element={<SignUp />} />
         {/* You can add more routes here */}
         <Route path="/login" element={<Login />} /> 
-        {/* <Route path="/" element={<Home />} /> */}
+         <Route path="/" element={<Home />} /> 
+         <Route path="/ProfileDash" element={<ProfileDash />} /> 
+
       </Routes>
     </Router>
   );
