@@ -1,6 +1,5 @@
 var express = require("express");
-var router = express.Router();
-import prisma from "../prisma/client";
+const router = express.Router();
 
 import { Request, Response, NextFunction } from "express";
 
@@ -8,9 +7,6 @@ import { Request, Response, NextFunction } from "express";
 router.get(
   "/",
   async function (req: Request, res: Response, next: NextFunction) {
-    const users = await prisma.users.findMany();
-    console.log("users are ---- ", users);
-
     return res.json({ message: "server works" });
   },
 );
