@@ -1,4 +1,4 @@
-
+import { LockOutlined } from "@mui/icons-material";
 import {
   Container,
   CssBaseline,
@@ -77,7 +77,7 @@ const Login = () => {
             </Button>
             <Grid container justifyContent={"flex-end"}>
               <Grid item>
-                <Link to="/Signup">Don't have an account? Register</Link>
+                <Link to="/register">Don't have an account? Register</Link>
               </Grid>
             </Grid>
           </Box>
