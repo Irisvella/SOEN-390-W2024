@@ -48,7 +48,7 @@ const SignUp = () => {
               <label htmlFor="role">I am a: </label>
               <select name="role" >
                 <option value="condoOwner">Public User</option>
-                <option value="compagny">compagny</option>
+                <option value="company">Company</option>
               </select>
             </div>
             <Box sx={{ mt: 3 }}>

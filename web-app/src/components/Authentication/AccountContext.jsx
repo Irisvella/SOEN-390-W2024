@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 
-const { createContext, useState, useEffect } = require("react");
+import { createContext, useState, useEffect } from "react";
 
 export const AccountContext = createContext();
 
@@ -8,10 +8,11 @@ const UserContext = ({ children }) => {
   const [user, setUser] = useState({ loggedIn: null });
   const navigate = useNavigate();
   useEffect(() => {
-    fetch("http://localhost:4000/auth/login", {
+    fetch("http://localhost:5173/auth/login", {
       credentials: "include",
     })
       .catch(err => {
+        console.error(err);
         setUser({ loggedIn: false });
         return;
       })
