@@ -110,7 +110,7 @@ model property {
 
 model public_users {
   id                                             Int                @id
-  username                                       String             @unique
+  username                                       String             
   phone_number                                   String
   profile_image_key                              String?
   employed_by                                    employed_by[]

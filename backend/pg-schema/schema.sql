@@ -8,7 +8,7 @@ CREATE TABLE users (
 
 CREATE TABLE public_users (
     id INT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
-    username TEXT UNIQUE NOT NULL, -- serves as a display name (does it have to be unique?)
+    username TEXT NOT NULL, -- serves as a display name (does it have to be unique?)
     phone_number TEXT NOT NULL,
     profile_image_key TEXT
 );

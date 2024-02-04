@@ -7,6 +7,7 @@ require("dotenv").config();
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const signUpRouter = require("./routes/signup");
+const loginRouter = require("./routes/login");
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/signup", signUpRouter);
+app.use("/login", loginRouter);
 
 const port = process.env.PORT || 3000;
 app.listen(port || 3000, () => {
