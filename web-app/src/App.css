@@ -199,3 +199,16 @@ body {
     font-size: 1.75rem;
   }
 }
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide just the vertical scrollbar */
+::-webkit-scrollbar-thumb {
+  display: none;
+}
+
+/* Hide just the horizontal scrollbar */
+::-webkit-scrollbar-track {
+  display: none;
+}
