@@ -1,8 +1,8 @@
 // App.tsx
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import SignUp from './components/Authentication/SignUp.jsx';
-import Login from './components/Authentication/Login.jsx';
+import SignUp from './components/Authentication/SignUp.js';
+import Login from './components/Authentication/Login.js';
 import ProfileDash from './components/ProfileDash.js';
 import './App.css';
 import Home from './pages/Home.jsx';
