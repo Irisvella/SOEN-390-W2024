@@ -1,9 +1,10 @@
 // App.tsx
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import SignUp from './components/Authentication/SignUp.js';
-import Login from './components/Authentication/Login.js';
-import ProfileDash from './components/ProfileDash.js';
+import SignUp from './components/Authentication/SignUp.tsx';
+import Login from './components/Authentication/Login.tsx';
+import MinApp from './components/EditProfile/src/container/MinApp.tsx';
+
 import './App.css';
 import Home from './pages/Home.jsx';
 
@@ -15,8 +16,8 @@ function App() {
         {/* You can add more routes here */}
         <Route path="/login" element={<Login />} /> 
          <Route path="/" element={<Home />} /> 
-         <Route path="/ProfileDash" element={<ProfileDash />} /> 
-
+         <Route path="/ProfileDash" element={<MinApp />} /> 
+          
       </Routes>
     </Router>
   );
