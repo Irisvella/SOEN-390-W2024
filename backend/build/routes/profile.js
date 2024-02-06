@@ -14,10 +14,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
-/* GET home page. */
-router.get("/", function (req, res, next) {
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const verify_token_1 = __importDefault(require("../middleware/verify-token"));
+require("dotenv").config();
+router.get("/", verify_token_1.default, function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        return res.json({ message: "server works" });
+        jsonwebtoken_1.default.verify(req.token, process.env.SECRET, (err, decoded) => {
+            if (err) {
+                return res.status(400).json("Unauthorized");
+            }
+            else {
+                console.log("decoded ---- ", decoded);
+                return res.status(200).json("Success");
+            }
+        });
     });
 });
 exports.default = router;
