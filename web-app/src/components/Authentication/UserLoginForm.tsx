@@ -1,6 +1,7 @@
 // UserLoginForm.js
 import  { useState } from 'react';
 import { TextField, Button, Box } from "@mui/material";
+import "../../App.css";
 
 const UserLoginForm = () => {
   const [email, setEmail] = useState("");
@@ -11,7 +12,7 @@ const UserLoginForm = () => {
   };
 
   return (
-    <Box sx={{ mt: 1 }}>
+    <Box sx={{ mt: 0 }}>
       <TextField
         margin="normal"
         required
@@ -22,6 +23,7 @@ const UserLoginForm = () => {
         autoFocus
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        sx={{ marginBottom: '0px' }}
       />
 
       <TextField
@@ -34,17 +36,28 @@ const UserLoginForm = () => {
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        sx={{ marginBottom: '15px' }}
       />
 
-      <Button
-        fullWidth
-        variant="outlined"
-        color="warning"
-        sx={{ mt: 3, mb: 2 }}
-        onClick={handleLogin}
-      >
-        Login
-      </Button>
+<Button
+  fullWidth
+  variant="outlined"
+  color="warning"
+  sx={{
+    mt: 0, 
+    mb: 0,
+    borderColor: 'salmon', // Default border color
+    '&:hover': {
+      backgroundColor: 'salmon', // Fill the button with salmon color on hover
+      color: '#fff', // Change text color to white on hover
+      borderColor: 'salmon', // Maintain salmon border on hover
+    }
+  }}
+  onClick={handleLogin}
+>
+  Login
+</Button>
+
     </Box>
   );
 };
