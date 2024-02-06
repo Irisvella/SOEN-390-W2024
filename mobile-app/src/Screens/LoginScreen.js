@@ -39,7 +39,7 @@ export default function LoginScreen() {
             <View className="flex items-center">
                 <Animated.Text 
                     entering={FadeInUp.duration(1000).springify()} 
-                    className="text-white font-bold tracking-wider text-5xl">
+                    className="text-orange-900 font-bold tracking-wider text-5xl">
                         Login
                 </Animated.Text>
             </View>
