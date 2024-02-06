@@ -1,9 +1,9 @@
-var express = require("express");
+import express from "express";
 const router = express.Router();
 import prisma from "../prisma/client";
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 import { Prisma } from "@prisma/client";
-import VerifyToken from "../middleware/verify-token";
+import verifyToken from "../middleware/verify-token";
 require("dotenv").config();
 
 import { Request, Response, NextFunction } from "express";
@@ -16,16 +16,12 @@ interface userData {
 
 router.get(
   "/",
-  VerifyToken,
-  async function (
-    req: Request & { token: string },
-    res: Response,
-    next: NextFunction,
-  ) {
+  verifyToken,
+  async function (req: Request, res: Response, next: NextFunction) {
     jwt.verify(
-      req.token,
-      process.env.SECRET,
-      function (err: Error, decoded: userData) {
+      req.token as string,
+      process.env.SECRET as jwt.Secret,
+      (err, decoded) => {
         if (err) {
           return res.status(400).json("Unauthorized");
         } else {
@@ -37,4 +33,4 @@ router.get(
   },
 );
 
-module.exports = router;
+export default router;

@@ -17,6 +17,7 @@ CREATE TABLE management_companies (
     id INT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
     company_name TEXT NOT NULL,
     address TEXT NOT NULL,
+    phone_number TEXT NOT NULL,
     unit_count INT DEFAULT 0,
     parking_count INT DEFAULT 0,
     locker_count INT DEFAULT 0,

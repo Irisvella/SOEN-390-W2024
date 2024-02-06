@@ -8,4 +8,4 @@ router.get("/", function (req: Request, res: Response, next: NextFunction) {
   return res.json({ message: "Currently on /users route" });
 });
 
-module.exports = router;
+export default router;

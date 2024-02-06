@@ -1,4 +1,4 @@
-var express = require("express");
+import express from "express";
 const router = express.Router();
 
 import { Request, Response, NextFunction } from "express";
@@ -11,4 +11,4 @@ router.get(
   },
 );
 
-module.exports = router;
+export default router;

@@ -1,14 +1,23 @@
-var express = require("express");
-const path = require("path");
-const cookieParser = require("cookie-parser");
-const logger = require("morgan");
-require("dotenv").config();
+import express from "express";
+import path from "path";
+import cookieParser from "cookie-parser";
+import logger from "morgan";
+import dotenv from "dotenv";
+dotenv.config();
 
-const indexRouter = require("./routes/index");
-const usersRouter = require("./routes/users");
-const signUpRouter = require("./routes/signup");
-const loginRouter = require("./routes/login");
-const profileRouter = require("./routes/profile");
+import indexRouter from "./routes/index";
+import usersRouter from "./routes/users";
+import signUpRouter from "./routes/signup";
+import loginRouter from "./routes/login";
+import profileRouter from "./routes/profile";
+
+declare global {
+  namespace Express {
+    export interface Request {
+      token?: string;
+    }
+  }
+}
 
 const app = express();
 
@@ -29,4 +38,4 @@ app.listen(port || 3000, () => {
   console.log(`Listening on port ${port}`);
 });
 
-module.exports = app;
+export default app;

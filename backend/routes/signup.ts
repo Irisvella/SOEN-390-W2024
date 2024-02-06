@@ -1,21 +1,28 @@
-var express = require("express");
+import express from "express";
 const router = express.Router();
 import * as z from "zod";
 import prisma from "../prisma/client";
-const bcrypt = require("bcryptjs");
+import bcrypt from "bcryptjs";
 import { Prisma } from "@prisma/client";
 
 import { Request, Response, NextFunction } from "express";
 
 const User = z.object({
-  role: z.enum(["condoOwner", "company"]),
+  role: z.enum(["publicUser", "company"]),
   username: z.string().min(1),
   email: z.string().email(),
   password: z.string().min(6),
   phone: z.string(),
 });
 
-const Company = z.object({});
+const Company = z.object({
+  role: z.enum(["publicUser", "company"]),
+  companyName: z.string().min(1),
+  email: z.string().email(),
+  address: z.string().min(4),
+  password: z.string().min(6),
+  phone: z.string(),
+});
 
 /* Allow a new user to sign up */
 router.post(
@@ -40,23 +47,27 @@ router.post(
         return res.status(400).json({ message: "Email already exists" });
       }
 
-      await bcrypt.hash(
+      async function createUser(hashed_password: string) {
+        const user = await prisma.users.create({
+          data: {
+            email: body.email,
+            hashed_password: hashed_password,
+          },
+        });
+        const publicUser = await prisma.public_users.create({
+          data: {
+            id: user.id,
+            username: body.username,
+            phone_number: body.phone,
+          },
+        });
+      }
+
+      bcrypt.hash(
         body.password,
         10,
-        async function (err: Error, hash: string) {
-          const user = await prisma.users.create({
-            data: {
-              email: body.email,
-              hashed_password: hash,
-            },
-          });
-          const publicUser = await prisma.public_users.create({
-            data: {
-              id: user.id,
-              username: body.username,
-              phone_number: body.phone,
-            },
-          });
+        function (err: Error | null, hash: string) {
+          createUser(hash);
         },
       );
 
@@ -76,4 +87,4 @@ router.post(
   },
 );
 
-module.exports = router;
+export default router;

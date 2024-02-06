@@ -1,10 +1,11 @@
-var express = require("express");
+import express from "express";
 const router = express.Router();
 import * as z from "zod";
 import prisma from "../prisma/client";
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 import { Prisma } from "@prisma/client";
 
 import { Request, Response, NextFunction } from "express";
@@ -32,40 +33,16 @@ router.post(
         },
       });
       if (!userExists) {
+        console.log("a");
         return res.status(401).json({ message: "Unauthorized" });
       }
 
-      // check password
-      await bcrypt.compare(
+      const checkPassword = bcrypt.compareSync(
         body.password,
         userExists.hashed_password,
-        function (err: Error, result: boolean) {
-          if (!result) {
-            console.log("incorrect pass");
-            return res.status(401).json({ message: "Unauthorized" });
-          }
-        },
       );
-
-      let subUserExists;
-      if (body.role === "publicUser") {
-        subUserExists = await prisma.users.findFirst({
-          where: {
-            id: userExists.id,
-          },
-        });
-        if (!subUserExists) {
-          return res.status(401).json({ message: "Unauthorized" });
-        }
-      } else {
-        subUserExists = await prisma.users.findFirst({
-          where: {
-            id: userExists.id,
-          },
-        });
-        if (!subUserExists) {
-          return res.status(401).json({ message: "Unauthorized" });
-        }
+      if (!checkPassword) {
+        return res.status(401).json({ message: "Incorrect password" });
       }
 
       const token = jwt.sign(
@@ -73,10 +50,46 @@ router.post(
           exp: Math.floor(Date.now() / 1000) + 60 * 60,
           data: { id: userExists.id, role: body.role, email: body.email },
         },
-        process.env.SECRET,
+        process.env.SECRET as jwt.Secret,
       );
 
-      return res.status(200).json({ message: token });
+      let subUserExists;
+      if (body.role === "publicUser") {
+        subUserExists = await prisma.public_users.findFirst({
+          where: {
+            id: userExists.id,
+          },
+        });
+        if (!subUserExists) {
+          return res.status(401).json({ message: "Unauthorized" });
+        } else {
+          return res.status(200).json({
+            token,
+            data: {
+              username: subUserExists.username,
+              imageKey: subUserExists.profile_image_key,
+            },
+          });
+        }
+      } else {
+        subUserExists = await prisma.management_companies.findFirst({
+          where: {
+            id: userExists.id,
+          },
+        });
+        if (!subUserExists) {
+          return res.status(401).json({ message: "Unauthorized" });
+        } else {
+          return res.status(200).json({
+            token,
+            data: {
+              data: {
+                companyName: subUserExists.company_name,
+              },
+            },
+          });
+        }
+      }
     } catch (err) {
       if (err instanceof z.ZodError) {
         console.log(err.issues);
@@ -85,7 +98,7 @@ router.post(
 
       if (err instanceof Prisma.PrismaClientUnknownRequestError) {
         console.log(err);
-        return res.status(401).json({ message: "Unauthorized" });
+        return res.status(401).json({ message: "User does not exist" });
       }
 
       console.log("error from /login ---- ", err);
@@ -94,4 +107,4 @@ router.post(
   },
 );
 
-module.exports = router;
+export default router;

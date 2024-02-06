@@ -1,10 +1,13 @@
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
+// const jwt = require("jsonwebtoken");
+// require("dotenv").config();
 
 import { Request, Response, NextFunction } from "express";
 
-function verifyToken(
-  req: Request & { token: string },
+export default function verifyToken(
+  req: Request,
   res: Response,
   next: NextFunction,
 ) {
@@ -14,8 +17,8 @@ function verifyToken(
     const bearer = bearerHeader.split(" ");
     const bearerToken = bearer[1];
     req.token = bearerToken;
+    next();
+  } else {
+    res.status(401).json({ message: "Unauthorized" });
   }
-  next();
 }
-
-export default verifyToken;
