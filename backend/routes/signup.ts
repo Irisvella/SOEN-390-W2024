@@ -4,11 +4,13 @@ import * as z from "zod";
 import prisma from "../prisma/client";
 import bcrypt from "bcryptjs";
 import { Prisma } from "@prisma/client";
+import multer from "multer";
+const upload = multer();
 
 import { Request, Response, NextFunction } from "express";
 
 const User = z.object({
-  role: z.enum(["publicUser", "company"]),
+  // role: z.enum(["publicUser", "company"]),
   username: z.string().min(1),
   email: z.string().email(),
   password: z.string().min(6),
@@ -89,9 +91,66 @@ router.post(
 /* Allow a public user to register */
 router.post(
   "/public-user",
+  upload.none(),
   async function (req: Request, res: Response, next: NextFunction) {
     try {
-    } catch (err) {}
+      const body = req.body;
+
+      const result = User.safeParse(body);
+      if (!result.success) {
+        console.log("error ---- ", result.error);
+        console.log("formatted ---- ", result.error.format());
+        return res.status(400).json(result.error.issues);
+      }
+
+      const userExists = await prisma.users.findFirst({
+        where: {
+          email: body.email,
+        },
+      });
+      if (userExists) {
+        return res.status(409).json({ message: "User already exists" });
+      }
+
+      async function createPublicUser(hashed_password: string) {
+        await prisma.$transaction(async (tx) => {
+          const user = await prisma.users.create({
+            data: {
+              email: body.email,
+              hashed_password,
+            },
+          });
+          const publicUser = await prisma.public_users.create({
+            data: {
+              id: user.id,
+              username: body.username,
+              phone_number: body.phone,
+            },
+          });
+        });
+      }
+
+      bcrypt.hash(
+        body.password,
+        10,
+        function (err: Error | null, hash: string) {
+          createPublicUser(hash);
+        },
+      );
+
+      return res.status(201).json({ message: "User created successfully" });
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        console.log(err.issues);
+        return res.status(400).json({ message: "One or more fields invalid" });
+      }
+
+      if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        return res.status(409).json({ message: "User already exists" });
+      }
+
+      return res.status(500).json({ message: "Unexpected error" });
+    }
   },
 );
 
@@ -115,7 +174,7 @@ router.post(
         },
       });
       if (userExists) {
-        return res.status(400).json({ message: "Email already exists" });
+        return res.status(409).json({ message: "Email already exists" });
       }
 
       async function createCompanyUser(hashed_password: string) {
@@ -123,7 +182,7 @@ router.post(
           const user = await prisma.users.create({
             data: {
               email: body.email,
-              hashed_password: hashed_password,
+              hashed_password,
             },
           });
           const company = await prisma.management_companies.create({
@@ -145,7 +204,7 @@ router.post(
         },
       );
 
-      return res.status(200).json({ message: "User created successfully" });
+      return res.status(201).json({ message: "User created successfully" });
     } catch (err) {
       if (err instanceof z.ZodError) {
         console.log(err.issues);
@@ -153,7 +212,7 @@ router.post(
       }
 
       if (err instanceof Prisma.PrismaClientKnownRequestError) {
-        return res.status(400).json({ message: "Email taken" });
+        return res.status(409).json({ message: "User exists already" });
       }
 
       return res.status(500).json({ message: "Unexpected error" });

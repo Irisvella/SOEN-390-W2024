@@ -83,9 +83,7 @@ router.post(
           return res.status(200).json({
             token,
             data: {
-              data: {
-                companyName: subUserExists.company_name,
-              },
+              companyName: subUserExists.company_name,
             },
           });
         }
