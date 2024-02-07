@@ -5,8 +5,6 @@ import logger from "morgan";
 import dotenv from "dotenv";
 dotenv.config();
 
-import indexRouter from "./routes/index";
-import usersRouter from "./routes/users";
 import signUpRouter from "./routes/signup";
 import loginRouter from "./routes/login";
 import profileRouter from "./routes/profile";
@@ -27,8 +25,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", indexRouter);
-app.use("/users", usersRouter);
 app.use("/signup", signUpRouter);
 app.use("/login", loginRouter);
 app.use("/profile", profileRouter);
