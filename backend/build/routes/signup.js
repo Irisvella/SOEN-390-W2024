@@ -41,23 +41,23 @@ const z = __importStar(require("zod"));
 const client_1 = __importDefault(require("../prisma/client"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const client_2 = require("@prisma/client");
+const multer_1 = __importDefault(require("multer"));
+const upload = (0, multer_1.default)();
 const User = z.object({
-    role: z.enum(["publicUser", "company"]),
     username: z.string().min(1),
     email: z.string().email(),
     password: z.string().min(6),
     phone: z.string(),
 });
 const Company = z.object({
-    role: z.enum(["publicUser", "company"]),
     companyName: z.string().min(1),
     email: z.string().email(),
     address: z.string().min(4),
     password: z.string().min(6),
     phone: z.string(),
 });
-/* Allow a new user to sign up */
-router.post("/", function (req, res, next) {
+/* Allow a public user to register */
+router.post("/public-user", upload.none(), function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const body = req.body;
@@ -73,29 +73,31 @@ router.post("/", function (req, res, next) {
                 },
             });
             if (userExists) {
-                return res.status(400).json({ message: "Email already exists" });
+                return res.status(409).json({ message: "User already exists" });
             }
-            function createUser(hashed_password) {
+            function createPublicUser(hashed_password) {
                 return __awaiter(this, void 0, void 0, function* () {
-                    const user = yield client_1.default.users.create({
-                        data: {
-                            email: body.email,
-                            hashed_password: hashed_password,
-                        },
-                    });
-                    const publicUser = yield client_1.default.public_users.create({
-                        data: {
-                            id: user.id,
-                            username: body.username,
-                            phone_number: body.phone,
-                        },
-                    });
+                    yield client_1.default.$transaction((tx) => __awaiter(this, void 0, void 0, function* () {
+                        const user = yield client_1.default.users.create({
+                            data: {
+                                email: body.email,
+                                hashed_password,
+                            },
+                        });
+                        const publicUser = yield client_1.default.public_users.create({
+                            data: {
+                                id: user.id,
+                                username: body.username,
+                                phone_number: body.phone,
+                            },
+                        });
+                    }));
                 });
             }
             bcryptjs_1.default.hash(body.password, 10, function (err, hash) {
-                createUser(hash);
+                createPublicUser(hash);
             });
-            return res.status(200).json({ message: "User created successfully" });
+            return res.status(201).json({ message: "User created successfully" });
         }
         catch (err) {
             if (err instanceof z.ZodError) {
@@ -103,26 +105,66 @@ router.post("/", function (req, res, next) {
                 return res.status(400).json({ message: "One or more fields invalid" });
             }
             if (err instanceof client_2.Prisma.PrismaClientKnownRequestError) {
-                return res.status(400).json({ message: "Email taken" });
+                return res.status(409).json({ message: "User already exists" });
             }
             return res.status(500).json({ message: "Unexpected error" });
         }
-    });
-});
-/* Allow a public user to register */
-router.post("/public-user", function (req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-        }
-        catch (err) { }
     });
 });
 /* Allow a management company to register */
 router.post("/management-company", function (req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            const body = req.body;
+            const result = Company.safeParse(body);
+            if (!result.success) {
+                console.log("error ---- ", result.error);
+                console.log("formatted ---- ", result.error.format());
+                return res.status(400).json(result.error.issues); // change this later
+            }
+            const userExists = yield client_1.default.users.findFirst({
+                where: {
+                    email: body.email,
+                },
+            });
+            if (userExists) {
+                return res.status(409).json({ message: "Email already exists" });
+            }
+            function createCompanyUser(hashed_password) {
+                return __awaiter(this, void 0, void 0, function* () {
+                    yield client_1.default.$transaction((tx) => __awaiter(this, void 0, void 0, function* () {
+                        const user = yield client_1.default.users.create({
+                            data: {
+                                email: body.email,
+                                hashed_password,
+                            },
+                        });
+                        const company = yield client_1.default.management_companies.create({
+                            data: {
+                                id: user.id,
+                                company_name: body.companyName,
+                                address: body.address,
+                                phone_number: body.phone,
+                            },
+                        });
+                    }));
+                });
+            }
+            bcryptjs_1.default.hash(body.password, 10, function (err, hash) {
+                createCompanyUser(hash);
+            });
+            return res.status(201).json({ message: "User created successfully" });
         }
-        catch (err) { }
+        catch (err) {
+            if (err instanceof z.ZodError) {
+                console.log(err.issues);
+                return res.status(400).json({ message: "One or more fields invalid" });
+            }
+            if (err instanceof client_2.Prisma.PrismaClientKnownRequestError) {
+                return res.status(409).json({ message: "User exists already" });
+            }
+            return res.status(500).json({ message: "Unexpected error" });
+        }
     });
 });
 exports.default = router;

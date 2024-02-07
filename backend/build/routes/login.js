@@ -64,7 +64,7 @@ router.post("/", function (req, res, next) {
             });
             if (!userExists) {
                 console.log("a");
-                return res.status(401).json({ message: "Unauthorized" });
+                return res.status(401).json({ message: "User does not exist" });
             }
             const checkPassword = bcryptjs_1.default.compareSync(body.password, userExists.hashed_password);
             if (!checkPassword) {
@@ -107,9 +107,7 @@ router.post("/", function (req, res, next) {
                     return res.status(200).json({
                         token,
                         data: {
-                            data: {
-                                companyName: subUserExists.company_name,
-                            },
+                            companyName: subUserExists.company_name,
                         },
                     });
                 }
@@ -118,7 +116,7 @@ router.post("/", function (req, res, next) {
         catch (err) {
             if (err instanceof z.ZodError) {
                 console.log(err.issues);
-                return res.status(401).json({ message: "Unauthorized" });
+                return res.status(400).json({ message: "Bad request" });
             }
             if (err instanceof client_2.Prisma.PrismaClientUnknownRequestError) {
                 console.log(err);

@@ -34,7 +34,7 @@ router.post(
       });
       if (!userExists) {
         console.log("a");
-        return res.status(401).json({ message: "Unauthorized" });
+        return res.status(401).json({ message: "User does not exist" });
       }
 
       const checkPassword = bcrypt.compareSync(
@@ -91,7 +91,7 @@ router.post(
     } catch (err) {
       if (err instanceof z.ZodError) {
         console.log(err.issues);
-        return res.status(401).json({ message: "Unauthorized" });
+        return res.status(400).json({ message: "Bad request" });
       }
 
       if (err instanceof Prisma.PrismaClientUnknownRequestError) {
