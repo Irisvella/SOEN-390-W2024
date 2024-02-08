@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap");
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
 :root {
   --black-gradient: linear-gradient(
@@ -17,10 +17,105 @@
   scroll-behavior: smooth;
 }
 /**this is flex container from signup and login page*/
-.form-container {
-  display: flex;
-  margin: 0 auto;
 
+/****real navbar */
+
+.Login {
+  display: flex;
+  justify-content: flex-end;
+}
+
+a {
+  text-decoration: none;
+}
+li {
+  list-style-type: none;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  box-shadow: rgba(50, 50, 93, 0.23) 0px 30px 30px -20px;
+  width: 100%;
+
+  /*box-shadow: rgba(50, 50, 93, 0.23) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;*/
+}
+
+.logo {
+  display: flex;
+  justify-content: flex-start;
+}
+.logotext {
+  position: relative;
+  top: 20px;
+  font-size: 30px;
+}
+.nav-links {
+  display: flex;
+}
+
+.nav-links li {
+  color: black;
+  font-size: 20px;
+  padding: 10px 20px;
+  margin: 0 10px;
+  cursor: pointer;
+  text-transform: capitalize;
+}
+.hero {
+  text-align: center;
+  margin-top: 15%;
+}
+.hero h1 {
+  text-align: center;
+  font-size: 80px;
+}
+.mobile-menu-icon {
+  display: none;
+}
+button {
+  border: none;
+  text-decoration: none;
+  font-size: 20px;
+}
+@media (max-width: 768px) {
+  .logo {
+    display: flex;
+    position: absolute;
+    top: 15px;
+    left: 35px;
+  }
+  .nav-links {
+    display: none;
+  }
+  .nav-links-mobile {
+    position: absolute;
+    display: block;
+    list-style: none;
+    box-shadow: rgba(50, 50, 93, 0.23) 0px 50px 100px -20px,
+      rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+    left: 0;
+    top: 10%;
+    transition: all 0.5s ease-in-out;
+    width: 100%;
+    background-color: white;
+  }
+  ul li {
+    padding: 32px;
+    width: 100%;
+    transition: all 0.5s ease-in-out;
+    text-align: center;
+  }
+  .mobile-menu-icon {
+    position: absolute;
+    display: block;
+    right: 20px;
+  }
+  .hero h1 {
+    font-size: 50px;
+  }
 }
 
 /*This is to remove the point on navbar**/
@@ -34,8 +129,8 @@
 }
 
 .text-gradient {
-  background:#5F54E3;
- 
+  background: #5f54e3;
+
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -50,7 +145,7 @@
     #c69df0 12.19%,
     #b47deb 29.82%,
     #a15ce6 51.94%,
-    #5F54E3 90.29%
+    #5f54e3 90.29%
   );
   animation: gradient 5s ease infinite;
 }
@@ -128,12 +223,11 @@
   }
 }
 
-
 /****Login css */
 
 /* index.css */
 .login-background {
-  background: linear-gradient(-45deg,#ffffff, #9731E7, #5F54E3, #5f64E3 );
+  background: linear-gradient(-45deg, #ffffff, #9731e7, #5f54e3, #5f64e3);
   background-size: 400% 400%;
   animation: gradient 5s ease infinite;
 }
@@ -151,7 +245,7 @@
 }
 
 .log:hover {
-  background-color: #DFF8F5;
+  background-color: #dff8f5;
   color: black;
 }
 
