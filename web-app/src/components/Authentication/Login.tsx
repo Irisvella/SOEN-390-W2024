@@ -10,10 +10,12 @@ import bgImage from '../../bg2.jpg';
 
 const LoginPage = () => {
   const [role, setRole] = useState("");
+  
 
   const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setRole(event.target.value);
   };
+  
 
   return (
     <>
