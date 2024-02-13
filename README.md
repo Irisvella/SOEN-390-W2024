@@ -1,8 +1,30 @@
 # SOEN-390-W2024
 
-#Project Name: Estate flow 
+# Project Name: Estate flow 
 
-##Description
+# Team Members: 
+Andy Sun 40192040 github: irisvella 
+<br>
+Jeremie Garzon 40062316 github: jeremiegar
+<br>
+Sarah Abellard 40184667 github: sarahabellard
+<br>
+Ziyi Wang 40167122 github: Zeebruh326
+<br>
+Fatoumata Binta  Barry 40213443 
+<br>
+Yousef Enein 40115494 GitHub: yousefenein
+<br>
+Arshpreet Singh 40172137  ghub:Ashx11
+<br>
+barthan thirunavukarasu 40098158  github: bt919
+<br>
+Abisan Uthamacumaran 40078084  github: swaggyyyy2
+<br>
+Samuel collette 40175048 Github: vaqint
+<br>
+
+# Description
 EstateFlow is a condo management app. The code for the mobile app and its companion Web are in the code down below. Follow these steps to install packages to use the project on your computer 
 
 # Clone the repository
