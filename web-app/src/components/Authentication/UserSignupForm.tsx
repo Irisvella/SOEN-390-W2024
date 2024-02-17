@@ -1,25 +1,51 @@
-// UserForm.js
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Grid, TextField, Button } from "@mui/material";
 
 
 const UserSignupForm = () => {
-  // You can include useState hooks here if needed for form inputs
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    // Process form data here (e.g., send it to a server)
+ 
+  const handleRegister = async () => {
+    if (!email || !password || !username || !phone || !confirmPassword) {
+      alert("Please fill the required fields");
+      return;
+    }
+  
+    try {
+      // Replace 'http://localhost:3000' with actual backend endpoint
+      const response = await fetch('http://localhost:3000/signup/public-user',  {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // need to fix role param
+        body: JSON.stringify({ username, email, password, phone}), 
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        console.log('Signup successful', data);
+    
+        window.location.href = '/Login';
+      } else {
+        console.error('Signup failed:', data.message);
+        alert(data.message || 'An error occurred. Please try again.');
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
+      alert('An error occurred. Please try again.');
+    }
   };
-  const handleRegister = async () => {};
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleRegister}>
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <TextField
@@ -31,6 +57,7 @@ const UserSignupForm = () => {
           autoFocus
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          aria-required
         />
       </Grid>
 
