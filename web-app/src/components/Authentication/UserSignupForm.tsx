@@ -9,13 +9,25 @@ const UserSignupForm = () => {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  
+  const [successMessage, setSuccessMessage] = useState("");
+  const [failMessage, setFailMessage] = useState("");
+
+
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const validateEmail = (email) => emailRegex.test(email);
+  const phoneRegex = /^\d{10}$/; // Adjust based on required format
+  const validatePhone = (phone) => phoneRegex.test(phone);
+  const passwordsMatch = password === confirmPassword;
+
+
+
  
-  const handleRegister = async () => {
-    if (!email || !password || !username || !phone || !confirmPassword) {
-      alert("Please fill the required fields");
-      return;
-    }
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setSuccessMessage("");
+    setFailMessage("");
+
   
     try {
       // Replace 'http://localhost:3000' with actual backend endpoint
@@ -32,20 +44,31 @@ const UserSignupForm = () => {
   
       if (response.ok) {
         console.log('Signup successful', data);
-    
+        setSuccessMessage("Signup successful! You can now login.");     
         window.location.href = '/Login';
       } else {
         console.error('Signup failed:', data.message);
-        alert(data.message || 'An error occurred. Please try again.');
-      }
+        setFailMessage(data.message || 'An error occurred. Please try again.');}
     } catch (error) {
       console.error('Signup error:', error);
-      alert('An error occurred. Please try again.');
+      setFailMessage('An error occurred. Please try again.');
     }
   };
 
   return (
     <form onSubmit={handleRegister}>
+      {successMessage && (
+        <div style={{ color: 'green', textAlign: 'center', marginBottom: '10px'}}>
+          {successMessage}
+        </div>
+      )}
+
+      {failMessage && (
+        <div style={{ color: 'red', textAlign: 'center', marginBottom: '10px'}}>
+                {failMessage}
+              </div>
+            )}
+
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <TextField
@@ -62,45 +85,33 @@ const UserSignupForm = () => {
       </Grid>
 
       <Grid item xs={12}>
-        <TextField
+      <TextField
           required
           fullWidth
           id="email"
           label="Email Address"
           name="email"
+          error={!validateEmail(email) && email.length > 0}
+          helperText={!validateEmail(email) && email.length > 0 ? "Invalid email format" : ""}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
+
       </Grid>
       <Grid item xs={12}>
-        <TextField
+      <TextField
           required
           fullWidth
           id="phone"
           label="Phone number"
           name="phone"
+          error={!validatePhone(phone) && phone.length > 0}
+          helperText={!validatePhone(phone) && phone.length > 0 ? "Invalid phone format" : ""}
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
         />
-      </Grid>
-      <Grid item xs={12}>
 
-      <label htmlFor="upload-photo">
-        <input
-          style={{ display: 'none', backgroundColor:'#FA8072' } }
-          id="upload-photo"
-          name="upload-photo"
-          type="file"
-        />
-        <Button color="info" variant="outlined" component="span">
-          Upload profile picture
-        </Button>
-      </label>
-      
       </Grid>
-
-      
-     
       <Grid item xs={12}>
         <TextField
           required
@@ -118,26 +129,29 @@ const UserSignupForm = () => {
           required
           fullWidth
           name="confirmPassword"
-          label="confirmPassword"
-          type="confirmPassword"
+          label="Confirm Password"
+          type="password"
           id="confirmPassword"
+          error={!passwordsMatch && confirmPassword.length > 0}
+          helperText={!passwordsMatch && confirmPassword.length > 0 ? "Passwords do not match" : ""}
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
+
       </Grid>
     </Grid>
   
     <Button
-      fullWidth
-      variant="outlined" 
-      color="warning"
-      sx={{ mt: 3, mb: 2 }}
-      onClick={handleRegister}
-      
-     
-    >
-      Register
-    </Button>
+          type="submit"
+          fullWidth
+          variant="outlined" 
+          color="warning"
+          sx={{ mt: 3, mb: 2 }}
+          disabled={!validateEmail(email) || !validatePhone(phone) || !passwordsMatch || !email || !phone || !password || !confirmPassword}
+        >
+          Register
+  </Button>
+
     <Grid container justifyContent="center">
       <Grid item>
         <Link to="/login">Already have an account? Login</Link>
