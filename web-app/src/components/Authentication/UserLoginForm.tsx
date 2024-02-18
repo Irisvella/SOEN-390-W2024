@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { TextField, Button, Box, Typography } from "@mui/material";
+
+
 const UserLoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,13 +19,13 @@ const UserLoginForm = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        // need to fix role param
         body: JSON.stringify({ email, password, role: 'publicUser' }), 
       });
   
       const data = await response.json();
   
-      if (response.ok) {
+      if (response.ok && data.token) {
+        localStorage.setItem('token', data.token);
         window.location.href = '/ProfileDash';
       } else {
         console.error('Login failed:', data.message);

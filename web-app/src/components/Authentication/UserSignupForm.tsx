@@ -36,7 +36,6 @@ const UserSignupForm = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        // need to fix role param
         body: JSON.stringify({ username, email, password, phone}), 
       });
   
