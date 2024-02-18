@@ -1,25 +1,73 @@
-// UserForm.js
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Grid, TextField, Button } from "@mui/material";
 
 
 const UserSignupForm = () => {
-  // You can include useState hooks here if needed for form inputs
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [failMessage, setFailMessage] = useState("");
+
+
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const validateEmail = (email) => emailRegex.test(email);
+  const phoneRegex = /^\d{10}$/; // Adjust based on required format
+  const validatePhone = (phone) => phoneRegex.test(phone);
+  const passwordsMatch = password === confirmPassword;
+
+
+
+ 
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setSuccessMessage("");
+    setFailMessage("");
+
   
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    // Process form data here (e.g., send it to a server)
+    try {
+      // Replace 'http://localhost:3000' with actual backend endpoint
+      const response = await fetch('http://localhost:3000/signup/public-user',  {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, email, password, phone}), 
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        console.log('Signup successful', data);
+        setSuccessMessage("Signup successful! You can now login.");     
+        window.location.href = '/Login';
+      } else {
+        console.error('Signup failed:', data.message);
+        setFailMessage(data.message || 'An error occurred. Please try again.');}
+    } catch (error) {
+      console.error('Signup error:', error);
+      setFailMessage('An error occurred. Please try again.');
+    }
   };
-  const handleRegister = async () => {};
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleRegister}>
+      {successMessage && (
+        <div style={{ color: 'green', textAlign: 'center', marginBottom: '10px'}}>
+          {successMessage}
+        </div>
+      )}
+
+      {failMessage && (
+        <div style={{ color: 'red', textAlign: 'center', marginBottom: '10px'}}>
+                {failMessage}
+              </div>
+            )}
+
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <TextField
@@ -31,49 +79,38 @@ const UserSignupForm = () => {
           autoFocus
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          aria-required
         />
       </Grid>
 
       <Grid item xs={12}>
-        <TextField
+      <TextField
           required
           fullWidth
           id="email"
           label="Email Address"
           name="email"
+          error={!validateEmail(email) && email.length > 0}
+          helperText={!validateEmail(email) && email.length > 0 ? "Invalid email format" : ""}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
+
       </Grid>
       <Grid item xs={12}>
-        <TextField
+      <TextField
           required
           fullWidth
           id="phone"
           label="Phone number"
           name="phone"
+          error={!validatePhone(phone) && phone.length > 0}
+          helperText={!validatePhone(phone) && phone.length > 0 ? "Invalid phone format" : ""}
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
         />
-      </Grid>
-      <Grid item xs={12}>
 
-      <label htmlFor="upload-photo">
-        <input
-          style={{ display: 'none', backgroundColor:'#FA8072' } }
-          id="upload-photo"
-          name="upload-photo"
-          type="file"
-        />
-        <Button color="info" variant="outlined" component="span">
-          Upload profile picture
-        </Button>
-      </label>
-      
       </Grid>
-
-      
-     
       <Grid item xs={12}>
         <TextField
           required
@@ -91,26 +128,29 @@ const UserSignupForm = () => {
           required
           fullWidth
           name="confirmPassword"
-          label="confirmPassword"
-          type="confirmPassword"
+          label="Confirm Password"
+          type="password"
           id="confirmPassword"
+          error={!passwordsMatch && confirmPassword.length > 0}
+          helperText={!passwordsMatch && confirmPassword.length > 0 ? "Passwords do not match" : ""}
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
+
       </Grid>
     </Grid>
   
     <Button
-      fullWidth
-      variant="outlined" 
-      color="warning"
-      sx={{ mt: 3, mb: 2 }}
-      onClick={handleRegister}
-      
-     
-    >
-      Register
-    </Button>
+          type="submit"
+          fullWidth
+          variant="outlined" 
+          color="warning"
+          sx={{ mt: 3, mb: 2 }}
+          disabled={!validateEmail(email) || !validatePhone(phone) || !passwordsMatch || !email || !phone || !password || !confirmPassword}
+        >
+          Register
+  </Button>
+
     <Grid container justifyContent="center">
       <Grid item>
         <Link to="/login">Already have an account? Login</Link>

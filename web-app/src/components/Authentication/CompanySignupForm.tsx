@@ -1,35 +1,83 @@
-// UserForm.js
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Grid, TextField, Button } from "@mui/material";
 
 const CompanySignupForm = () => {
-  // You can include useState hooks here if needed for form inputs
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
-  const [compagnyName, setCompagnyName] = useState("");
+  const [companyName, setCompanyName] = useState("");
   const [address, setAddress] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    // Process form data here (e.g., send it to a server)
+  const [successMessage, setSuccessMessage] = useState("");
+  const [failMessage, setFailMessage] = useState("");
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const validateEmail = (email) => emailRegex.test(email);
+  const phoneRegex = /^\d{10}$/; // Adjust based on required format
+  const validatePhone = (phone) => phoneRegex.test(phone);
+  const passwordsMatch = password === confirmPassword;
+
+  
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setSuccessMessage("");
+    setFailMessage("");
+
+  
+    try {
+      // Replace 'http://localhost:3000' with actual backend endpoint
+      const response = await fetch('http://localhost:3000/signup/management-company',  {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ companyName, email, address, password, phone}), 
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        console.log('Signup successful', data);
+        setSuccessMessage("Signup successful! You can now login.");     
+        window.location.href = '/Login';
+      } else {
+        console.error('Signup failed:', data.message);
+        setFailMessage(data.message || 'An error occurred. Please try again.');}
+    } catch (error) {
+      console.error('Signup error:', error);
+      setFailMessage('An error occurred. Please try again.');
+    }
   };
-  const handleRegister = async () => {};
+
+
+
+
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleRegister}>
+        {successMessage && (
+        <div style={{ color: 'green', textAlign: 'center', marginBottom: '10px'}}>
+          {successMessage}
+        </div>
+      )}
+
+      {failMessage && (
+        <div style={{ color: 'red', textAlign: 'center', marginBottom: '10px'}}>
+                {failMessage}
+              </div>
+            )}
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <TextField
-          name="compagnyName"
+          name="companyName"
           required
           fullWidth
-          id="compagnyName"
+          id="companyName"
           label="Company Name"
           autoFocus
-          value={compagnyName}
-          onChange={(e) => setCompagnyName(e.target.value)}
+          value={companyName}
+          onChange={(e) => setCompanyName(e.target.value)}
         />
       </Grid>
 
@@ -40,6 +88,8 @@ const CompanySignupForm = () => {
           id="email"
           label="Email Address"
           name="email"
+          error={!validateEmail(email) && email.length > 0}
+          helperText={!validateEmail(email) && email.length > 0 ? "Invalid email format" : ""}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -51,6 +101,8 @@ const CompanySignupForm = () => {
           id="phone"
           label="Phone number"
           name="phone"
+          error={!validatePhone(phone) && phone.length > 0}
+          helperText={!validatePhone(phone) && phone.length > 0 ? "Invalid phone format" : ""}
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
         />
@@ -87,9 +139,11 @@ const CompanySignupForm = () => {
           required
           fullWidth
           name="confirmPassword"
-          label="confirmPassword"
-          type="confirmPassword"
+          label="Confirm Password"
+          type="password"
           id="confirmPassword"
+          error={!passwordsMatch && confirmPassword.length > 0}
+          helperText={!passwordsMatch && confirmPassword.length > 0 ? "Passwords do not match" : ""}
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
@@ -106,7 +160,8 @@ const CompanySignupForm = () => {
       color="warning"
       sx={{ mt: 3, mb: 2 }}
       onClick={handleRegister}
-       
+      disabled={!validateEmail(email) || !validatePhone(phone) || !passwordsMatch || !password || !confirmPassword || !companyName || !address}
+
     >
       Register
     </Button>
