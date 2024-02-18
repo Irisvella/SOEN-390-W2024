@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react';
 import {
   Avatar,
   AvatarBadge,
@@ -16,13 +16,39 @@ import {
   Text,
   useDisclosure,
   VStack,
-} from '@chakra-ui/react'
+} from '@chakra-ui/react';
 
 function Profile() {
-  const [userProfile, setUserProfile] = useState(null)
+  const [userProfile, setUserProfile] = useState(null);
+  const [userName, setUserName] = useState(''); 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const profileImage = useRef(null);
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const profileImage = useRef(null)
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      const token = localStorage.getItem('token'); 
+      try {
+        const response = await fetch('http://localhost:3000/profile', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = await response.json();
+        if (response.ok) {
+          setUserProfile(data.avatar); 
+          setUserName(data.username); 
+        } else {
+          console.error('Failed to fetch profile:', data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
 
   const openChooseImage = () => {
     profileImage.current.click()
@@ -90,14 +116,14 @@ function Profile() {
       </Modal>
       <VStack spacing={1}>
         <Heading as="h3" fontSize="xl" color="brand.dark">
-          User Name
+          {userName || "User Name"}
         </Heading>
         <Text color="brand.gray" fontSize="sm">
           Bio
         </Text>
       </VStack>
     </VStack>
-  )
+  );
 }
 
 export default Profile
