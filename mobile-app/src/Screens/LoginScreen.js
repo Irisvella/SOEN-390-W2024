@@ -1,5 +1,5 @@
 import { View, Text, Image, SafeAreaView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native'
-import React from 'react'
+import React, {useState} from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { useNavigation } from '@react-navigation/native'
 import Animated, { FadeIn, FadeInDown, FadeInUp } from 'react-native-reanimated';
@@ -7,6 +7,41 @@ import Animated, { FadeIn, FadeInDown, FadeInUp } from 'react-native-reanimated'
 
 export default function LoginScreen() {
     const navigation = useNavigation();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [failMessage, setFailMessage] = useState("");
+
+
+    const handleLogin = async () => {
+        setFailMessage("");
+
+        // URL should be replaced with your actual backend endpoint
+        const url = 'http://192.168.2.13:3000/login';
+  
+        try {
+          const response = await fetch(url,  {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password, role: 'publicUser' }), 
+          });
+      
+          const data = await response.json();
+      
+          if (response.ok) {
+            console.log('Login successful', data);
+            setTimeout(() => {
+                navigation.navigate('Profile'); 
+              }, 1000)
+        } else {
+            console.error('Login failed:', data.message);
+            setFailMessage(data.message || 'An error occurred. Please try again.');}
+        } catch (error) {
+          console.error('Login error:', error);
+          setFailMessage('An error occurred. Please try again.');}
+      };
+      
   return (
     <KeyboardAvoidingView
     style={{ flex: 1 }}
@@ -44,6 +79,12 @@ export default function LoginScreen() {
                 </Animated.Text>
             </View>
 
+            {failMessage && (
+            <View style={{ alignItems: 'center', marginVertical: 10 }}>
+            <Text style={{ color: 'red' }}>{failMessage}</Text>
+            </View>
+        )}
+
             {/* form */}
             <View className="flex items-center mx-5 space-y-4">
                 <Animated.View 
@@ -53,6 +94,8 @@ export default function LoginScreen() {
                     <TextInput
                         placeholder="Email"
                         placeholderTextColor={'gray'}
+                        value={email}
+                        onChangeText={setEmail}
                     />
                 </Animated.View>
                 <Animated.View 
@@ -63,6 +106,8 @@ export default function LoginScreen() {
                         placeholder="Password"
                         placeholderTextColor={'gray'}
                         secureTextEntry
+                        value={password}
+                        onChangeText={setPassword}
                     />
                 </Animated.View>
 
@@ -70,7 +115,9 @@ export default function LoginScreen() {
                     className="w-full" 
                     entering={FadeInDown.delay(400).duration(1000).springify()}>
 
-                    <TouchableOpacity className="w-full bg-orange-900 p-3 rounded-2xl mb-3">
+                    <TouchableOpacity 
+                    onPress={handleLogin}
+                    className="w-full bg-orange-900 p-3 rounded-2xl mb-3">
                         <Text className="text-xl font-bold text-white text-center">Login</Text>
                     </TouchableOpacity>
                 </Animated.View>
