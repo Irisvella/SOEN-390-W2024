@@ -1,0 +1,214 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
+  color: #333;
+  padding: 0 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: -50px;
+}
+
+.logotext {
+  color: #333;
+  margin-top: -40px;
+}
+.login-button {
+  margin-right: -30px;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+@media (max-width: 768px) {
+  .login-button {
+    position: absolute;
+    right: 90px;
+    top: 80%;
+    transform: translateY(47%);
+  }
+
+  .mobile-menu-icon {
+    position: absolute;
+    right: 20px;
+    top: 180%;
+    transform: translate(28%, 115%);
+  }
+
+  .logo {
+    justify-content: center;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(10%, -15%);
+  }
+
+  .nav-links,
+  .nav-links-mobile {
+    display: none;
+  }
+}
+
+body {
+  padding-top: 96px;
+}
+
+.nav-links a,
+.nav-links-mobile a,
+.nav-link {
+  font-size: 15px;
+  margin-left: -20px;
+  position: relative;
+  display: inline-block;
+  color: #333;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links-mobile a:hover,
+.nav-link:hover {
+  color: #04c;
+}
+
+.nav-links a::after,
+.nav-links-mobile a::after,
+.nav-link::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -5px;
+  left: 50%;
+  background-color: #04c;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.nav-links a:hover::after,
+.nav-links-mobile a:hover::after,
+.nav-link:hover::after {
+  width: 100%;
+  left: 0;
+  transform: translateX(0%);
+}
+
+.mobile-menu-icon,
+.MuiButton-outlined {
+  color: #333;
+}
+
+.MuiButton-outlined {
+  border-color: #333;
+}
+
+.MuiButton-outlined:hover {
+  background-color: #f0f0f0;
+  color: #333;
+  border-color: #333;
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-icon {
+    color: #333;
+  }
+}
+.nav-links-mobile,
+.nav-links {
+  z-index: 1050;
+}
+
+.login-button {
+  z-index: 1000;
+}
+
+.mobile-menu-icon {
+  z-index: 1050;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.home-background {
+  background-image: url("bg1.jpg");
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  width: 100%;
+}
+
+.content {
+  background-color: #fff;
+  margin-top: 350px;
+  position: absolute;
+  z-index: 1;
+  padding: 2rem;
+}
+
+.content h1 {
+  font-size: 3rem;
+  margin-top: -90px;
+  padding-top: -90px;
+  margin-bottom: 1rem;
+  color: #fff;
+  z-index: 4;
+  text-shadow: 0 0 1px #fff, 0 0 1px #fff, 0 0 15px #fff;
+}
+
+.content h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.content h3 {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.content p {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+@media (max-width: 768px) {
+  .content {
+    padding: 1rem;
+    margin-top: 550px;
+  }
+
+  .content h1 {
+    font-size: 2rem;
+    margin-top: -55px;
+  }
+
+  .content h2 {
+    font-size: 1.75rem;
+  }
+}
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide just the vertical scrollbar */
+::-webkit-scrollbar-thumb {
+  display: none;
+}
+
+/* Hide just the horizontal scrollbar */
+::-webkit-scrollbar-track {
+  display: none;
+}

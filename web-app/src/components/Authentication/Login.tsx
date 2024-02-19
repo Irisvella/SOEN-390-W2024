@@ -1,10 +1,17 @@
 // LoginPage.js
-import  { useState } from 'react';
-import { Container, CssBaseline, Box, Avatar, Typography, Grid } from "@mui/material";
+import { useState } from "react";
+import {
+  Container,
+  CssBaseline,
+  Box,
+  Avatar,
+  Typography,
+  Grid,
+} from "@mui/material";
 import { Link } from "react-router-dom";
-import FitbitIcon from '@mui/icons-material/Fitbit';
-import UserLoginForm from '../Authentication/UserLoginForm';
-import CompanyLoginForm from '../Authentication/CompanyLoginForm';
+import FitbitIcon from "@mui/icons-material/Fitbit";
+import UserLoginForm from "../Authentication/UserLoginForm";
+import CompanyLoginForm from "../Authentication/CompanyLoginForm";
 
 const LoginPage = () => {
   const [role, setRole] = useState("");
@@ -28,7 +35,7 @@ const LoginPage = () => {
           <Avatar sx={{ m: 1, bgcolor: "salmon" }}>
             <FitbitIcon />
           </Avatar>
-          
+
           <Typography variant="h5">Login</Typography>
           <Box sx={{ mt: 2 }}></Box>
           <div className="form-group">
@@ -38,14 +45,14 @@ const LoginPage = () => {
               <option value="company">Company</option>
             </select>
           </div>
-          
+
           {role === "company" ? <CompanyLoginForm /> : <UserLoginForm />}
 
           <Grid container justifyContent={"center"}>
-              <Grid item>
-                <Link to="/Signup">Don't have an account? Register</Link>
-              </Grid>
+            <Grid item>
+              <Link to="/Signup">Don't have an account? Register</Link>
             </Grid>
+          </Grid>
         </Box>
       </Container>
     </>
