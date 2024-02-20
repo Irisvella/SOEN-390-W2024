@@ -15,7 +15,7 @@ export default function App() {
     const [username, setUsername] = useState('');
     const [phone, setPhone] = useState('');
     const [showDropdown, setShowDropdown] = useState(false);
-    // const [profileImage, setProfileImage] = useState(null); // will use when we implement image upload with backend endpoint
+    const [profileImage, setProfileImage] = useState(null); // will use when we implement image upload with backend endpoint
 
     const handleLogout = async () => {
         await AsyncStorage.removeItem('token');
@@ -56,21 +56,21 @@ export default function App() {
       }, []);
 
 
-    // const pickImage = async () => {
-    //     let result = await ImagePicker.launchImageLibraryAsync({
-    //       mediaTypes: ImagePicker.MediaTypeOptions.All,
-    //       allowsEditing: true,
-    //       aspect: [4, 3],
-    //       quality: 1,
-    //     });
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
       
-    //     console.log(result);
+        console.log(result);
       
-    //     if (!result.cancelled) {
-    //       console.log(result.uri);
-    //      setProfileImage(result.uri); // need to send this to backend endpoint
-    //     }
-    //   };
+        if (!result.cancelled) {
+          console.log(result.uri);
+         setProfileImage(result.uri); // need to send this to backend endpoint
+        }
+      };
 
     return (
         <SafeAreaView style={styles.container}>
