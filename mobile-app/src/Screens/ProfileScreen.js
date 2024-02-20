@@ -1,11 +1,77 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, TouchableOpacity } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialIcons } from "@expo/vector-icons";
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
+import * as ImagePicker from 'expo-image-picker';
+
+
+
+
 
 export default function App() {
     const navigation = useNavigation();
+    const [username, setUsername] = useState('');
+    const [phone, setPhone] = useState('');
+    const [showDropdown, setShowDropdown] = useState(false);
+    // const [profileImage, setProfileImage] = useState(null); // will use when we implement image upload with backend endpoint
+
+    const handleLogout = async () => {
+        await AsyncStorage.removeItem('token');
+        setUsername('');
+        setPhone('');
+        setShowDropdown(false);
+        navigation.navigate('Login');
+    };
+
+
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+          const storedToken = await AsyncStorage.getItem('token');
+          if (!storedToken) return;
+            
+          const url = 'http://192.168.2.13:3000/profile';
+          try {
+            const response = await fetch(url, {
+              method: 'GET',
+              headers: {
+                'Authorization': `Bearer ${storedToken}`,
+                'Content-Type': 'application/json',
+              },
+            });
+            const data = await response.json();
+            if (response.ok) {
+              setUsername(data.username);
+              setPhone(data.phone);
+            } else {
+              console.error('Failed to fetch profile:', data.message);
+            }
+          } catch (error) {
+            console.error('Error fetching profile:', error);
+          }
+        };
+      
+        fetchUserProfile();
+      }, []);
+
+
+    // const pickImage = async () => {
+    //     let result = await ImagePicker.launchImageLibraryAsync({
+    //       mediaTypes: ImagePicker.MediaTypeOptions.All,
+    //       allowsEditing: true,
+    //       aspect: [4, 3],
+    //       quality: 1,
+    //     });
+      
+    //     console.log(result);
+      
+    //     if (!result.cancelled) {
+    //       console.log(result.uri);
+    //      setProfileImage(result.uri); // need to send this to backend endpoint
+    //     }
+    //   };
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={true}>
@@ -14,8 +80,30 @@ export default function App() {
                 <TouchableOpacity onPress={() => navigation.push('Login')}>
                 <MaterialIcons name="arrow-back-ios" size={26} color="#52575D" />
                 </TouchableOpacity>
+                <TouchableOpacity  onPress={() => setShowDropdown(!showDropdown)}>
                     <MaterialIcons name="more-horiz" size={26} color="#52575D"></MaterialIcons>
+                </TouchableOpacity>
                 </View>
+
+               
+            {showDropdown && (
+                <View style={styles.dropdown}>
+                      <TouchableOpacity
+                      onPress={pickImage}
+                        style={styles.dropdownItem}
+                    >
+                        <Text style={styles.dropdownItemText}>Edit picture</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={handleLogout}
+                        style={styles.dropdownItem}
+                    >
+                        <Text style={styles.dropdownItemText}>Logout</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
+    
+
 
                 <View style={{ alignSelf: "center" }}>
                     <View style={styles.profileImage}>
@@ -24,8 +112,8 @@ export default function App() {
                 </View>
 
                 <View style={styles.infoContainer}>
-                    <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>User</Text>
-                    <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>(XXX)-XXX-XXXX</Text>
+                    <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>{username ? username : 'User'}</Text>
+                    <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{phone ? phone : '(XXX)-XXX-XXXX'}</Text>
                 </View>
 
                 <View style={styles.statsContainer}>
@@ -203,5 +291,19 @@ const styles = StyleSheet.create({
         borderRadius: 6,
         marginTop: 3,
         marginRight: 20
-    }
+    },
+    dropdown: {
+        marginTop: 10,
+        backgroundColor: '#f9f9f9',
+        borderColor: '#ccc',
+        borderWidth: 1,
+        width: 100,
+        alignSelf: 'flex-end',
+    },
+    dropdownItem: {
+        padding: 10,
+    },
+    dropdownItemText: {
+        textAlign: 'center',
+    },
 });

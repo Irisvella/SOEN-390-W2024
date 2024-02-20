@@ -3,6 +3,8 @@ import React, {useState} from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { useNavigation } from '@react-navigation/native'
 import Animated, { FadeIn, FadeInDown, FadeInUp } from 'react-native-reanimated';
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
+
 
 
 export default function LoginScreen() {
@@ -17,6 +19,7 @@ export default function LoginScreen() {
 
         // URL should be replaced with your actual backend endpoint
         const url = 'http://192.168.2.13:3000/login';
+      //  const url = ' http://localhost:3000/login'; 
   
         try {
           const response = await fetch(url,  {
@@ -30,10 +33,11 @@ export default function LoginScreen() {
           const data = await response.json();
       
           if (response.ok) {
+            await AsyncStorage.setItem('token', data.token);
             console.log('Login successful', data);
             setTimeout(() => {
                 navigation.navigate('Profile'); 
-              }, 1000)
+              }, 2000)
         } else {
             console.error('Login failed:', data.message);
             setFailMessage(data.message || 'An error occurred. Please try again.');}

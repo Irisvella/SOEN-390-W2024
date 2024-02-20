@@ -22,7 +22,9 @@ export default function SignupScreen() {
         setFailMessage("");
 
         // URL should be replaced with your actual backend endpoint
-        const url = 'http://192.168.2.13:3000/signup/public-user';
+         const url = 'http://192.168.2.13:3000/signup/public-user';
+        // const url = ' http://localhost:3000/signup/public-user'; 
+
       
         try {
           const response = await fetch(url, {
@@ -141,7 +143,6 @@ export default function SignupScreen() {
                 <TextInput
                     placeholder="Phone Number"
                     placeholderTextColor={'gray'}
-                    secureTextEntry
                     value={phone}
                     onChangeText={setPhone}
                 />
