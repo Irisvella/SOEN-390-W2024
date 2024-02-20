@@ -26,7 +26,6 @@ export default function App() {
     };
 
 
-    useEffect(() => {
         const fetchUserProfile = async () => {
           const storedToken = await AsyncStorage.getItem('token');
           if (!storedToken) return;
@@ -52,8 +51,7 @@ export default function App() {
           }
         };
       
-        fetchUserProfile();
-      }, []);
+       
 
 
     const pickImage = async () => {
@@ -93,6 +91,12 @@ export default function App() {
                         style={styles.dropdownItem}
                     >
                         <Text style={styles.dropdownItemText}>Edit picture</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={fetchUserProfile}
+                        style={styles.dropdownItem}
+                    >
+                        <Text style={styles.dropdownItemText}>Refresh</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={handleLogout}
