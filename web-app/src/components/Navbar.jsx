@@ -6,10 +6,9 @@ import FitbitIcon from '@mui/icons-material/Fitbit';
 import Avatar from "@mui/material/Avatar";
 import { Button } from "@mui/material";
 import "../App.css"; // Make sure this path is correct
-
-const Navbar = () => {
+const Navbar = ({ userName }) => { // userName prop added here
   const [Mobile, setMobile] = useState(false);
-  const location = useLocation(); // Get the current location
+  const location = useLocation();
 
   // Check if the current path is '/Login'
   const isLoginPage = location.pathname === "/Login";
@@ -29,37 +28,43 @@ const Navbar = () => {
         <li><Link to='/skills' className='nav-link pricing'>Pricing</Link></li>
         <li><Link to='/contact' className='nav-link contact'>Contact</Link></li>
       </ul>
-      <div className="login-button">
-        {isLoginPage ? (
-          <Button
-            variant="outlined"
-            href="/Signup"
-            size="Medium"
-            sx={{
-              ':hover': {
-                backgroundColor: '#DFF8F5',
-                color: 'black',
-              }
-            }}
-          >
-            Sign Up
-          </Button>
-        ) : (
-          <Button
-            variant="outlined"
-            href="/Login"
-            size="Medium"
-            sx={{
-              ':hover': {
-                backgroundColor: '#DFF8F5',
-                color: 'black',
-              }
-            }}
-          >
-            Login
-          </Button>
-        )}
-      </div>
+      {userName ? ( // Conditionally render the welcome message or the login/signup buttons
+        <div className="welcome-message">
+          Welcome, {userName}
+        </div>
+      ) : (
+        <div className="login-button">
+          {isLoginPage ? (
+            <Button
+              variant="outlined"
+              href="/Signup"
+              size="Medium"
+              sx={{
+                ':hover': {
+                  backgroundColor: '#DFF8F5',
+                  color: 'black',
+                }
+              }}
+            >
+              Sign Up
+            </Button>
+          ) : (
+            <Button
+              variant="outlined"
+              href="/Login"
+              size="Medium"
+              sx={{
+                ':hover': {
+                  backgroundColor: '#DFF8F5',
+                  color: 'black',
+                }
+              }}
+            >
+              Login
+            </Button>
+          )}
+        </div>
+      )}
       <button className='mobile-menu-icon' onClick={() => setMobile(!Mobile)}>
         {Mobile ? <ImCross /> : <FaBars />}
       </button>
