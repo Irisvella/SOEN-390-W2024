@@ -10,6 +10,7 @@ import * as ImagePicker from 'expo-image-picker';
 
 
 
+
 export default function App() {
     const navigation = useNavigation();
     const [username, setUsername] = useState('');
@@ -70,6 +71,15 @@ export default function App() {
         }
       };
 
+      useEffect(() => {
+        const fetchOnNavigate = navigation.addListener('focus', () => {
+          fetchUserProfile();
+        });
+      
+        return fetchOnNavigate;
+      }, [navigation]);
+      
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={true}>
@@ -91,12 +101,6 @@ export default function App() {
                         style={styles.dropdownItem}
                     >
                         <Text style={styles.dropdownItemText}>Edit picture</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={fetchUserProfile}
-                        style={styles.dropdownItem}
-                    >
-                        <Text style={styles.dropdownItemText}>Refresh</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={handleLogout}

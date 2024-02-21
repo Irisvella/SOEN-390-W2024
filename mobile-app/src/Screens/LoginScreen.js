@@ -36,8 +36,8 @@ export default function LoginScreen() {
             await AsyncStorage.setItem('token', data.token);
             console.log('Login successful', data);
             setTimeout(() => {
-                navigation.navigate('Profile'); 
-              }, 2000)
+                navigation.navigate('Profile', { shouldFetchProfile: true }); 
+              }, 500)
         } else {
             console.error('Login failed:', data.message);
             setFailMessage(data.message || 'An error occurred. Please try again.');}
