@@ -16,6 +16,8 @@ export default function App() {
     const [username, setUsername] = useState('');
     const [phone, setPhone] = useState('');
     const [showDropdown, setShowDropdown] = useState(false);
+    const [userRole, setUserRole] = useState(''); 
+    const [companyName, setCompanyName] = useState(''); 
     const [profileImage, setProfileImage] = useState(null); // will use when we implement image upload with backend endpoint
 
     const handleLogout = async () => {
@@ -31,6 +33,7 @@ export default function App() {
           const storedToken = await AsyncStorage.getItem('token');
           if (!storedToken) return;
             
+
           const url = 'http://192.168.2.13:3000/profile';
           try {
             const response = await fetch(url, {
@@ -42,15 +45,22 @@ export default function App() {
             });
             const data = await response.json();
             if (response.ok) {
-              setUsername(data.username);
-              setPhone(data.phone);
+                if (data.role === 'publicUser') {
+                    setUserRole('publicUser');
+                    setUsername(data.username);
+                    setPhone(data.phone);
+                } else if (data.role === 'company') {
+                    setUserRole('company');
+                    setCompanyName(data.companyName);
+                    setPhone(data.phone);
+                }
             } else {
-              console.error('Failed to fetch profile:', data.message);
+                console.error('Failed to fetch profile:', data.message);
             }
-          } catch (error) {
+        } catch (error) {
             console.error('Error fetching profile:', error);
-          }
-        };
+        }
+    };
       
        
 
@@ -119,10 +129,20 @@ export default function App() {
                     </View>
                 </View>
 
-                <View style={styles.infoContainer}>
-                    <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>{username ? username : 'User'}</Text>
-                    <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{phone ? phone : '(XXX)-XXX-XXXX'}</Text>
-                </View>
+                    <View style={styles.infoContainer}>
+                    {userRole === 'publicUser' ? (
+                        <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>
+                        {username ? username : 'User'}
+                        </Text>
+                    ) : (
+                        <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>
+                        {companyName ? companyName : 'Company'}
+                        </Text>
+                    )}
+                    <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>
+                        {phone ? phone : '(XXX)-XXX-XXXX'}
+                    </Text>
+                    </View>
 
                 <View style={styles.statsContainer}>
                     <View style={styles.statsBox}>

@@ -1,4 +1,4 @@
-import { View, Text, Image, SafeAreaView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native'
+import { StyleSheet, View, Text, Image, SafeAreaView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native'
 import React, {useState} from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { useNavigation } from '@react-navigation/native'
@@ -12,6 +12,8 @@ export default function LoginScreen() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [failMessage, setFailMessage] = useState("");
+    const [userType, setUserType] = useState('publicUser'); 
+
 
 
     const handleLogin = async () => {
@@ -27,11 +29,11 @@ export default function LoginScreen() {
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ email, password, role: 'publicUser' }), 
+            body: JSON.stringify({ email, password, role: userType === 'publicUser' ? 'publicUser' : 'company' }), 
           });
       
           const data = await response.json();
-      
+                
           if (response.ok) {
             await AsyncStorage.setItem('token', data.token);
             console.log('Login successful', data);
@@ -82,6 +84,22 @@ export default function LoginScreen() {
                         Login
                 </Animated.Text>
             </View>
+
+            <View style={styles.userTypeContainer}>
+                        <TouchableOpacity
+                            style={[styles.userTypeButton, userType === 'publicUser' && styles.selected]}
+                            onPress={() => setUserType('publicUser')}
+                        >
+                            <Text style={styles.userTypeText}>Public User</Text>
+                        </TouchableOpacity>
+                        
+                        <TouchableOpacity
+                            style={[styles.userTypeButton, userType === 'company' && styles.selected]}
+                            onPress={() => setUserType('company')}
+                        >
+                            <Text style={styles.userTypeText}>Company</Text>
+                        </TouchableOpacity>
+                        </View>
 
             {failMessage && (
             <View style={{ alignItems: 'center', marginVertical: 10 }}>
@@ -141,3 +159,43 @@ export default function LoginScreen() {
     </KeyboardAvoidingView>
   )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'white', 
+    },
+    overlay: {
+        ...StyleSheet.absoluteFillObject, 
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'white', 
+    },
+    lottie: {
+        width: 150,
+        height: 150, 
+    },
+
+    successText: {
+        marginTop: 20, 
+        fontSize: 18,
+        color: 'green', 
+        textAlign: 'center',
+    }, 
+    userTypeContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginVertical: 20,
+      },
+      userTypeButton: {
+        backgroundColor: '#e0e0e0',
+        padding: 10,
+        marginHorizontal: 5,
+      },
+      selected: {
+        backgroundColor: '#8b4513',
+      },
+      userTypeText: {
+        color: 'white',
+      },
+}); 

@@ -42,6 +42,7 @@ router.get(
                 parking_count: company?.parking_count,
                 locker_count: company?.locker_count,
                 phone: company?.phone_number,
+                role: "company",
               });
             } else if (role === "publicUser") {
               const publicUser = await prisma.public_users.findFirst({
@@ -54,6 +55,7 @@ router.get(
                 username: publicUser?.username,
                 phone: publicUser?.phone_number,
                 avatar: publicUser?.profile_image_key,
+                role: "publicUser",
               });
             }
             console.log("c");

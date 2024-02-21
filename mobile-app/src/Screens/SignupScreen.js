@@ -6,6 +6,7 @@ import Animated, { FadeIn, FadeInDown, FadeInUp } from 'react-native-reanimated'
 import LottieView from 'lottie-react-native';
 
 
+
 export default function SignupScreen() {
     const navigation = useNavigation();
     const [username, setUsername] = useState('');
@@ -13,6 +14,11 @@ export default function SignupScreen() {
     const [password, setPassword] = useState('');
     const [phone, setPhone] = useState('');
     const [successAnimation, setSuccessAnimation] = useState(false);
+    const [userType, setUserType] = useState('publicUser'); 
+    const[companyName, setCompanyName] = useState('');
+    const[companyAddress, setCompanyAddress] = useState('');
+
+
 
     const [successMessage, setSuccessMessage] = useState("");
     const [failMessage, setFailMessage] = useState("");
@@ -22,10 +28,11 @@ export default function SignupScreen() {
         setFailMessage("");
 
         // URL should be replaced with your actual backend endpoint
-         const url = 'http://192.168.2.13:3000/signup/public-user';
-        // const url = ' http://localhost:3000/signup/public-user'; 
+        const url = userType === 'publicUser' ?
+        'http://192.168.2.13:3000/signup/public-user' :
+        'http://192.168.2.13:3000/signup/management-company';        //  OR const url = ' http://localhost:3000/signup/public-user'; 
 
-      
+ if (userType === 'publicUser') {     
         try {
           const response = await fetch(url, {
             method: 'POST',
@@ -39,7 +46,7 @@ export default function SignupScreen() {
               phone
             }),
           });
-      
+
           const data = await response.json();
       
           if (response.ok) {
@@ -57,8 +64,43 @@ export default function SignupScreen() {
         } catch (error) {
           console.error('Signup error:', error);
           setFailMessage("Signup failed. Please try again.");}
-      };
-      
+      } else {
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    companyName,
+                    email,
+                    address: companyAddress,
+                    password,
+                    phone,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log('Signup successful', data);
+                setSuccessMessage("Signup successful! You can now login.");
+                setSuccessAnimation(true);
+
+                setTimeout(() => {
+                    setSuccessAnimation(false);
+                    navigation.navigate('Login');
+                }, 2000)
+            } else {
+                console.error('Signup failed:', data.message);
+                setFailMessage(data.message);}
+            } catch (error) {
+                console.error('Signup error:', error);
+                setFailMessage("Signup failed. Please try again.");}
+            };
+    };
+
+        
 
   return (
      <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
@@ -92,16 +134,29 @@ export default function SignupScreen() {
                 className="text-orange-900 font-bold tracking-wider text-5xl">
                     Sign Up
             </Animated.Text>
-        </View>
+             </View>
+                                <View style={styles.userTypeContainer}>
+                        <TouchableOpacity
+                            style={[styles.userTypeButton, userType === 'publicUser' && styles.selected]}
+                            onPress={() => setUserType('publicUser')}
+                        >
+                            <Text style={styles.userTypeText}>Public User</Text>
+                        </TouchableOpacity>
+                        
+                        <TouchableOpacity
+                            style={[styles.userTypeButton, userType === 'company' && styles.selected]}
+                            onPress={() => setUserType('company')}
+                        >
+                            <Text style={styles.userTypeText}>Company</Text>
+                        </TouchableOpacity>
+                        </View>
+
 
         {failMessage && (
             <View style={{ alignItems: 'center', marginVertical: 10 }}>
             <Text style={{ color: 'red' }}>{failMessage}</Text>
             </View>
         )}
-
-
-        {/* form */}
 
         {successAnimation && (
                 <View style={styles.overlay}>
@@ -117,15 +172,34 @@ export default function SignupScreen() {
                 )}
 
         <View className="flex items-center mx-5 space-y-4">
+        {userType === 'company' && (
+  <Animated.View entering={FadeInDown.delay(200).duration(1000).springify()} className="bg-black/5 p-5 rounded-2xl w-full">
+    <TextInput
+      placeholder="Company Name"
+      placeholderTextColor={'gray'}
+     value={companyName}
+    onChangeText={setCompanyName}
+/>
+  </Animated.View>
+)}
             <Animated.View 
                 entering={FadeInDown.duration(1000).springify()} 
                 className="bg-black/5 p-5 rounded-2xl w-full">
+                 {userType === 'publicUser' ? (
                 <TextInput
-                    placeholder="Username"
-                    placeholderTextColor={'gray'}
-                    value={username}
-                    onChangeText={setUsername}
+                placeholder="Username"
+                placeholderTextColor={'gray'}
+                value={username}
+                onChangeText={setUsername}
                 />
+            ) : (
+                <TextInput
+                placeholder="Address"
+                placeholderTextColor={'gray'}
+                value={companyAddress} 
+                onChangeText={setCompanyAddress} 
+                />
+            )}
             </Animated.View>
             <Animated.View 
                 entering={FadeInDown.delay(200).duration(1000).springify()} 
@@ -205,5 +279,21 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: 'green', 
         textAlign: 'center',
-    }
+    }, 
+    userTypeContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginVertical: 20,
+      },
+      userTypeButton: {
+        backgroundColor: '#e0e0e0',
+        padding: 10,
+        marginHorizontal: 5,
+      },
+      selected: {
+        backgroundColor: '#8b4513',
+      },
+      userTypeText: {
+        color: 'white',
+      },
 });
