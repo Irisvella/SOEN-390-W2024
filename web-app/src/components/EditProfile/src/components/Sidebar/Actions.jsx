@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   Button,
   Input,
@@ -7,10 +7,40 @@ import {
   useClipboard,
   VStack,
 } from '@chakra-ui/react'
+import { useNavigate } from 'react-router-dom';
 
 export default function Actions() {
-  const value = 'User Email would go here or we could put registration key'
-  const { hasCopied, onCopy } = useClipboard(value)
+  const [userEmail, setUserEmail] = useState(''); 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchUserEmail = async () => {
+      const token = localStorage.getItem('token'); 
+      try {
+        const response = await fetch('http://localhost:3000/profile', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = await response.json();
+        if (response.ok) {
+                    // need to adjusst/make sure user email is sent from the backened 
+
+          setUserEmail(data.email); 
+        } else {
+          console.error('Failed to fetch email:', data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching email:', error);
+      }
+    };
+
+    fetchUserEmail();
+  }, []);
+
+  const { hasCopied, onCopy } = useClipboard(userEmail)
 
   const profileUrl = useRef(null)
 
@@ -21,6 +51,12 @@ export default function Actions() {
     }
   })
 
+  const logout = () => {
+    localStorage.removeItem('token'); 
+    navigate('/login');
+  };
+  
+
   return (
     <VStack py={8} px={5} spacing={3}>
       <InputGroup>
@@ -28,20 +64,17 @@ export default function Actions() {
           ref={profileUrl}
           type="url"
           color="brand.blue"
-          value={value}
+          value={userEmail}
           userSelect="all"
           isReadOnly
           _focus={{ borderColor: 'brand.blue' }}
         />
         <InputRightAddon bg="transparent" px={0} overflow="hidden">
           <Button onClick={onCopy} variant="link">
-            <svg width="1.2em" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
-              <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
-            </svg>
           </Button>
         </InputRightAddon>
       </InputGroup>
+      <Button colorScheme="red" onClick={logout}>Logout</Button>
     </VStack>
   )
 }
