@@ -1,11 +1,13 @@
 import express from 'express';
 import request from 'supertest';
-
+import { app } from './setup.test';
 import signupRouter from '../routes/signup'; 
 import prisma from '../prisma/client'; 
 import bcrypt from 'bcryptjs';
 
-// Mocks the prisma client to prevent any actual database changes during testing
+
+
+/*
 jest.mock('../prisma/client', () => ({
   users: {
     findFirst: jest.fn(),
@@ -34,7 +36,9 @@ const app = express();
 app.use(express.json());
 app.use('/signup', signupRouter); //attaches the signupRouter to the /signup route
 
+*/
 
+// USER TESTS 
 // the describe blocks defines the test suite for the signup functions for public users
 describe('POST /signup/public-user', () => {
   it('should create a new public user with valid data', async () => {
@@ -66,6 +70,7 @@ describe('POST /signup/public-user', () => {
     });
   });
 
+
   it('should not create a user if they already exist', async () => {
     const userData = {
       username: 'testuser',
@@ -87,4 +92,50 @@ describe('POST /signup/public-user', () => {
 
 });
 
- // TODO Company sign up tests
+
+//COMPANY TESTS
+describe('POST /signup/management-company', () => {
+  it('should create a new management company with valid data', async () => {
+    const companyData = {
+      companyName: 'Test Company',
+      email: 'company@example.com',
+      password: 'securepassword',
+      address: '123 Business St.',
+      phone: '1234567890',
+    };
+
+    // Mock the prisma client responses for this specific test case
+    (prisma.users.findFirst as jest.Mock).mockResolvedValueOnce(null); // Simulate no existing company found
+    (prisma.users.create as jest.Mock).mockResolvedValueOnce({ id: 1 }); // Simulate user (company) creation in DB
+    (prisma.management_companies.create as jest.Mock).mockResolvedValueOnce({}); // Simulate company creation in DB
+
+    // Make a POST request to the signup endpoint with the companyData
+    const response = await request(app).post('/signup/management-company').send(companyData);
+
+    // Assertions to check if the response is as expected for successful signup
+    expect(response.statusCode).toBe(201); // Expect a 201 status code for successful creation
+    expect(response.body.message).toBe('User created successfully'); // Expect the success message in the response
+  });
+
+  it('should not create a management company if the email already exists', async () => {
+    const companyData = {
+      companyName: 'Test Company',
+      email: 'company@example.com',
+      password: 'securepassword',
+      address: '123 Business St.',
+      phone: '1234567890',
+      };
+
+      (prisma.users.findFirst as jest.Mock).mockResolvedValueOnce({
+        email: companyData.email,
+        // ...other user properties as needed
+      });
+      
+      // Make a POST request to the signup endpoint with the companyData that already exists
+      const response = await request(app).post('/signup/management-company').send(companyData);
+      
+      // Assertions to check if the response is as expected when a company already exists
+      expect(response.statusCode).toBe(409); // Expect a 409 status code for conflict (email already exists)
+      expect(response.body.message).toBe('Email already exists'); // Expect the message indicating the email already exists
+    });
+  });
