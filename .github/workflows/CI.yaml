@@ -9,7 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    environment: 
+      name: .env
     strategy:
       matrix:
         node-version: [20.x]
