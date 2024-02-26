@@ -5,9 +5,6 @@ on:
     branches: [ "tests-andy" ]  
   pull_request:
     branches: [ "tests-andy" ] 
-env:
-  DATABASE_URL: ${{ secrets.DATABASE_URL }}
-  SECRET: ${{ secrets.SECRET }}
     
 jobs:
   build:
@@ -21,6 +18,13 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
+      with:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SECRET: ${{ secrets.SECRET }}
+      env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SECRET: ${{ secrets.SECRET }}
+      
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
