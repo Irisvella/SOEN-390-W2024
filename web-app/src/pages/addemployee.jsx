@@ -4,6 +4,7 @@ import { Box, Typography, TextField, Button, Select, MenuItem, FormControl, Inpu
 
 const AddEmployee = () => {
   const [employeeData, setEmployeeData] = useState({
+    employee_id: '',
     firstName: '',
     lastName: '',
     role: '',
@@ -22,6 +23,7 @@ const AddEmployee = () => {
     console.log('Employee data submitted:', employeeData);
     // Reset the form
     setEmployeeData({
+      employee_id: '',
       firstName: '',
       lastName: '',
       role: '',
@@ -36,6 +38,15 @@ const AddEmployee = () => {
           Add Employee
         </Typography>
         <form>
+        <TextField
+            fullWidth
+            label="Employee id"
+            variant="outlined"
+            name="employee_id"
+            value={employeeData.firstName}
+            onChange={handleChange}
+            margin="normal"
+          />
           <TextField
             fullWidth
             label="First Name"
