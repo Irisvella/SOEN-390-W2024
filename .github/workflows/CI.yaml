@@ -5,6 +5,9 @@ on:
     branches: [ "tests-andy" ]  
   pull_request:
     branches: [ "tests-andy" ] 
+env:
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    
 jobs:
   build:
     runs-on: ubuntu-latest
