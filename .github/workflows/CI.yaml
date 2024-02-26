@@ -17,18 +17,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
     - name: Use Node.js ${{ matrix.node-version }}
-      
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+
+    - name: Install dependencies and run tests in ${{ matrix.project }}
+      env:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
         SECRET: ${{ secrets.SECRET }}
-    env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      SECRET: ${{ secrets.SECRET }}
-    - name: Install dependencies and run tests in ${{ matrix.project }}
       run: |
         cd ${{ matrix.project }}
         npm ci
