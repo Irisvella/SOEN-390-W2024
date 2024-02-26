@@ -7,6 +7,7 @@ import MinApp from './components/EditProfile/src/container/MinApp.tsx';
 
 import './App.css';
 import Home from './pages/Home.jsx';
+import Employeesinfo from './pages/employeesinfo.jsx';
 
 function App() {
   return (
@@ -17,7 +18,7 @@ function App() {
         <Route path="/login" element={<Login />} /> 
          <Route path="/" element={<Home />} /> 
          <Route path="/ProfileDash" element={<MinApp />} /> 
-          
+         <Route path="/Employeesinfo" element={<Employeesinfo/>} /> 
       </Routes>
     </Router>
   );
