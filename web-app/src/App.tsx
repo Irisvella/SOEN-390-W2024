@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SignUp from './components/Authentication/SignUp.tsx';
 import Login from './components/Authentication/Login.tsx';
 import MinApp from './components/EditProfile/src/container/MinApp.tsx';
+import Addemployee from './pages/addemployee.jsx';
 
 import './App.css';
 import Home from './pages/Home.jsx';
@@ -19,6 +20,7 @@ function App() {
          <Route path="/" element={<Home />} /> 
          <Route path="/ProfileDash" element={<MinApp />} /> 
          <Route path="/Employeesinfo" element={<Employeesinfo/>} /> 
+         <Route path="/Addemployee" element={<Addemployee />} /> 
       </Routes>
     </Router>
   );

@@ -5,6 +5,9 @@ import { DataGrid } from '@mui/x-data-grid';
 import Grid from '@mui/material/Grid';
 import sampleAddressImage from '../assets/images/sampleproperty.png';
 import { Typography, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import AddEmployee from './addemployee';
+import { Pages } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
 
 /* Sample data columns for the DataGrid */
 const columns = [
@@ -96,9 +99,11 @@ const Employeesinfo = () => {
               </Button>
               {!editMode && (
                 // Render "Add Employee" button only when not in edit mode
+                <Link to="/addemployee" style={{ textDecoration: 'none' }}>
                 <Button variant="outlined" color="primary" style={{ marginLeft: '8px' }} onClick={() => console.log('Add Employee clicked')}>
                   Add Employee
                 </Button>
+                </Link>
               )}
               {editMode && (
                 <>
