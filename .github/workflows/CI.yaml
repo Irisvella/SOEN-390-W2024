@@ -7,7 +7,7 @@ on:
     branches: [ "tests-andy" ] 
 env:
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
-  JWT_SECRET: ${{ secrets.SECRET }}  
+    
 jobs:
   build:
     runs-on: ubuntu-latest
