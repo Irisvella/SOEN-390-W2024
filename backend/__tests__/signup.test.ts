@@ -114,7 +114,7 @@ describe('POST /signup/management-company', () => {
 
     // Assertions to check if the response is as expected for successful signup
     expect(response.statusCode).toBe(201); // Expect a 201 status code for successful creation
-    expect(response.body.message).toBe('User created successfully'); // Expect the success message in the response
+    expect(response.body.message).toBe('User created successfully'); 
   });
 
   it('should not create a management company if the email already exists', async () => {
@@ -128,7 +128,6 @@ describe('POST /signup/management-company', () => {
 
       (prisma.users.findFirst as jest.Mock).mockResolvedValueOnce({
         email: companyData.email,
-        // ...other user properties as needed
       });
       
       // Make a POST request to the signup endpoint with the companyData that already exists
@@ -136,6 +135,6 @@ describe('POST /signup/management-company', () => {
       
       // Assertions to check if the response is as expected when a company already exists
       expect(response.statusCode).toBe(409); // Expect a 409 status code for conflict (email already exists)
-      expect(response.body.message).toBe('Email already exists'); // Expect the message indicating the email already exists
+      expect(response.body.message).toBe('Email already exists'); 
     });
   });

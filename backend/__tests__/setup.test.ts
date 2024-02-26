@@ -24,6 +24,15 @@ jest.mock('../prisma/client', () => ({
     },
     management_companies: {
       create: jest.fn(),
+      findFirst: jest.fn().mockImplementation(() => {
+        return Promise.resolve( {
+            id: 2,
+            email: 'companytest@mail.com',
+            hashed_password: 'hashed_password',
+            company_name: 'testcompany',
+            phone: '1234567890',
+        })})
+
     },
     $transaction: jest.fn(async (cb) => {
       await cb();
@@ -35,7 +44,7 @@ jest.mock('../prisma/client', () => ({
     hash: jest.fn((_, __, callback) => {
       callback(null, 'hashed_password');
     }),
-    compareSync: jest.fn().mockReturnValue(true), // or false, depending on the test
+    compareSync: jest.fn().mockReturnValue(true), // or false, depending on the test, MODIFY HERE as needed
   }));
 
   

@@ -8,7 +8,10 @@ jest.mock('bcryptjs', () => ({
 }));
 
 
-  describe('POST /login', () => {
+  describe('POST /login for users', () => {
+    beforeEach(() => {
+      jest.clearAllMocks(); // Clear mocks between tests to ensure a clean slate
+    });
     it('should allow a public user to login with correct credentials', async () => {
       // Mock data to represent a public user
       const mockPublicUser = {
@@ -89,6 +92,79 @@ jest.mock('bcryptjs', () => ({
           expect(response.statusCode).toBe(401);
           expect(response.body.message).toBe('User does not exist');
         });
-      
-        // Company shouldnt be able to login as a public user, and vice versa
       });
+
+describe('POST /login for companies', () => {
+  beforeEach(() => {
+    jest.clearAllMocks(); 
+  });
+
+  it('should allow a management company to login with correct credentials', async () => {
+    const mockCompanyUser = {
+      id: 2,
+      email: 'companytest@mail.com',
+      hashed_password: 'hashed_password',
+    };
+
+    const mockCompanyDetails = {
+      id: 2,
+      company_name: 'testcompany',
+      phone: '1234567890',
+
+    };
+
+    //Mocks
+    (prisma.users.findFirst as jest.Mock).mockResolvedValueOnce(mockCompanyUser);
+    (bcrypt.compareSync as jest.Mock).mockReturnValueOnce(true);
+    (prisma.management_companies.findFirst as jest.Mock).mockResolvedValueOnce(mockCompanyDetails);
+
+
+    const response = await request(app)
+      .post('/login')
+      .send({ role: 'company', email: mockCompanyUser.email, password: 'correctPassword' });
+
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toHaveProperty('token'); 
+    expect(response.body.data).toEqual({
+      companyName: mockCompanyDetails.company_name,
+    });
+  });
+
+  it('should not allow a management company to login with incorrect password', async () => {
+    const mockCompanyEmail = 'company@example.com';
+
+    // Mock prisma for user lookup to simulate finding the user
+    (prisma.users.findFirst as jest.Mock).mockResolvedValueOnce({
+      id: 1,
+      email: mockCompanyEmail,
+      hashed_password: 'hashed_password',
+    });
+
+    // Mock bcrypt to simulate password check failing
+    (bcrypt.compareSync as jest.Mock).mockReturnValueOnce(false);
+
+    // Perform the login request with incorrect password
+    const response = await request(app)
+      .post('/login')
+      .send({ role: 'company', email: mockCompanyEmail, password: 'incorrectPassword' });
+
+    // Assertions
+    expect(response.statusCode).toBe(401);
+    expect(response.body.message).toBe('Incorrect password');
+  });
+
+  it('should not allow a company to login if they do not exist', async () => {
+    (prisma.users.findFirst as jest.Mock).mockResolvedValueOnce(null);
+
+    const response = await request(app)
+      .post('/login')
+      .send({ role: 'company', email: 'nonexistent@example.com', password: 'password123' });
+
+    expect(response.statusCode).toBe(401);
+    expect(response.body.message).toBe('User does not exist');
+  });
+
+
+
+});
