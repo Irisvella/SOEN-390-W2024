@@ -5,39 +5,6 @@ import signupRouter from '../routes/signup';
 import prisma from '../prisma/client'; 
 import bcrypt from 'bcryptjs';
 
-
-
-/*
-jest.mock('../prisma/client', () => ({
-  users: {
-    findFirst: jest.fn(),
-    create: jest.fn(),
-  },
-  public_users: {
-    create: jest.fn(),
-  },
-  management_companies: {
-    create: jest.fn(),
-  },
-  $transaction: jest.fn(async (cb) => {
-    await cb();
-  }),
-}));
-
-// Mock bcrypt to prevent actual password hashing during testing
-jest.mock('bcryptjs', () => ({
-  hash: jest.fn((_, __, callback) => {
-    callback(null, 'hashed_password');
-  }),
-}));
-
-// Creates a new express app instance and use the signupRouter for testing
-const app = express();
-app.use(express.json());
-app.use('/signup', signupRouter); //attaches the signupRouter to the /signup route
-
-*/
-
 // USER TESTS 
 // the describe blocks defines the test suite for the signup functions for public users
 describe('POST /signup/public-user', () => {
@@ -87,9 +54,6 @@ describe('POST /signup/public-user', () => {
     expect(response.statusCode).toBe(409);
     expect(response.body.message).toBe('User already exists');
   });
-
-  //additional test cases: s
-
 });
 
 
@@ -138,3 +102,50 @@ describe('POST /signup/management-company', () => {
       expect(response.body.message).toBe('Email already exists'); 
     });
   });
+
+//SERVER TESTING
+describe('/public-user signup validation', () => {
+  it('should return 400 Bad Request for invalid input data', async () => {
+    const invalidUserData = {
+      username: '', 
+      email: 'notAValidEmail', 
+      password: '123', // Password too short, less than 6 characters
+      phone: '', 
+    };
+
+    const response = await request(app)
+      .post('/signup/public-user') 
+      .send(invalidUserData);
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body.some((error: { path: string | string[]; }) => error.path.includes('email'))).toBeTruthy();
+    expect(response.body.some((error: { path: string | string[]; }) => error.path.includes('password'))).toBeTruthy();
+    expect(response.body.some((error: { path: string | string[]; }) => error.path.includes('username'))).toBeTruthy();
+
+  });
+
+  it('should return 400 Bad Request for invalid input data', async () => {
+    const invalidUserData = {
+      companyName: '', 
+      email: 'notAValidEmail', 
+      password: '123', // Password too short, less than 6 characters
+      phone: '', 
+    };
+
+    const response = await request(app)
+      .post('/signup/management-company') 
+      .send(invalidUserData);
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body.some((error: { path: string | string[]; }) => error.path.includes('email'))).toBeTruthy();
+    expect(response.body.some((error: { path: string | string[]; }) => error.path.includes('password'))).toBeTruthy();
+    expect(response.body.some((error: { path: string | string[]; }) => error.path.includes('companyName'))).toBeTruthy();
+
+  });
+
+
+
+  
+
+
+});
