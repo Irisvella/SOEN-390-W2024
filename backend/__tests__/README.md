@@ -1,2 +1,3 @@
 to run tests: 
-npm test
+npm test 
+(to get code coverage) npm test -- --coverage

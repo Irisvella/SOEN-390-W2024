@@ -4,6 +4,7 @@ import logInRouter from '../routes/login';
 import prisma from '../prisma/client';
 import bcrypt from 'bcryptjs';
 
+
 // Put mocks here
 jest.mock('../prisma/client', () => ({
     users: {

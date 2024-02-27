@@ -2,6 +2,7 @@ import request from 'supertest';
 import { app } from './setup.test'; // Import the app from your setup.test.ts file
 import prisma from '../prisma/client'; // Adjust the import path as necessary
 import bcrypt from 'bcryptjs';
+import { Prisma } from '@prisma/client';
 
 jest.mock('bcryptjs', () => ({
   compareSync: jest.fn(),
@@ -113,7 +114,6 @@ describe('POST /login for companies', () => {
 
     };
 
-    //Mocks
     (prisma.users.findFirst as jest.Mock).mockResolvedValueOnce(mockCompanyUser);
     (bcrypt.compareSync as jest.Mock).mockReturnValueOnce(true);
     (prisma.management_companies.findFirst as jest.Mock).mockResolvedValueOnce(mockCompanyDetails);
@@ -144,12 +144,10 @@ describe('POST /login for companies', () => {
     // Mock bcrypt to simulate password check failing
     (bcrypt.compareSync as jest.Mock).mockReturnValueOnce(false);
 
-    // Perform the login request with incorrect password
     const response = await request(app)
       .post('/login')
       .send({ role: 'company', email: mockCompanyEmail, password: 'incorrectPassword' });
 
-    // Assertions
     expect(response.statusCode).toBe(401);
     expect(response.body.message).toBe('Incorrect password');
   });
@@ -165,6 +163,69 @@ describe('POST /login for companies', () => {
     expect(response.body.message).toBe('User does not exist');
   });
 
+  describe('POST /login - Input Validation', () => {
+    it('should return 400 Bad Request for invalid input data', async () => {
+      const invalidData = {
+        email: 'notAnEmail', // no @ symbol
+        password: '123' // length of password should be at least 6
+      };
+  
+      const response = await request(app)
+        .post('/login')
+        .send(invalidData);
+  
+      expect(response.status).toBe(400);
+      // You can also assert that the response body contains the validation errors
+    expect(response.body.some((error: { path: string | string[]; }) => error.path.includes('email'))).toBeTruthy();
+    expect(response.body.some((error: { path: string | string[]; }) => error.path.includes('password'))).toBeTruthy();
+    expect(response.body.some((error: { path: string | string[]; }) => error.path.includes('role'))).toBeTruthy();
+    });
+    
 
+    /*  Error Message PrismaClientUnknownRequestError
+    it('should return 401 if PrismaClientUnknownRequestError is thrown', async () => {
+      (prisma.users.findFirst as jest.Mock).mockRejectedValue(new Prisma.PrismaClientUnknownRequestError('User does not exist', 2.30.0));
+      
+      const response = await request(app).post('/login').send({
+        email: 'user@example.com',
+        password: 'password123',
+        role: 'publicUser'
+      });
+  
+      expect(response.status).toBe(401);
+      expect(response.body.message).toBe('User does not exist');
+    });
+    */
 
+    it('should return 500 for unexpected errors', async () => {
+      // Mock a function used in the route to throw a generic error
+      (prisma.users.findFirst as jest.Mock).mockRejectedValue(new Error('Unexpected error'));
+  
+      const response = await request(app).post('/login').send({
+        email: 'user@example.com',
+        password: 'password123',
+        role: 'publicUser'
+      });
+  
+      expect(response.status).toBe(500);
+      expect(response.body.message).toBe('Unexpected error');
+    });
+  });
+});
+
+test('returns 401 Unauthorized for non-existing publicUser', async () => {
+  (prisma.users.findFirst as jest.Mock).mockResolvedValue({
+    id: 'user_id',
+    email: 'user@example.com',
+    hashed_password: 'hashed_password'
+  });
+
+  (prisma.public_users.findFirst as jest.Mock).mockResolvedValue(null);
+
+  const response = await request(app)
+    .post('/login')
+    .send({ email: 'user@example.com', password: 'password', role: 'publicUser' });
+
+  expect(response.status).toBe(401);
+  expect(response.body).toEqual({ message: "Unauthorized" });
 });
