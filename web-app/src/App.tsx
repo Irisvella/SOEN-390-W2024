@@ -7,7 +7,6 @@ import MinApp from './components/EditProfile/src/container/MinApp.tsx';
 
 import './App.css';
 import Home from './pages/Home.jsx';
-import CreateListingPage from './pages/CreateListingPage.tsx';
 
 function App() {
   return (
@@ -17,10 +16,9 @@ function App() {
         {/* You can add more routes here */}
         <Route path="/login" element={<Login />} /> 
          <Route path="/" element={<Home />} /> 
+         <Route path="/ManagementLanding" element={<ManagementLanding />} />
          <Route path="/ProfileDash" element={<MinApp />} /> 
-         <Route path="/CreateListingPage" element={<CreateListingPage />} /> 
-
-         
+          
       </Routes>
     </Router>
   );
