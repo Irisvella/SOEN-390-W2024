@@ -76,15 +76,6 @@ router.post(
 
       return res.status(201).json({ message: "User created successfully" });
     } catch (err) {
-      if (err instanceof z.ZodError) {
-        console.log(err.issues);
-        return res.status(400).json({ message: "One or more fields invalid" });
-      }
-
-      if (err instanceof Prisma.PrismaClientKnownRequestError) {
-        return res.status(409).json({ message: "User already exists" });
-      }
-
       return res.status(500).json({ message: "Unexpected error" });
     }
   },
@@ -142,11 +133,6 @@ router.post(
 
       return res.status(201).json({ message: "User created successfully" });
     } catch (err) {
-      if (err instanceof z.ZodError) {
-        console.log(err.issues);
-        return res.status(400).json({ message: "One or more fields invalid" });
-      }
-
       if (err instanceof Prisma.PrismaClientKnownRequestError) {
         return res.status(409).json({ message: "User exists already" });
       }
