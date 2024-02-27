@@ -1,5 +1,7 @@
-import React, { ChangeEvent, useState, FormEvent } from 'react';
+
+import React, { ChangeEvent, useState, FormEvent,SetStateAction } from 'react';
 import { Container, CssBaseline, Box, Avatar, Typography, TextField, Button ,Grid} from "@mui/material";
+
 import FitbitIcon from '@mui/icons-material/Fitbit';
 import Navbar from '../Navbar'; // Adjust the import path accordingly
 import bgImage from '../../bg2.jpg'; // Adjust the import path accordingly
@@ -15,6 +17,7 @@ interface FormData {
 }
 
 const SignUp = () => {
+  const [role, setRole] = useState('');
   const [step, setStep] = useState<number>(1);
   const [fileName, setFileName] = useState('');
   const [formData, setFormData] = useState<FormData>({
@@ -46,20 +49,22 @@ const SignUp = () => {
     }));
   };
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    // Check if e.target.files is not null and has at least one file
+const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setFormData({
         ...formData,
         profilePicture: e.target.files[0],
       });
     }
-};
-
+  };
+  
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    // Implement your submission logic here
     console.log(formData);
+  };
+  
+  const handleChangeRole = (event: { target: { value: SetStateAction<string>; }; }) => {
+    setRole(event.target.value);
   };
 
   const nextStep = () => setStep(step + 1);

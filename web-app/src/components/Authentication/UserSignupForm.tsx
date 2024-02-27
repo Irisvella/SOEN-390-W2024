@@ -15,15 +15,15 @@ const UserSignupForm = () => {
 
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const validateEmail = (email) => emailRegex.test(email);
+  const validateEmail = (email: string) => emailRegex.test(email);
   const phoneRegex = /^\d{10}$/; // Adjust based on required format
-  const validatePhone = (phone) => phoneRegex.test(phone);
+  const validatePhone = (phone: string) => phoneRegex.test(phone);
   const passwordsMatch = password === confirmPassword;
 
 
 
  
-  const handleRegister = async (e) => {
+  const handleRegister = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     setSuccessMessage("");
     setFailMessage("");

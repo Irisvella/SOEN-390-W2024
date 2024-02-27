@@ -89,16 +89,6 @@ router.post(
         }
       }
     } catch (err) {
-      if (err instanceof z.ZodError) {
-        console.log(err.issues);
-        return res.status(400).json({ message: "Bad request" });
-      }
-
-      if (err instanceof Prisma.PrismaClientUnknownRequestError) {
-        console.log(err);
-        return res.status(401).json({ message: "User does not exist" });
-      }
-
       console.log("error from /login ---- ", err);
       return res.status(500).json({ message: "Unexpected error" });
     }

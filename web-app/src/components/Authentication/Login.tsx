@@ -1,6 +1,6 @@
 
 // LoginPage.js
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import {
   Container,
   CssBaseline,
@@ -19,7 +19,9 @@ const LoginPage = () => {
   const [role, setRole] = useState("");
   
 
-  const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+
+  const handleRoleChange = (event: { target: { value: SetStateAction<string>; }; }) => {
+
     setRole(event.target.value);
   };
   

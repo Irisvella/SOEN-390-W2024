@@ -10,7 +10,7 @@ const CompanyLoginForm = () => {
   const [failMessage, setFailMessage] = useState("");
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const validateEmail = (email) => emailRegex.test(email);
+  const validateEmail = (email: string) => emailRegex.test(email);
 
   const handleLogin = async () => {
   
