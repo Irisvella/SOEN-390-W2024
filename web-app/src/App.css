@@ -326,7 +326,7 @@ ponents directly if needed */ .MuiTextField-root {
 /* PropertySlider.css */
 
 .property-slide img {
-  max-width: 150%;
+  max-width: 100%;
   height: 50vh;
   margin: 0 auto;
   object-fit: cover;
