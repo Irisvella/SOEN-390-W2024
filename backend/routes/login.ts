@@ -12,8 +12,8 @@ import { Request, Response, NextFunction } from "express";
 
 const User = z.object({
   role: z.enum(["publicUser", "company"]),
-  email: z.string().email(),
-  password: z.string().min(6),
+  email: z.string().trim().toLowerCase().email(),
+  password: z.string().trim().min(6),
 });
 
 router.post(
@@ -26,19 +26,20 @@ router.post(
       if (!result.success) {
         return res.status(400).json(result.error.issues);
       }
+      const { role, email, password } = result.data;
+      console.log("result.data is " + result.data.email);
 
       const userExists = await prisma.users.findFirst({
         where: {
-          email: body.email,
+          email: email,
         },
       });
       if (!userExists) {
-        console.log("a");
         return res.status(401).json({ message: "User does not exist" });
       }
 
       const checkPassword = bcrypt.compareSync(
-        body.password,
+        password,
         userExists.hashed_password,
       );
       if (!checkPassword) {
@@ -47,43 +48,55 @@ router.post(
 
       const token = jwt.sign(
         {
-          exp: Math.floor(Date.now() / 1000) + 60 * 60,
-          data: { id: userExists.id, role: body.role, email: body.email },
+          exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
+          data: {
+            id: userExists.id,
+            role,
+            email,
+            // might need "subRole" here for public users ('none', 'renter', 'owner')
+          },
         },
         process.env.SECRET as jwt.Secret,
       );
 
-      let subUserExists;
-      if (body.role === "publicUser") {
-        subUserExists = await prisma.public_users.findFirst({
+      if (role === "publicUser") {
+        const publicUserExists = await prisma.public_users.findFirst({
           where: {
-            id: userExists.id,
+            user_id: userExists.id,
           },
         });
-        if (!subUserExists) {
+        if (!publicUserExists) {
+          console.log("user was confirmed to not be a public user");
           return res.status(401).json({ message: "Unauthorized" });
         } else {
           return res.status(200).json({
             token,
             data: {
-              username: subUserExists.username,
-              imageKey: subUserExists.profile_image_key,
+              email,
+              firstName: publicUserExists.first_name,
+              lastName: publicUserExists.last_name,
+              role,
+              subRole: publicUserExists.role,
+              imageKey: publicUserExists.profile_image_key,
             },
           });
         }
       } else {
-        subUserExists = await prisma.management_companies.findFirst({
+        const companyUserExists = await prisma.management_companies.findFirst({
           where: {
-            id: userExists.id,
+            user_id: userExists.id,
           },
         });
-        if (!subUserExists) {
+        if (!companyUserExists) {
+          console.log("user was confirmed to not be a company");
           return res.status(401).json({ message: "Unauthorized" });
         } else {
           return res.status(200).json({
             token,
             data: {
-              companyName: subUserExists.company_name,
+              email,
+              companyName: companyUserExists.company_name,
+              role,
             },
           });
         }
