@@ -29,8 +29,10 @@ const Img = styled("img")({
 
 // EditListingForm component
 const EditListingForm = () => {
-  // State hooks for form inputs
+  // State hooks for form inputs 
   const [Address, setAddress] = useState("");
+  const [PostalCode, setPostalCode] = useState("");
+
   const [TotalUnit, setTotalUnit] = useState("");
   const [ParkingSpaces, setParkingSpaces] = useState("");
   const [Amenities, setAmenities] = useState("");
@@ -122,8 +124,8 @@ const EditListingForm = () => {
                       </label>
                       <Input
                         id="PostalCode"
-                        value={Address}
-                        onChange={(e) => setAddress(e.target.value)}
+                        value={PostalCode}
+                        onChange={(e) => setPostalCode(e.target.value)}
                         
                         sx={{
                           borderWidth: "1px",
