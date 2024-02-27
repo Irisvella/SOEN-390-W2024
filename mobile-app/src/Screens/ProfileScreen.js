@@ -47,8 +47,9 @@ export default function App() {
             if (response.ok) {
                 if (data.role === 'publicUser') {
                     setUserRole('publicUser');
-                    setUsername(data.username);
+                    setUsername('Hi ' + data.username);
                     setPhone(data.phone);
+                    setProfileImage(data.avatar);
                 } else if (data.role === 'company') {
                     setUserRole('company');
                     setCompanyName(data.companyName);
@@ -61,9 +62,48 @@ export default function App() {
             console.error('Error fetching profile:', error);
         }
     };
-      
-       
 
+      
+    const uploadImage = async (imageUri) => {
+
+        console.log("now in upload" + imageUri); 
+        const storedToken = await AsyncStorage.getItem('token');
+        const url = 'http://192.168.2.13:3000/profile/public-user';
+    
+        let formData = new FormData();
+        formData.append('isUpload', '1'); 
+    
+        
+        let uriParts = imageUri.split('.');
+        let fileType = uriParts[uriParts.length - 1];
+        console.log('fileType:', fileType); 
+        formData.append('avatar', {
+            uri: imageUri,
+            name: `photo.${fileType}`,
+            type: `image/${fileType}`, 
+        });
+    
+        try {
+            const response = await fetch(url, {
+                method: 'PATCH',
+                headers: {
+                    'Authorization': `Bearer ${storedToken}`,
+                },
+                body: formData,
+            });
+    
+            const data = await response.json();
+            if (response.ok) {
+                console.log('Upload successful', data);
+                fetchUserProfile();
+            } else {
+                console.error('Upload failed', data.message || 'Unknown error');
+            }
+        } catch (error) {
+            console.error('Error uploading image', error);
+        }
+    };
+    
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -75,10 +115,12 @@ export default function App() {
       
         console.log(result);
       
-        if (!result.cancelled) {
-          console.log(result.uri);
-         setProfileImage(result.uri); // need to send this to backend endpoint
-        }
+        if (!result.cancelled && result.assets && result.assets.length > 0) {
+            const imageUri = result.assets[0].uri;
+            console.log(imageUri);
+            uploadImage(imageUri);
+            fetchUserProfile();
+          }
       };
 
       useEffect(() => {
@@ -86,6 +128,7 @@ export default function App() {
           fetchUserProfile();
         });
       
+
         return fetchOnNavigate;
       }, [navigation]);
       
@@ -125,7 +168,7 @@ export default function App() {
 
                 <View style={{ alignSelf: "center" }}>
                     <View style={styles.profileImage}>
-                        <Image source={require("../../assets/profile-pic.jpg")} style={styles.image} resizeMode="center"></Image>
+                        <Image source={require("../../assets/avatar.png") } style={styles.image} resizeMode="center"></Image>
                     </View>
                 </View>
 
@@ -164,13 +207,13 @@ export default function App() {
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                         {/* We can insert condo plans here */}
                         <View style={styles.mediaImageContainer}>
-                            <Image source={require("../../assets/profile-pic.jpg")} style={styles.image} resizeMode="cover"></Image>
+                            <Image source={require("../../assets/condo.png")} style={styles.image} resizeMode="cover"></Image>
                         </View>
                         <View style={styles.mediaImageContainer}>
-                            <Image source={require("../../assets/profile-pic.jpg")} style={styles.image} resizeMode="cover"></Image>
+                            <Image source={require("../../assets/condo.png")} style={styles.image} resizeMode="cover"></Image>
                         </View>
                         <View style={styles.mediaImageContainer}>
-                            <Image source={require("../../assets/profile-pic.jpg")} style={styles.image} resizeMode="cover"></Image>
+                            <Image source={require("../../assets/condo.png")} style={styles.image} resizeMode="cover"></Image>
                         </View>
                     </ScrollView>
                 </View>
