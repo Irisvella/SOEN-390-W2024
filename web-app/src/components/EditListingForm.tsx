@@ -1,5 +1,5 @@
 // Import React and useState hook for state management
-import React, { useState } from "react";
+import { useState } from "react";
 
 // Import necessary Material-UI components and styles
 import {
@@ -39,7 +39,7 @@ const EditListingForm = () => {
   const [Description, setDescription] = useState("");
 
   // Handle form submission
-  function handleSubmit(event) {
+  function handleSubmit(event: { preventDefault: () => void; }) {
     event.preventDefault();
     console.log(Address, TotalUnit, ParkingSpaces, Amenities, Description);
   }
