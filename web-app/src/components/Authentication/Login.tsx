@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import FitbitIcon from "@mui/icons-material/Fitbit";
 import UserLoginForm from "../Authentication/UserLoginForm";
 import CompanyLoginForm from "../Authentication/CompanyLoginForm";
+import bgImage from '../../bg2.jpg';
 
 
 const LoginPage = () => {
@@ -28,7 +29,7 @@ const LoginPage = () => {
 
   return (
     <>
-      <Navbar /> {/* Render the Navbar component */}
+      <Navbar userName={undefined}/> {/* Render the Navbar component */}
       <div style={{
         backgroundImage: `url(${bgImage})`,
         backgroundSize: 'cover',
@@ -42,12 +43,26 @@ const LoginPage = () => {
       }}>
         <Box
 
-          sx={{
-            mt: 20,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
+         sx={{
+  backgroundColor: 'rgba(255, 255, 255, 0.8)',
+  borderRadius: '8px',
+  padding: '0.9rem',
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+  width: '100%',
+  maxWidth: '330px',
+  margin: 'auto',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  mt: {
+    xs: 5, // Margin top on xs screens
+    sm: 10, // Margin top on sm screens, you can adjust the value as needed
+  },
+  '@media screen and (max-width: 480px)': {
+    maxWidth: '88%', // Override maxWidth for very small screens
+    mt: -18, // Adjust marginTop for very small screens
+  },
+}}
         >
           <Avatar sx={{ m: 1, bgcolor: "salmon" }}>
             <FitbitIcon />
