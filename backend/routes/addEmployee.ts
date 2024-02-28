@@ -52,7 +52,6 @@ router.post(
 
                     public_user_id: user.id,
                     company_id: user.id,
-                    yearly_salary:60000.00,
                     role: body.role,
                 },
             });
