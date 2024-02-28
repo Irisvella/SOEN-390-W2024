@@ -26,8 +26,8 @@ import { Request, Response, NextFunction } from "express";
               if (role === "company") {
                 const company = await prisma.$queryRaw`
                 SELECT *
-                FROM property as p, owned_by as o
-                WHERE p.id = o.property_id AND ${id} = o.owner_id
+                FROM property AS p, owned_by AS o
+                WHERE p.id = o.property_id AND ${id} = o.owner_id;
                 `;
                 console.log("a");
                 return res.status(200).json({
@@ -40,10 +40,8 @@ import { Request, Response, NextFunction } from "express";
                   phone: company?.phone_number,
                 });
               } else if (role === "publicUser") {
-                const publicUser = await prisma.$queryRaw`
-                SELECT *
-                FROM property as p, owned_by as o
-                WHERE p.id = o.property_id AND ${id} = o.owner_id
+                const publicUser = await prisma.$queryRaw`SELECT * FROM property as p, owned_by as o
+                WHERE p.id = o.property_id AND ${id} = o.owner_id;
                 `;
                   
                 console.log("b");
