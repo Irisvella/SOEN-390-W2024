@@ -43,7 +43,7 @@ const AddEmployee = () => {
             label="Employee id"
             variant="outlined"
             name="employee_id"
-            value={employeeData.firstName}
+            value={employeeData.employee_id}
             onChange={handleChange}
             margin="normal"
           />
