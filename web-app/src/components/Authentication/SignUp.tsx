@@ -1,5 +1,5 @@
 // SignUpPage.js
-import  { useState } from 'react';
+import  { SetStateAction, useState } from 'react';
 import { Container, CssBaseline, Box, Avatar, Typography } from "@mui/material";
 import FitbitIcon from '@mui/icons-material/Fitbit';
 import UserSignupForm from '../Authentication/UserSignupForm';
@@ -8,7 +8,7 @@ import CompanySignupForm from '../Authentication/CompanySignupForm';
 const SignUp = () => {
   const [role, setRole] = useState("");
 
-  const handleChangeRole = (event) => {
+  const handleChangeRole = (event: { target: { value: SetStateAction<string>; }; }) => {
     setRole(event.target.value);
   };
 
