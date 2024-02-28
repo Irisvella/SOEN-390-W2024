@@ -2,7 +2,7 @@
 import { Container, CssBaseline, Grid } from "@mui/material";
 import Navbar from '../components/Navbar';
 import PropertySlider, { Property } from './PropertySlider';
-
+import Button from '@mui/material/Button';
 import "../App.css";
 
 // Assuming you have a similar structure for company properties
@@ -34,7 +34,11 @@ const companyProperties: Property[] = [
     },
    
   ];
-  
+  const handleAddProperty = () => {
+    // Here you can handle the logic to add a property
+    // For example, opening a dialog or redirecting to a form page
+    console.log('Add Property button clicked');
+  };
   const DashboardCompany = () => {
     const companyName = "CoolCompany";
   
@@ -44,13 +48,22 @@ const companyProperties: Property[] = [
         <Navbar userName={companyName} />
         <Container component="main" maxWidth="lg" sx={{ mt: 10, mb: 10 }}>
           <PropertySlider properties={companyProperties} />
+          {/* Add Property Button */}
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ mb: 2 }} // Adjust the margin as needed
+            onClick={handleAddProperty} // Replace with your actual event handler function
+          >
+            Add Property
+          </Button>
           <Grid container spacing={3}>
             {/* Additional company-specific content here */}
           </Grid>
         </Container>
       </>
     );
-  };
+  }
   
   export default DashboardCompany;
   
