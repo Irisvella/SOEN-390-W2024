@@ -40,7 +40,7 @@ const Navbar = () => {
           Login
         </Button>
       </div>
-      <button className='mobile-menu-icon' onClick={() => setMobile(!Mobile)}>
+      <button className='mobile-menu-icon' aria-label="menu" onClick={() => setMobile(!Mobile)}>
         {Mobile ? <ImCross /> : <FaBars />}
       </button>
     </nav>

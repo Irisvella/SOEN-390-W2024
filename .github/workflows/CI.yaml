@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         node-version: [20.x]
-        project: ["backend"]  # "web-app", "mobile-app"
+        project: ["backend", "web-app"]  # "web-app", "mobile-app"
 
     steps:
     - uses: actions/checkout@v3
