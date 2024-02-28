@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 import FitbitIcon from "@mui/icons-material/Fitbit";
 import UserLoginForm from "../Authentication/UserLoginForm";
 import CompanyLoginForm from "../Authentication/CompanyLoginForm";
-import bgImage from '../../bg2.jpg';
+
 
 
 const LoginPage = () => {
