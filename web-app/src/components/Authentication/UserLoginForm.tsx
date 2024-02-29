@@ -2,6 +2,7 @@ import { useState } from "react";
 import { TextField, Button, Box, Typography } from "@mui/material";
 
 
+
 const UserLoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -37,6 +38,7 @@ const UserLoginForm = () => {
   
 
   return (
+
     <Box sx={{ mt: 1 }}>
 
     {failMessage && (
@@ -44,6 +46,7 @@ const UserLoginForm = () => {
               {failMessage}
             </Typography>
           )}
+
       <TextField
         margin="normal"
         required
@@ -56,6 +59,7 @@ const UserLoginForm = () => {
         helperText={!validateEmail(email) && email.length > 0 ? "Invalid email format" : ""}
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        sx={{ marginBottom: '0px' }}
       />
 
       <TextField
@@ -68,6 +72,7 @@ const UserLoginForm = () => {
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        sx={{ marginBottom: '15px' }}
       />
 
       <Button
@@ -80,6 +85,7 @@ const UserLoginForm = () => {
       >
         Login
       </Button>
+
     </Box>
   );
 };
