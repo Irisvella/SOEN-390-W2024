@@ -46,7 +46,7 @@ const EditListingForm = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar userName={undefined} />
       <Paper
         sx={{
           p: 2,
