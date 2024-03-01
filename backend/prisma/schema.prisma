@@ -101,7 +101,6 @@ model property {
   unit_id          Int
   size             Int
   condo_fee        Decimal            @db.Decimal(10, 2)
-  image_url        String?
   amenities        amenities[]
   belongs_to       belongs_to[]
   owned_by         owned_by[]

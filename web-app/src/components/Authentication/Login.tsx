@@ -1,4 +1,3 @@
-
 // LoginPage.js
 import { SetStateAction, useState } from "react";
 import {
@@ -13,8 +12,6 @@ import { Link } from "react-router-dom";
 import FitbitIcon from "@mui/icons-material/Fitbit";
 import UserLoginForm from "../Authentication/UserLoginForm";
 import CompanyLoginForm from "../Authentication/CompanyLoginForm";
-
-
 
 const LoginPage = () => {
   const [role, setRole] = useState("");
@@ -63,5 +60,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-
-
