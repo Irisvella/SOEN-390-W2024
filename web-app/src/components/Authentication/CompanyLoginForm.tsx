@@ -1,5 +1,7 @@
+
 import  { useState } from 'react';
 import { TextField, Button, Box, Typography } from "@mui/material";
+
 
 
 const CompanyLoginForm = () => {
@@ -33,21 +35,25 @@ const CompanyLoginForm = () => {
     } catch (error) {
       console.error('Login error:', error);
       setFailMessage('An error occurred. Please try again.');}
+
   };
   
 
   return (
+
     <Box sx={{ mt: 1 }}>
        {failMessage && (
             <Typography color="error" textAlign="center">
               {failMessage}
             </Typography>
           )}
+
       <TextField
+       className="form-field"
         margin="normal"
         required
         fullWidth
-        id="email"
+        id="company-email"
         label="Email Address"
         name="email"
         autoFocus
@@ -55,19 +61,23 @@ const CompanyLoginForm = () => {
         helperText={!validateEmail(email) && email.length > 0 ? "Invalid email format" : ""}
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        sx={{ marginBottom: '0px' }}
       />
 
       <TextField
+       className="form-field"
         margin="normal"
         required
         fullWidth
-        id="password"
+        id="company-password"
         name="password"
         label="Password"
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        sx={{ marginBottom: '15px' }}
       />
+
 
       <Button
         fullWidth
@@ -80,6 +90,7 @@ const CompanyLoginForm = () => {
       >
         Login
       </Button>
+
     </Box>
   );
 };
