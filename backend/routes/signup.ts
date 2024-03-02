@@ -4,32 +4,30 @@ import * as z from "zod";
 import prisma from "../prisma/client";
 import bcrypt from "bcryptjs";
 import { Prisma } from "@prisma/client";
+import multer from "multer";
+const upload = multer();
 
 import { Request, Response, NextFunction } from "express";
 
 const User = z.object({
-  email: z.string().trim().toLowerCase().email(),
-  password: z.string().trim().min(6),
-  firstName: z.string().trim().toLowerCase().min(1),
-  lastName: z.string().trim().toLowerCase().min(1),
-  phoneNumber: z.string().trim().min(10),
+  username: z.string().min(1),
+  email: z.string().email(),
+  password: z.string().min(6),
+  phone: z.string(),
 });
 
 const Company = z.object({
-  email: z.string().email().trim().toLowerCase(),
-  password: z.string().trim().min(6),
-  companyName: z.string().trim().toLowerCase().min(1),
-  phoneNumber: z.string().trim().min(10),
-  country: z.string().trim().toLowerCase().min(1).optional(), // by default 'Canada'
-  province: z.string().trim().toLowerCase().min(1),
-  city: z.string().trim().toLowerCase().min(1),
-  streetName: z.string().trim().toLowerCase().min(1),
-  postalCode: z.string().trim().toUpperCase().length(7), // format is 'A3A 3A3'
-  apartmentNumber: z.string().trim().min(1).optional(),
+  companyName: z.string().min(1),
+  email: z.string().email(),
+  address: z.string().min(4),
+  password: z.string().min(6),
+  phone: z.string(),
 });
 
+/* Allow a public user to register */
 router.post(
   "/public-user",
+  upload.none(),
   async function (req: Request, res: Response, next: NextFunction) {
     try {
       const body = req.body;
@@ -40,39 +38,36 @@ router.post(
         console.log("formatted ---- ", result.error.format());
         return res.status(400).json(result.error.issues);
       }
-      const parsedUser = result.data;
 
       const userExists = await prisma.users.findFirst({
         where: {
-          email: parsedUser.email,
+          email: body.email,
         },
       });
       if (userExists) {
-        return res.status(409).json({ message: "User exists already" });
+        return res.status(409).json({ message: "User already exists" });
       }
 
       async function createPublicUser(hashed_password: string) {
         await prisma.$transaction(async (tx) => {
           const user = await prisma.users.create({
             data: {
-              email: parsedUser.email,
+              email: body.email,
               hashed_password,
             },
           });
-
           const publicUser = await prisma.public_users.create({
             data: {
-              user_id: user.id,
-              first_name: parsedUser.firstName,
-              last_name: parsedUser.lastName,
-              phone_number: parsedUser.phoneNumber,
+              id: user.id,
+              username: body.username,
+              phone_number: body.phone,
             },
           });
         });
       }
 
       bcrypt.hash(
-        parsedUser.password,
+        body.password,
         10,
         function (err: Error | null, hash: string) {
           createPublicUser(hash);
@@ -81,21 +76,12 @@ router.post(
 
       return res.status(201).json({ message: "User created successfully" });
     } catch (err) {
-      if (err instanceof z.ZodError) {
-        console.log(err.issues);
-        return res.status(400).json({ message: "One or more fields invalid" });
-      }
-
-      if (err instanceof Prisma.PrismaClientKnownRequestError) {
-        return res.status(409).json({ message: "User exists already" });
-      }
-
-      console.log("unexpected error from /signup/public-user ---- ", err);
       return res.status(500).json({ message: "Unexpected error" });
     }
   },
 );
 
+/* Allow a management company to register */
 router.post(
   "/management-company",
   async function (req: Request, res: Response, next: NextFunction) {
@@ -106,55 +92,42 @@ router.post(
       if (!result.success) {
         console.log("error ---- ", result.error);
         console.log("formatted ---- ", result.error.format());
-        return res.status(400).json(result.error.issues);
+        return res.status(400).json(result.error.issues); // change this later
       }
-      const parsedCompany = result.data;
 
       const userExists = await prisma.users.findFirst({
         where: {
-          email: parsedCompany.email,
+          email: body.email,
         },
       });
       if (userExists) {
-        return res.status(409).json({ message: "User exists already" });
+        return res.status(409).json({ message: "Email already exists" });
       }
 
       async function createCompanyUser(hashed_password: string) {
         await prisma.$transaction(async (tx) => {
           const user = await prisma.users.create({
             data: {
-              email: parsedCompany.email,
+              email: body.email,
               hashed_password,
             },
           });
-
           const company = await prisma.management_companies.create({
             data: {
-              user_id: user.id,
-              company_name: parsedCompany.companyName,
-              phone_number: parsedCompany.phoneNumber,
-            },
-          });
-
-          const companyAddress = await prisma.company_address.create({
-            data: {
-              company_id: company.user_id,
-              country: parsedCompany.country,
-              province: parsedCompany.province,
-              city: parsedCompany.city,
-              street_name: parsedCompany.streetName,
-              postal_code: parsedCompany.postalCode,
-              apartment_number: parsedCompany.apartmentNumber,
+              id: user.id,
+              company_name: body.companyName,
+              address: body.address,
+              phone_number: body.phone,
             },
           });
         });
       }
 
       bcrypt.hash(
-        parsedCompany.password,
+        body.password,
         10,
-        async function (err: Error | null, hash: string) {
-          await createCompanyUser(hash);
+        function (err: Error | null, hash: string) {
+          createCompanyUser(hash);
         },
       );
 
@@ -164,9 +137,9 @@ router.post(
         return res.status(409).json({ message: "User exists already" });
       }
 
-      console.log("error from /signup/management-company ---- ", err);
       return res.status(500).json({ message: "Unexpected error" });
     }
   },
 );
+
 export default router;
