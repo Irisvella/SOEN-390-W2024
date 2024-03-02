@@ -9,6 +9,7 @@ dotenv.config();
 import signUpRouter from "./routes/signup";
 import loginRouter from "./routes/login";
 import profileRouter from "./routes/profile";
+import addEmployeeRouter from "./routes/addEmployee";
 
 declare global {
   namespace Express {
@@ -30,6 +31,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/signup", signUpRouter);
 app.use("/login", loginRouter);
 app.use("/profile", profileRouter);
+app.use("/add-employee", addEmployeeRouter);
 
 const port = process.env.PORT || 3000;
 app.listen(port || 3000, () => {
