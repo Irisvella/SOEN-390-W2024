@@ -9,43 +9,57 @@ import {
   Typography,
   Container,
   Grid,
-  ButtonBase,
   List,
   ListItem,
   ListItemText,
   Divider,
+  CardActionArea,
+
 } from '@mui/material';
+import { Link } from 'react-router-dom'; // Import Link for navigation
 import "../App.css";
 
 const defaultTheme = createTheme({});
 
-const SectionBox = ({ title, children, onClick }) => (
-  <ButtonBase onClick={onClick} style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+const SectionBox = ({ title, children, route }) => (
+  
     <Box sx={{
       padding: 2,
       border: '2px solid orange',
       borderRadius: '4px',
       flexGrow: 1,
       margin: 1,
-      boxShadow: '0 4px 6px rgba(128, 128, 128, 0.6)', // Grey shadow
+      boxShadow: '0 4px 6px rgba(128, 128, 128, 0.6)',
       '&:hover': {
-        boxShadow: '0 6px 8px rgba(128, 128, 128, 0.8)', // Enhance shadow on hover
-        borderColor: 'darkorange', // Darken border on hover for visual feedback
+        boxShadow: '0 6px 8px rgba(128, 128, 128, 0.8)',
+        borderColor: 'darkorange',
       },
-      transition: 'box-shadow 0.3s ease, border-color 0.3s ease', // Smooth transition for shadow and border color
+      transition: 'box-shadow 0.3s ease, border-color 0.3s ease',
     }}>
+      <CardActionArea component={Link} to={route} style={{ width: '100%', display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'center', textAlign: 'center' }}>
       <Typography variant="h6" gutterBottom component="div">
         {title}
       </Typography>
       <Divider />
-      <Typography variant="body1" component="div">
+      <Typography variant="body1" component="div" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1 }}>
         {children}
       </Typography>
+      </CardActionArea>
     </Box>
-  </ButtonBase>
+ 
 );
 
 const ManagementLanding = () => {
+  // Define navigation items with associated routes
+  const navigationItems = {
+    'Property Dashboard': '/dashboard-company',
+    'Manage Condo Listing': '/CreateListingPage',
+    'Financial System': '/financial-system',
+    'Reservation System': '/reservation-system',
+    'Employee': '/employee-management',
+    'Requests': '/requests-management',
+  };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
@@ -56,14 +70,14 @@ const ManagementLanding = () => {
           justifyContent: 'center',
           alignItems: 'flex-start',
           minHeight: 'calc(100vh - 64px)',
-          paddingTop: '80px', 
+          paddingTop: '80px',
         }}>
           <Box sx={{
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
-            gap: 2, 
+            gap: 2,
           }}>
             {/* Navigation Menu */}
             <Box sx={{
@@ -73,15 +87,15 @@ const ManagementLanding = () => {
               borderRadius: '8px',
               boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
               padding: 2,
-              alignSelf: 'start', 
+              alignSelf: 'start',
             }}>
-              <Typography variant="h6" sx={{ my: 2, ml: 1, color: 'orange'}}>
+              <Typography variant="h6" sx={{ my: 2, ml: 1, color: 'orange' }}>
                 Navigation
               </Typography>
               <List>
-                {['Property Dashboard', 'Manage Condo Files', 'Financial System', 'Reservation System', 'Employee', 'Requests'].map((text) => (
-                  <ListItem button key={text} onClick={() => console.log(`${text} clicked`)}>
-                    <ListItemText primary={text} />
+                {Object.entries(navigationItems).map(([text, route]) => (
+                  <ListItem button key={text} component={Link} to={route}>
+                    <ListItemText primary={text} /> {/* For each element on the Nav menu, direct to the according page*/}
                   </ListItem>
                 ))}
               </List>
@@ -101,28 +115,29 @@ const ManagementLanding = () => {
                   Welcome, Condo Management User!
                 </Typography>
                 <Grid container spacing={3}>
+                  {/* Use SectionBox with a route prop */}
                   <Grid item xs={12} sm={6}>
-                    <SectionBox title="Property Dashboard" onClick={() => console.log('Property Dashboard clicked')}>
+                    <SectionBox title="Property Dashboard" route = "/dashboard-company">
                       Owned properties with employee list and request management features
-                      <ArrowForwardIosIcon /> {/* Arrow icon is now positioned to the right */}
+                      <ArrowForwardIosIcon /> 
                     </SectionBox>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <SectionBox title="Manage Condo Files" onClick={() => console.log('Manage Condo Files clicked')}>
+                    <SectionBox title="Manage Condo Listing" route = "/CreateListingPage">
                       Here you can manage and access condo-related documents and files
-                      <ArrowForwardIosIcon /> {/* Arrow icon is now positioned to the right */}
+                      <ArrowForwardIosIcon /> 
                     </SectionBox>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <SectionBox title="Financial System" onClick={() => console.log('Financial System clicked')}>
+                    <SectionBox title="Financial System" route = "">
                       Overview of financial operations, such as billing, and payments
-                      <ArrowForwardIosIcon /> {/* Arrow icon is now positioned to the right */}
+                      <ArrowForwardIosIcon /> 
                     </SectionBox>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <SectionBox title="Reservation System" onClick={() => console.log('Reservation System clicked')}>
+                    <SectionBox title="Reservation System" route = "">
                       Residents can book amenities and services available in the condo.
-                      <ArrowForwardIosIcon /> {/* Arrow icon is now positioned to the right */}
+                      <ArrowForwardIosIcon /> 
                     </SectionBox>
                   </Grid>
                 </Grid>
