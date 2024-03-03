@@ -1,7 +1,4 @@
-// Import React and useState hook for state management
-import React, { useState } from "react";
-
-// Import necessary Material-UI components and styles
+import React, { useState, useEffect } from "react";
 import {
   Button,
   FormControl,
@@ -11,59 +8,88 @@ import {
   Paper,
   Stack,
   Typography,
-  styled,
   Box,
 } from "@mui/material";
-
-
-// Additional imports
 import Navbar from "./Navbar";
+import { Img } from "@chakra-ui/react";
 
-// Styled component for the image
-const Img = styled("img")({
-  margin: "auto",
-  display: "block",
-  maxWidth: "75%",
-  maxHeight: "75%",
-});
-
-// EditListingForm component
-const EditListingForm = () => {
-  // State hooks for form inputs 
+const EditListingForm = ({ propertyId }) => {
+  const [isEditing, setIsEditing] = useState(false);
   const [Address, setAddress] = useState("");
   const [PostalCode, setPostalCode] = useState("");
-
   const [TotalUnit, setTotalUnit] = useState("");
   const [ParkingSpaces, setParkingSpaces] = useState("");
   const [Amenities, setAmenities] = useState("");
   const [Description, setDescription] = useState("");
 
-  // Handle form submission
-  function handleSubmit(event) {
+  useEffect(() => {
+    if (propertyId) {
+      setIsEditing(true);
+      // Placeholder for fetching property details by ID
+      // You'll need to implement or call the actual function to fetch data
+    }
+  }, [propertyId]);
+
+  
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(Address, TotalUnit, ParkingSpaces, Amenities, Description);
-  }
+    const formData = {
+        address: Address, // Make sure this matches the backend's expected key
+        postalCode: PostalCode,
+        totalUnit: TotalUnit,
+        parkingSpaces: ParkingSpaces,
+        amenities: Amenities,
+        description: Description,
+    };
+
+    try {
+        const response = await fetch('http://localhost:3000/dashboard/listings', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to submit property data');
+        }
+
+        // On successful submission, trigger refresh in DashboardCompany
+        localStorage.setItem('refreshListings', 'true');
+        // Navigate back to the DashboardCompany after submission
+        // navigate('/path-to-dashboard-company'); // Make sure you define `navigate`
+    } catch (error) {
+        console.error("Submission failed", error);
+    }
+};
+
+
+
+
+
+
+
 
   return (
     <>
       <Navbar />
-      <Paper
-        sx={{
-          p: 2,
-          m: 10,
-          backgroundColor: (theme) =>
-            theme.palette.mode === "dark" ? "#1A2027" : "#F0F0F0",
-        }}
-      >
+      <Paper sx={{ p: 2, m: 10, backgroundColor: (theme) => theme.palette.mode === "dark" ? "#1A2027" : "#F0F0F0", }}>
         <form onSubmit={handleSubmit}>
+          {/* The rest of your form fields go here */}
+          
           <Grid container direction="column" padding={5}>
+            {/* Form content remains unchanged */}
+
             <Grid item xs container direction="row" spacing={2}>
               <Grid item xs marginBottom={5}>
                 <Box>
-                   
-                  <Typography variant="h5" padding={2}>Edit Listing</Typography>
-                  
-                  <Img alt="complex" src="/public/condoImage.jpeg" />
+                  <Typography variant="h5" padding={2}>
+                    Edit Listing
+                  </Typography>
+
+                  <Img alt="complex" src="https://accescondos.org/app/uploads/2016/09/fc6_persp_principale.jpg" />
                 </Box>
               </Grid>
 
@@ -120,13 +146,12 @@ const EditListingForm = () => {
                         htmlFor="PostalCode"
                         style={{ marginRight: "8px", width: "auto" }}
                       >
-                       Postal Code:
+                        Postal Code:
                       </label>
                       <Input
                         id="PostalCode"
                         value={PostalCode}
                         onChange={(e) => setPostalCode(e.target.value)}
-                        
                         sx={{
                           borderWidth: "1px",
                           borderStyle: "solid",
@@ -266,10 +291,12 @@ const EditListingForm = () => {
               </FormControl>
             </Grid>
           </Grid>
-          {/* Submit button */}
-          <Grid item >
-            <Button type="submit" variant="contained" color="error">
-              Submit
+
+          
+          <Grid container direction="column" padding={5}>
+            {/* Simplified for brevity */}
+            <Button type="submit" variant="contained" color="primary">
+              {isEditing ? "Save Changes" : "Submit"}
             </Button>
           </Grid>
         </form>
