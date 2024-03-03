@@ -54,6 +54,7 @@ jest.mock('bcryptjs', () => ({
       expect(response.body.data).toEqual({
         username: mockPublicUserDetails.username,
         imageKey: mockPublicUserDetails.profile_image_key,
+        role:"publicUser",
       });
     });
 
@@ -128,6 +129,7 @@ describe('POST /login for companies', () => {
     expect(response.body).toHaveProperty('token'); 
     expect(response.body.data).toEqual({
       companyName: mockCompanyDetails.company_name,
+      role: "company",
     });
   });
 
