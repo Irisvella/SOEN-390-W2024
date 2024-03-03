@@ -36,6 +36,9 @@ router.get(
               });
               console.log("a");
               return res.status(200).json({
+                id: id,
+                role: "company",
+                email: email,
                 companyName: company?.company_name,
                 address: company?.address,
                 unitCount: company?.unit_count,
@@ -51,6 +54,9 @@ router.get(
               });
               console.log("b");
               return res.status(200).json({
+                id: id,
+                role: "publicUser",
+                email: email,
                 username: publicUser?.username,
                 phone: publicUser?.phone_number,
                 avatar: publicUser?.profile_image_key,

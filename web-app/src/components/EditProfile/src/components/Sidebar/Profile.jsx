@@ -23,6 +23,9 @@ function Profile() {
   const [userName, setUserName] = useState(''); 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const profileImage = useRef(null);
+  const [companyName, setCompanyName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNumer, setPhoneNumber] = useState("");
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -36,9 +39,13 @@ function Profile() {
           },
         });
         const data = await response.json();
+        console.log(data);
         if (response.ok) {
+          setEmail(data.email);
           setUserProfile(data.avatar); 
           setUserName(data.username); 
+          setCompanyName(data.companyName);
+          setPhoneNumber(data.phone);
         } else {
           console.error('Failed to fetch profile:', data.message);
         }
@@ -116,10 +123,10 @@ function Profile() {
       </Modal>
       <VStack spacing={1}>
         <Heading as="h3" fontSize="xl" color="brand.dark">
-          {userName || "User Name"}
+          {userName || companyName || "User Name" }
         </Heading>
         <Text color="brand.gray" fontSize="sm">
-          Bio
+          {email}{phoneNumer}
         </Text>
       </VStack>
     </VStack>

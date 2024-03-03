@@ -30,22 +30,6 @@ function AccountSettings() {
           placeholder="email@address.com"
         />
       </FormControl>
-      <FormControl id="city">
-        <FormLabel>City</FormLabel>
-        <Select focusBorderColor="brand.blue" placeholder="Select city">
-          <option value="california">Montreal</option>
-          {/* could fetch data from backend here or hardcode if we just choose canada for our country*/}
-        </Select>
-      </FormControl>
-      <FormControl id="country">
-        <FormLabel>Country</FormLabel>
-        <Select focusBorderColor="brand.blue" placeholder="Select country">
-          {/* same comment as above */}
-          <option value="america" > America </option>
-          <option value="england">England</option>
-          <option value="poland" selected>Canada</option>
-        </Select>
-      </FormControl>
     </Grid>
   )
 }
