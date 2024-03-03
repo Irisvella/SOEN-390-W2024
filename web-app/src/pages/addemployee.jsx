@@ -9,8 +9,6 @@ const AddEmployee = () => {
 
   const [employeeData, setEmployeeData] = useState({
     email: '',
-    employee_id: '',
-    company_id: '',
     role: '',
   });
 
@@ -23,11 +21,13 @@ const AddEmployee = () => {
   };
 
   const handleSubmit = async () => {
+    const token = localStorage.getItem('token');
     try {
       const response = await fetch('http://localhost:3000/add-employee', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(employeeData),
       });

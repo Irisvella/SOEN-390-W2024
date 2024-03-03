@@ -26,6 +26,7 @@ interface companyData {
     verifyToken,
     async function (req: Request, res: Response, next: NextFunction) {
       try {
+        //verify token auth
         jwt.verify(
           req.token as string,
           process.env.SECRET as jwt.Secret,
@@ -35,6 +36,7 @@ interface companyData {
             } else {
               console.log("decoded ---- ", decoded);
               const { id, role, email } = (<any>decoded).data;
+              //if the role is company search for properties that are assigned to management companies
               if (role === "company") {
                 const company = await prisma.$queryRaw<companyData[]>`SELECT m.id, p.address, p.image_url, m.company_name FROM property AS p, management_companies as m, owned_by as o
                 where m.id = o.owner_id and m.id = ${id} and p.id = property_id;
@@ -44,6 +46,7 @@ interface companyData {
                 return res.status(200).json(
                   company
                 );
+                //if the role is publicUser search for properties that are assigned to public users
               } else if (role === "publicUser") {
                 const publicUser = await prisma.$queryRaw<userData[]>`SELECT pu.id, p.address, p.image_url, pu.username FROM property AS p, public_users as pu, owned_by as o
                 where pu.id = o.owner_id and pu.id = ${id} and p.id = property_id;

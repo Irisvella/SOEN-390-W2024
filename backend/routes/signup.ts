@@ -49,7 +49,6 @@ router.post(
       }
 
       async function createPublicUser(hashed_password: string) {
-        await prisma.$transaction(async (tx) => {
           const user = await prisma.users.create({
             data: {
               email: body.email,
@@ -63,7 +62,7 @@ router.post(
               phone_number: body.phone,
             },
           });
-        });
+        
       }
 
       bcrypt.hash(
