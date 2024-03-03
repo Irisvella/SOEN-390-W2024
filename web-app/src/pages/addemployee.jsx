@@ -3,10 +3,14 @@ import Navbar from '../components/Navbar';
 import { Box, Typography, TextField, Button, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 
 const AddEmployee = () => {
+  
+  // TODO: not hardcodded 
+  const companyName = 'CoolCompany';
+
   const [employeeData, setEmployeeData] = useState({
+    email: '',
     employee_id: '',
-    firstName: '',
-    lastName: '',
+    company_id: '',
     role: '',
   });
 
@@ -18,16 +22,31 @@ const AddEmployee = () => {
     }));
   };
 
-  const handleSubmit = () => {
-    // Implement logic to submit the employee data (e.g., send to the backend)
-    console.log('Employee data submitted:', employeeData);
-    // Reset the form
-    setEmployeeData({
-      employee_id: '',
-      firstName: '',
-      lastName: '',
-      role: '',
-    });
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/add-employee', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(employeeData),
+      });
+
+      if (response.ok) {
+        console.log('Employee data submitted successfully');
+        // Optionally, reset the form
+        setEmployeeData({
+          email: '',
+          employee_id: '',
+          company_id: '',
+          role: '',
+        });
+      } else {
+        console.error('Failed to submit employee data');
+      }
+    } catch (error) {
+      console.error('Error submitting employee data:', error);
+    }
   };
 
   return (
@@ -38,30 +57,12 @@ const AddEmployee = () => {
           Add Employee
         </Typography>
         <form>
-        <TextField
-            fullWidth
-            label="Employee id"
-            variant="outlined"
-            name="employee_id"
-            value={employeeData.employee_id}
-            onChange={handleChange}
-            margin="normal"
-          />
           <TextField
             fullWidth
-            label="First Name"
+            label="Email"
             variant="outlined"
-            name="firstName"
-            value={employeeData.firstName}
-            onChange={handleChange}
-            margin="normal"
-          />
-          <TextField
-            fullWidth
-            label="Last Name"
-            variant="outlined"
-            name="lastName"
-            value={employeeData.lastName}
+            name="email"
+            value={employeeData.email}
             onChange={handleChange}
             margin="normal"
           />
