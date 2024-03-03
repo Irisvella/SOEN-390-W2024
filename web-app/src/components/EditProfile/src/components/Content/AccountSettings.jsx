@@ -1,9 +1,6 @@
 import {useState, useEffect} from 'react';
 import { FormControl, FormLabel, Grid, Input, Select, Button } from '@chakra-ui/react'
 
-
-
-
 function AccountSettings() {
 
 const [userProfile, setUserProfile] = useState(null);
@@ -46,8 +43,10 @@ useEffect(() => {
 const updateProfile = async () => {
   const token = localStorage.getItem('token');
   const payload = {
-    //email,
-    phoneNumber
+    email,
+    phoneNumber,
+    userName,
+
   };
   console.log('Sending payload:', payload);
   try {
@@ -84,14 +83,13 @@ const updateProfile = async () => {
           onChange={(e) => setPhoneNumber(e.target.value)}
         />
       </FormControl>
-
-      <FormControl id="emailAddress">
-        <FormLabel>Email Address</FormLabel>
+      <FormControl id="userName">
+        <FormLabel>User Name</FormLabel>
         <Input
           focusBorderColor="brand.blue"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          type="userName"
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
         />
       </FormControl>
       <Button onClick={updateProfile}>Update</Button>
