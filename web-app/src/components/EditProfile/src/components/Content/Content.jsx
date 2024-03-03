@@ -2,10 +2,10 @@ import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
 
 import AccountSettings from './AccountSettings'
 import Actions from './Actions'
-import Notifications from './Notifications'
+import { Link } from 'react-router-dom'
 
 const Content = () => {
-  const tabs = ['Account Settings', 'Condo Settings', 'Notifications']
+  const tabs = ['Account Settings', 'Dashboard']
 
   return (
     <Box
@@ -45,10 +45,18 @@ const Content = () => {
             <AccountSettings />
           </TabPanel>
           <TabPanel>
-            Will update features before final deliverable
-          </TabPanel>
-          <TabPanel>
-            <Notifications />
+            <buttton style={{ 
+                textDecoration: 'none',
+                backgroundColor: '#4164e3',
+                border: 'none',
+                padding: '8px 16px',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                transition: 'background-color 0.3s ease',
+              }} 
+              className='to-dashboard'>
+                  <Link style={{color: "white"}} to= "/dashboard-user" className='to-dashboard'> To dashboard </Link>
+            </buttton>
           </TabPanel>
         </TabPanels>
       </Tabs>

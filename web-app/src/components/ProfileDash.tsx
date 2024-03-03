@@ -1,4 +1,3 @@
-import React from 'react';
 import { AppBar, Box, Container, CssBaseline, Toolbar, Typography, IconButton, Avatar } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
