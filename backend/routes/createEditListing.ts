@@ -4,7 +4,7 @@ const router = express.Router();
 
 // Route to handle the submission of a new listing
 router.post('/', async (req: Request, res: Response) => {
-    const { id,size, condo_fee, address, unit_id,image_url } = req.body;
+    const { id, size, condo_fee, address, unit_id,image_url } = req.body;
     
     try {
       const newListing = await prisma.property.create({
