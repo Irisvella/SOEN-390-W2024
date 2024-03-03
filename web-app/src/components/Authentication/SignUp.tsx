@@ -4,6 +4,7 @@ import { Container, CssBaseline, Box, Avatar, Typography } from "@mui/material";
 import FitbitIcon from '@mui/icons-material/Fitbit';
 import UserSignupForm from '../Authentication/UserSignupForm';
 import CompanySignupForm from '../Authentication/CompanySignupForm';
+import Navbar from '../Navbar';
 
 const SignUp = () => {
   const [role, setRole] = useState("");
@@ -16,6 +17,7 @@ const SignUp = () => {
     <>
       <Container maxWidth="xs">
         <CssBaseline />
+        <Navbar />
         <Box
           sx={{
             mt: 20,

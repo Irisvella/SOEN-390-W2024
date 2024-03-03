@@ -15,6 +15,7 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
+import Navbar from '../../../Navbar'
 
 export default function Cover() {
   const [coverImage, setCoverImage] = useState(null)

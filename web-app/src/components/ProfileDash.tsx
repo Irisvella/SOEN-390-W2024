@@ -1,7 +1,6 @@
 import { AppBar, Box, Container, CssBaseline, Toolbar, Typography, IconButton, Avatar } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
-
 const ProfileDash = () => {
   // Assuming username can be fetched or passed as props
   const username = "User"; // Placeholder username
