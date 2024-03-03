@@ -1,52 +1,135 @@
-import { FormControl, FormLabel, Grid, Input, Select } from '@chakra-ui/react'
+import {useState, useEffect} from 'react';
+import { FormControl, FormLabel, Grid, Input, Select, Button } from '@chakra-ui/react'
 
 function AccountSettings() {
+
+const [userProfile, setUserProfile] = useState(null);
+const [userName, setUserName] = useState('');
+const [companyName, setCompanyName] = useState('');
+const [email, setEmail] = useState('');
+const [phoneNumber, setPhoneNumber] = useState('');
+const [userRole, setUserRole] = useState('');
+const [address, setAddress] = useState('');
+
+useEffect(() => {
+  const fetchUserProfile = async () => {
+    const token = localStorage.getItem('token'); 
+    try {
+      const response = await fetch('http://localhost:3000/profile', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+      console.log(data);
+      if (response.ok) {
+        setUserRole(data.role);
+        setEmail(data.email);
+        setUserProfile(data.avatar); 
+        setUserName(data.username); 
+        setCompanyName(data.companyName);
+        setPhoneNumber(data.phone);
+        setAddress(data.address);
+      } else {
+        console.error('Failed to fetch profile:', data.message);
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    }
+  };
+
+  fetchUserProfile();
+}, []);
+
+const updateProfile = async () => {
+  const token = localStorage.getItem('token');
+  const payload = {
+    email,
+    phoneNumber,
+    userName,
+    companyName,
+    address
+  };
+  console.log('Sending payload:', payload);
+  try {
+    const response = await fetch('http://localhost:3000/profile', { 
+      method: 'PUT', 
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update profile');
+    }
+
+    console.log('Profile updated successfully');
+  } catch (error) {
+    console.error('Error updating profile:', error);
+  }
+};
+
   return (
     <Grid
       templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
       gap={6}
     >
-      <FormControl id="firstName">
-        <FormLabel>First Name</FormLabel>
-        <Input focusBorderColor="brand.blue" type="text" placeholder="First Name" />
-      </FormControl>
-      <FormControl id="lastName">
-        <FormLabel>Last Name</FormLabel>
-        <Input focusBorderColor="brand.blue" type="text" placeholder="Last Name" />
-      </FormControl>
       <FormControl id="phoneNumber">
         <FormLabel>Phone Number</FormLabel>
         <Input
           focusBorderColor="brand.blue"
           type="tel"
-          placeholder="(XXX) XXX-XXXX"
+          value= {phoneNumber}
+          onChange={(e) => setPhoneNumber(e.target.value)}
         />
       </FormControl>
-      <FormControl id="emailAddress">
-        <FormLabel>Email Address</FormLabel>
+
+      {userRole === 'company' && (
+      <>  
+        <FormControl id="companyName">
+        <FormLabel>Company Name</FormLabel>
         <Input
           focusBorderColor="brand.blue"
-          type="email"
-          placeholder="email@address.com"
+          type="companyName"
+          value={companyName}
+          onChange={(e) => setCompanyName(e.target.value)}
+        />
+        </FormControl>
+        <FormControl id="address">
+        <FormLabel>Address</FormLabel>
+        <Input
+          focusBorderColor="brand.blue"
+          type="address"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+        />
+        </FormControl>
+
+
+      </>
+      )}
+
+
+      {userRole === 'publicUser' && (
+      
+      <FormControl id="userName">
+        <FormLabel>User Name</FormLabel>
+        <Input
+          focusBorderColor="brand.blue"
+          type="userName"
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
         />
       </FormControl>
-      <FormControl id="city">
-        <FormLabel>City</FormLabel>
-        <Select focusBorderColor="brand.blue" placeholder="Select city">
-          <option value="california">Montreal</option>
-          {/* could fetch data from backend here or hardcode if we just choose canada for our country*/}
-        </Select>
-      </FormControl>
-      <FormControl id="country">
-        <FormLabel>Country</FormLabel>
-        <Select focusBorderColor="brand.blue" placeholder="Select country">
-          {/* same comment as above */}
-          <option value="america" > America </option>
-          <option value="england">England</option>
-          <option value="poland" selected>Canada</option>
-        </Select>
-      </FormControl>
+
+      )}
+      <Button onClick={updateProfile}>Update</Button>
     </Grid>
+    
   )
 }
 

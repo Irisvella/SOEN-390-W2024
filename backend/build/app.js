@@ -23,6 +23,7 @@ app.use(express_1.default.static(path_1.default.join(__dirname, "public")));
 app.use("/signup", signup_1.default);
 app.use("/login", login_1.default);
 app.use("/profile", profile_1.default);
+app.use("/update", profile_1.default);
 const port = process.env.PORT || 3000;
 app.listen(port || 3000, () => {
     console.log(`Listening on port ${port}`);

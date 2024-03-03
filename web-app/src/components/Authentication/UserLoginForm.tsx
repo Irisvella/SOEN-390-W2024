@@ -28,7 +28,7 @@ const UserLoginForm = () => {
       if (response.ok && data.token) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('role', "publicUser");
-        window.location.href = '/ProfileDash';
+        window.location.href = '/dashboard-user';
       } else {
         console.error('Login failed:', data.message);
         setFailMessage(data.message || 'An error occurred. Please try again.');}

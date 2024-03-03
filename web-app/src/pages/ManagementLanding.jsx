@@ -1,5 +1,5 @@
 import React from 'react';
-import NavbarLogOut from '../components/NavbarLogOut';
+import Navbar from '../components/Navbar';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import {
   createTheme,
@@ -64,7 +64,7 @@ const ManagementLanding = () => {
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
       <div className="home-background">
-        <NavbarLogOut />
+        <Navbar />
         <Box sx={{
           display: 'flex',
           justifyContent: 'center',
