@@ -28,7 +28,7 @@ const CompanyLoginForm = () => {
   
       if (response.ok && data.token) {
         localStorage.setItem('token', data.token);
-        window.location.href = '/ProfileDash';
+        window.location.href = '/ManagementLanding';
       } else {
         console.error('Login failed:', data.message);
         setFailMessage(data.message || 'An error occurred. Please try again.');}
