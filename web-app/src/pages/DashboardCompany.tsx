@@ -54,6 +54,12 @@ const DashboardCompany = () => {
       navigate("/login");
     }
 
+    const role = localStorage.getItem("role") ;
+    console.log(role);
+    if (role !== 'company'){
+      navigate("/dashboard-user")
+    }
+
     const fetchProperties = async () => {
       const res = await fetch("http://localhost:3000/dashboard", {
         method: "GET",

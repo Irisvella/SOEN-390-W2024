@@ -27,6 +27,7 @@ const UserLoginForm = () => {
   
       if (response.ok && data.token) {
         localStorage.setItem('token', data.token);
+        localStorage.setItem('role', "publicUser");
         window.location.href = '/ProfileDash';
       } else {
         console.error('Login failed:', data.message);
