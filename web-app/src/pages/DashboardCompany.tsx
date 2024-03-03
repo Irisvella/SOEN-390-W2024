@@ -1,9 +1,10 @@
-
-import { Container, CssBaseline, Grid } from "@mui/material";
+import React from 'react';
+import { Container, CssBaseline, Grid, Button } from "@mui/material";
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import Navbar from '../components/Navbar';
-import PropertySlider, { Property } from './PropertySlider';
-import Button from '@mui/material/Button';
+import PropertySlider from './PropertySlider';
 import "../App.css";
+
 
 // Assuming you have a similar structure for company properties
 // Explicitly define the type for each property in the array
@@ -34,14 +35,14 @@ const companyProperties: Property[] = [
     },
    
   ];
-  const handleAddProperty = () => {
-    // Here you can handle the logic to add a property
-    // For example, opening a dialog or redirecting to a form page
-    console.log('Add Property button clicked');
-  };
+ 
   const DashboardCompany = () => {
-    const companyName = "CoolCompany";
+    const navigate = useNavigate(); // Hook for navigation
   
+    const handleAddProperty = () => {
+      navigate('/CreateListingPage'); // Navigate to CreateListingPage
+    };
+    const companyName = "CoolCompany";
     return (
       <>
         <CssBaseline />

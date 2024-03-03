@@ -15,57 +15,51 @@ import { Img } from "@chakra-ui/react";
 
 const EditListingForm = ({ propertyId }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [Address, setAddress] = useState("");
   const [PostalCode, setPostalCode] = useState("");
   const [TotalUnit, setTotalUnit] = useState("");
   const [ParkingSpaces, setParkingSpaces] = useState("");
   const [Amenities, setAmenities] = useState("");
   const [Description, setDescription] = useState("");
 
-  useEffect(() => {
-    if (propertyId) {
-      setIsEditing(true);
-      // Placeholder for fetching property details by ID
-      // You'll need to implement or call the actual function to fetch data
-    }
-  }, [propertyId]);
+  const [formData, setFormData] = useState({
+    address:'',
+  });
 
+
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
   
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const formData = {
-        address: Address, // Make sure this matches the backend's expected key
-        postalCode: PostalCode,
-        totalUnit: TotalUnit,
-        parkingSpaces: ParkingSpaces,
-        amenities: Amenities,
-        description: Description,
-    };
 
-    try {
-        const response = await fetch('http://localhost:3000/dashboard/listings', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        });
+const handleSubmit = async () => {
+  try {
+    const response = await fetch('http://localhost:3000/createEditListing', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
 
-        if (!response.ok) {
-            throw new Error('Failed to submit property data');
-        }
-
-        // On successful submission, trigger refresh in DashboardCompany
-        localStorage.setItem('refreshListings', 'true');
-        // Navigate back to the DashboardCompany after submission
-        // navigate('/path-to-dashboard-company'); // Make sure you define `navigate`
-    } catch (error) {
-        console.error("Submission failed", error);
+    if (response.ok) {
+      console.log('Employee data submitted successfully');
+      // Optionally, reset the form
+      setFormData({
+        address: '',
+      });
+    } else {
+      console.error('Failed to submit employee data');
     }
+  } catch (error) {
+    console.error('Error submitting employee data:', error);
+  }
 };
-
-
 
 
 
@@ -116,8 +110,8 @@ const EditListingForm = ({ propertyId }) => {
                       </label>
                       <Input
                         id="Address"
-                        value={Address}
-                        onChange={(e) => setAddress(e.target.value)}
+                        value={formData.address}
+                        onChange={handleChange}
                         fullWidth
                         sx={{
                           borderWidth: "1px",

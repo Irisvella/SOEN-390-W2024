@@ -8,6 +8,7 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+
 model amenities {
   id          Int            @id @default(autoincrement())
   text_id     String

@@ -10,7 +10,7 @@ import signUpRouter from "./routes/signup";
 import loginRouter from "./routes/login";
 import profileRouter from "./routes/profile";
 import dashboard from "./routes/dashboard";
-
+import createEditListing from "./routes/createEditListing";
 declare global {
   namespace Express {
     export interface Request {
@@ -32,6 +32,7 @@ app.use("/signup", signUpRouter);
 app.use("/login", loginRouter);
 app.use("/profile", profileRouter);
 app.use("/dashboard", dashboard);
+app.use("/createEditListing", createEditListing);
 
 const port = process.env.PORT || 3000;
 app.listen(port || 3000, () => {
