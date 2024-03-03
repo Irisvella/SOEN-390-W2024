@@ -28,6 +28,7 @@ const CompanyLoginForm = () => {
   
       if (response.ok && data.token) {
         localStorage.setItem('token', data.token);
+        localStorage.setItem("role", "company");
         window.location.href = '/ManagementLanding';
       } else {
         console.error('Login failed:', data.message);

@@ -68,6 +68,7 @@ router.post(
             data: {
               username: subUserExists.username,
               imageKey: subUserExists.profile_image_key,
+              role: "publicUser",
             },
           });
         }
@@ -84,6 +85,7 @@ router.post(
             token,
             data: {
               companyName: subUserExists.company_name,
+              role: "company",
             },
           });
         }
