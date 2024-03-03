@@ -9,6 +9,7 @@ const [companyName, setCompanyName] = useState('');
 const [email, setEmail] = useState('');
 const [phoneNumber, setPhoneNumber] = useState('');
 const [userRole, setUserRole] = useState('');
+const [address, setAddress] = useState('');
 
 useEffect(() => {
   const fetchUserProfile = async () => {
@@ -24,11 +25,13 @@ useEffect(() => {
       const data = await response.json();
       console.log(data);
       if (response.ok) {
+        setUserRole(data.role);
         setEmail(data.email);
         setUserProfile(data.avatar); 
         setUserName(data.username); 
         setCompanyName(data.companyName);
         setPhoneNumber(data.phone);
+        setAddress(data.address);
       } else {
         console.error('Failed to fetch profile:', data.message);
       }
@@ -46,7 +49,8 @@ const updateProfile = async () => {
     email,
     phoneNumber,
     userName,
-
+    companyName,
+    address
   };
   console.log('Sending payload:', payload);
   try {
@@ -83,6 +87,35 @@ const updateProfile = async () => {
           onChange={(e) => setPhoneNumber(e.target.value)}
         />
       </FormControl>
+
+      {userRole === 'company' && (
+      <>  
+        <FormControl id="companyName">
+        <FormLabel>Company Name</FormLabel>
+        <Input
+          focusBorderColor="brand.blue"
+          type="companyName"
+          value={companyName}
+          onChange={(e) => setCompanyName(e.target.value)}
+        />
+        </FormControl>
+        <FormControl id="address">
+        <FormLabel>Address</FormLabel>
+        <Input
+          focusBorderColor="brand.blue"
+          type="address"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+        />
+        </FormControl>
+
+
+      </>
+      )}
+
+
+      {userRole === 'publicUser' && (
+      
       <FormControl id="userName">
         <FormLabel>User Name</FormLabel>
         <Input
@@ -92,6 +125,8 @@ const updateProfile = async () => {
           onChange={(e) => setUserName(e.target.value)}
         />
       </FormControl>
+
+      )}
       <Button onClick={updateProfile}>Update</Button>
     </Grid>
     

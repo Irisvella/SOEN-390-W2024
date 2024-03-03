@@ -47,7 +47,7 @@ const Content = () => {
           <TabPanel>
             <buttton style={{ 
                 textDecoration: 'none',
-                backgroundColor: '#007bff',
+                backgroundColor: '#4164e3',
                 border: 'none',
                 padding: '8px 16px',
                 borderRadius: '4px',
@@ -55,7 +55,7 @@ const Content = () => {
                 transition: 'background-color 0.3s ease',
               }} 
               className='to-dashboard'>
-                  <Link to= "/dashboard-user" className='to-dashboard'> To dashboard </Link>
+                  <Link style={{color: "white"}} to= "/dashboard-user" className='to-dashboard'> To dashboard </Link>
             </buttton>
           </TabPanel>
         </TabPanels>

@@ -80,15 +80,16 @@ router.put("/", verifyToken, async (req: Request, res: Response) => {
     const decoded = jwt.verify(req.token as string, process.env.SECRET as jwt.Secret);
     const { id, role } = (<any>decoded).data; 
 
-    const { phoneNumber, userName} = req.body; // Extract fields from request body
+    const { phoneNumber, userName, companyName, address} = req.body; // Extract fields from request body
 
     if (role === "company") {
     
       const company = await prisma.management_companies.update({
         where: { id },
         data: {
-          //company_name: companyName,
+          company_name: companyName,
           phone_number: phoneNumber,
+          address: address,
          
         },
       }); 
