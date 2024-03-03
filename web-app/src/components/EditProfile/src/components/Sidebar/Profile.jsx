@@ -125,8 +125,11 @@ function Profile() {
         <Heading as="h3" fontSize="xl" color="brand.dark">
           {userName || companyName || "User Name" }
         </Heading>
-        <Text color="brand.gray" fontSize="sm">
-          {email}{phoneNumer}
+        <Text  fontSize="sm">
+          {email}
+        </Text>
+        <Text>
+          {phoneNumer}
         </Text>
       </VStack>
     </VStack>

@@ -73,5 +73,45 @@ router.get(
     }
   },
 );
+router.put("/", verifyToken, async (req: Request, res: Response) => {
+  console.log('Received payload for update:', req.body);
+  try {
+    const decoded = jwt.verify(req.token as string, process.env.SECRET as jwt.Secret);
+    const { id, role } = (<any>decoded).data; 
+
+    const { phone} = req.body; // Extract fields from request body
+
+    if (role === "company") {
+    
+      const company = await prisma.management_companies.update({
+        where: { id },
+        data: {
+          //company_name: companyName,
+          phone_number: phone,
+         
+        },
+      }); 
+      console.log('Updated user data:', company);
+      return res.json({ message: "Profile updated successfully", company });
+    } else if (role === "publicUser") {
+      // Update public user profile
+      const public_users = await prisma.public_users.update({
+        where: { id },
+        data: {
+         // username,
+          phone_number: phone,
+         //profile_image_key: avatar,
+   
+        },
+      }); console.log('Updated user data:', public_users);
+      return res.json({ message: "Profile updated successfully", public_users });
+    } else {
+      return res.status(400).json({ message: "Invalid user role" });
+    }
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    return res.status(500).json({ message: "Unexpected error", error });
+  }
+});
 
 export default router;
