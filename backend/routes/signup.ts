@@ -49,6 +49,7 @@ router.post(
       }
 
       async function createPublicUser(hashed_password: string) {
+        await prisma.$transaction(async (tx:Prisma.TransactionClient) => {
           const user = await prisma.users.create({
             data: {
               email: body.email,
@@ -62,7 +63,7 @@ router.post(
               phone_number: body.phone,
             },
           });
-        
+        });
       }
 
       bcrypt.hash(
@@ -104,7 +105,7 @@ router.post(
       }
 
       async function createCompanyUser(hashed_password: string) {
-        await prisma.$transaction(async (tx) => {
+        await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
           const user = await prisma.users.create({
             data: {
               email: body.email,
@@ -132,10 +133,6 @@ router.post(
 
       return res.status(201).json({ message: "User created successfully" });
     } catch (err) {
-      if (err instanceof Prisma.PrismaClientKnownRequestError) {
-        return res.status(409).json({ message: "User exists already" });
-      }
-
       return res.status(500).json({ message: "Unexpected error" });
     }
   },

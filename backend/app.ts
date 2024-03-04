@@ -9,6 +9,8 @@ dotenv.config();
 import signUpRouter from "./routes/signup";
 import loginRouter from "./routes/login";
 import profileRouter from "./routes/profile";
+import dashboard from "./routes/dashboard";
+import createEditListing from "./routes/createEditListing";
 import addEmployeeRouter from "./routes/addEmployee";
 
 declare global {
@@ -31,6 +33,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/signup", signUpRouter);
 app.use("/login", loginRouter);
 app.use("/profile", profileRouter);
+app.use("/dashboard", dashboard);
+app.use("/createEditListing", createEditListing);
 app.use("/add-employee", addEmployeeRouter);
 
 const port = process.env.PORT || 3000;
