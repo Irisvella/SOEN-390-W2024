@@ -51,7 +51,7 @@ const AddEmployee = () => {
 
   return (
     <div>
-      <Navbar userName={userName} />
+      <Navbar userName={companyName} />
       <Box mt={10} display="flex" flexDirection="column" alignItems="center">
         <Typography variant="h5" mb={4}>
           Add Employee

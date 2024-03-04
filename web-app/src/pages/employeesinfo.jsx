@@ -99,7 +99,7 @@ const Employeesinfo = () => {
               </Button>
               {!editMode && (
                 // Render "Add Employee" button only when not in edit mode
-                <Link to="/addemployee" style={{ textDecoration: 'none' }}>
+                <Link to="/Addemployee" style={{ textDecoration: 'none' }}>
                 <Button variant="outlined" color="primary" style={{ marginLeft: '8px' }} onClick={() => console.log('Add Employee clicked')}>
                   Add Employee
                 </Button>
