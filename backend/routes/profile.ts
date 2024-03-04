@@ -3,6 +3,7 @@ const router = express.Router();
 import prisma from "../prisma/client";
 import jwt from "jsonwebtoken";
 import { Prisma } from "@prisma/client";
+import bcrypt from "bcryptjs";
 import * as z from "zod";
 import verifyToken from "../middleware/verify-token";
 import dotenv from "dotenv";
@@ -21,6 +22,11 @@ const publicUser = z.object({
   phoneNumber: z.string().trim().min(10),
   isUpload: z.enum(["0", "1"]), // "0" for no profile pic change, and "1" for yes
   profileImageKey: z.string().optional(),
+});
+
+const passwordReset = z.object({
+  oldPassword: z.string().min(6).max(64),
+  newPassword: z.string().min(6).max(64),
 });
 
 router.get(
@@ -191,6 +197,74 @@ router.patch(
       );
     } catch (err) {
       console.log("error from /profile/public-user ---- ", err);
+      return res.status(500).json({ message: "Unexpected error" });
+    }
+  },
+);
+
+router.patch(
+  "/reset-password",
+  verifyToken,
+  async function (req: Request, res: Response, next: NextFunction) {
+    try {
+      jwt.verify(
+        req.token as string,
+        process.env.SECRET as jwt.Secret,
+        async (err, decoded) => {
+          if (err) {
+            console.log("error within jwt.verify ---- ", err);
+            return res.status(401).json({ message: "Unauthorized" });
+          }
+          const result = passwordReset.safeParse(req.body);
+          if (!result.success) {
+            return res.status(400);
+          }
+
+          const { id } = (<any>decoded).data;
+          const { oldPassword, newPassword } = result.data;
+
+          const userExists = await prisma.users.findFirst({
+            where: {
+              id,
+            },
+          });
+          if (!userExists) {
+            return res.status(401).json({ message: "User does not exist" });
+          }
+
+          const checkPassword = bcrypt.compareSync(
+            oldPassword,
+            userExists.hashed_password,
+          );
+          if (!checkPassword) {
+            return res.status(401).json({ message: "Incorrect password" });
+          }
+
+          bcrypt.hash(
+            newPassword,
+            10,
+            async function (err: Error | null, hash: string) {
+              const updateUser = await prisma.users.update({
+                where: {
+                  id,
+                },
+                data: {
+                  hashed_password: hash,
+                },
+              });
+
+              return res
+                .status(200)
+                .json({ message: "Password successfully changed" });
+            },
+          );
+
+          return res.status(500);
+          ////////////////
+        },
+      );
+    } catch (err) {
+      console.log("error from /profile/reset-password ---- ", err);
       return res.status(500).json({ message: "Unexpected error" });
     }
   },
