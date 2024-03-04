@@ -41,7 +41,6 @@ router.post(
                 await new Promise(f => setTimeout(f, 1000));  // wait so that the database has time to update the added property
               }
              
-            
               async function linkProperty(owner_id: number, property_id:number) {
                 const owner = await prisma.owned_by.create({
                   data: {
