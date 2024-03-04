@@ -48,12 +48,20 @@ router.post(
               if (!userExists) {
                 return res.status(404).json({ message: "User not found" });
               }
-
-              if (await prisma.$queryRaw`Select public_user_id, company_id
-              from employed_by
-              where public_user_id = ${userExists.id} and company_id = ${id}`){
+              /*const employedBy = await prisma.employed_by.findFirst({
+                select: {
+                public_user_id: true,
+                company_id: true
+                },
+                where: {
+                public_user_id: userExists.id,
+                company_id: id
+                }
+                });
+              if (employedBy){
                 return res.status(409).json({ message: "User is already employed under you" });
               }
+              TODO: FIX so that when user is already employed it shouldnt create a new entry*/
   
               async function employExistingUser(userID:number) {
                 await prisma.$transaction(async (tx) => {
