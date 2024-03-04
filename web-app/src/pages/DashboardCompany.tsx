@@ -13,16 +13,16 @@ const companyProperties: Property[] = [
 ];
 
 const DashboardCompany = () => {
-  const companyName = "CoolCompany";
-  const [properties, setProperties] = useState<Property[]>([]);
-  const navigate = useNavigate();
-
 
   const handleAddProperty = () => {
     // Here you can handle the logic to add a property
     // For example, opening a dialog or redirecting to a form page
     navigate("/CreateListingPage");
   };
+  const companyName = "CoolCompany";
+  const [properties, setProperties] = useState<Property[]>([]);
+  const navigate = useNavigate();
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {

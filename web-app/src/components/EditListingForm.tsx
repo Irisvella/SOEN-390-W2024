@@ -15,7 +15,7 @@ import { Img } from "@chakra-ui/react";
 
 const EditListingForm = ({ propertyId }) => {
   const [isEditing, setIsEditing] = useState(false);
-  
+  const navigate = useNavigate(); // Step 2: Create an instance of useNavigate
   const [formData, setFormData] = useState({
     address: '',
     postalCode: '',
@@ -49,7 +49,7 @@ const EditListingForm = ({ propertyId }) => {
 
       if (response.ok) {
         console.log('Listing data submitted successfully');
-        // Optionally, reset the form
+        navigate('/dashboard'); // Step 3: Navigate to dashboard upon success
         setFormData({
           address: '',
           postalCode: '',
