@@ -9,7 +9,7 @@ import { Request, Response, NextFunction } from "express";
 
 const User = z.object({
   email: z.string().trim().toLowerCase().email(),
-  password: z.string().trim().min(6),
+  password: z.string().min(6).max(64),
   firstName: z.string().trim().toLowerCase().min(1),
   lastName: z.string().trim().toLowerCase().min(1),
   phoneNumber: z.string().trim().min(10),
@@ -17,7 +17,7 @@ const User = z.object({
 
 const Company = z.object({
   email: z.string().email().trim().toLowerCase(),
-  password: z.string().trim().min(6),
+  password: z.string().min(6).max(64),
   companyName: z.string().trim().toLowerCase().min(1),
   phoneNumber: z.string().trim().min(10),
   country: z.string().trim().toLowerCase().min(1).optional(), // by default 'Canada'
