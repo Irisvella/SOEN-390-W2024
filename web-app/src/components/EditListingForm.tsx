@@ -1,7 +1,4 @@
-// Import React and useState hook for state management
 import React, { useState } from "react";
-
-// Import necessary Material-UI components and styles
 import {
   Button,
   FormControl,
@@ -11,198 +8,135 @@ import {
   Paper,
   Stack,
   Typography,
-  styled,
   Box,
 } from "@mui/material";
-
-
-// Additional imports
 import Navbar from "./Navbar";
+import { Img } from "@chakra-ui/react";
 
-// Styled component for the image
-const Img = styled("img")({
-  margin: "auto",
-  display: "block",
-  maxWidth: "75%",
-  maxHeight: "75%",
-});
+const EditListingForm = ({ propertyId }) => {
+  const [isEditing, setIsEditing] = useState(false);
+ 
+  const [formData, setFormData] = useState({
+    address: '',
+    postalCode: '',
+    totalUnit: '',
+    parkingSpaces: '',
+    amenities: '',
+    description: '',
+  });
 
-// EditListingForm component
-const EditListingForm = () => {
-  // State hooks for form inputs 
-  const [Address, setAddress] = useState("");
-  const [PostalCode, setPostalCode] = useState("");
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
+  };
 
-  const [TotalUnit, setTotalUnit] = useState("");
-  const [ParkingSpaces, setParkingSpaces] = useState("");
-  const [Amenities, setAmenities] = useState("");
-  const [Description, setDescription] = useState("");
+  const handleSubmit = async (e) => {
+   
+    const token = localStorage.getItem('token');
+    try {
 
-  // Handle form submission
-  function handleSubmit(event) {
-    event.preventDefault();
-    console.log(Address, TotalUnit, ParkingSpaces, Amenities, Description);
-  }
+      const response = await fetch('http://localhost:3000/createEditListing', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,//checking if you are logged in or not 
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        console.log('Listing data submitted successfully');
+        
+        setFormData({
+          address: '',
+          postalCode: '',
+          totalUnit: '',
+          parkingSpaces: '',
+          amenities: '',
+          description: '',
+        });
+      } else {
+        console.error('Failed to submit listing data');
+      }
+    } catch (error) {
+      console.error('Error submitting listing data:', error);
+    }
+  };
 
   return (
     <>
       <Navbar />
-      <Paper
-        sx={{
-          p: 2,
-          m: 10,
-          backgroundColor: (theme) =>
-            theme.palette.mode === "dark" ? "#1A2027" : "#F0F0F0",
-        }}
-      >
-        <form onSubmit={handleSubmit}>
+      <Paper sx={{ p: 2, m: 10, backgroundColor: (theme) => theme.palette.mode === "dark" ? "#1A2027" : "#F0F0F0", }}>
+        <form>
           <Grid container direction="column" padding={5}>
             <Grid item xs container direction="row" spacing={2}>
               <Grid item xs marginBottom={5}>
                 <Box>
-                   
-                  <Typography variant="h5" padding={2}>Edit Listing</Typography>
-                  
-                  <Img alt="complex" src="/public/condoImage.jpeg" />
+                  <Typography variant="h5" padding={2}>
+                    Edit Listing
+                  </Typography>
+                  <Img alt="complex" src="https://accescondos.org/app/uploads/2016/09/fc6_persp_principale.jpg" />
                 </Box>
               </Grid>
 
               <Grid item xs marginTop={10}>
-                {/* Form fields */}
                 <Stack spacing={2} direction="column" sx={{ marginBottom: 6 }}>
-                  <FormControl
-                    variant="outlined"
-                    component="fieldset"
-                    sx={{ display: "flex", alignItems: "center" }}
-                  >
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        width: "100%",
-                      }}
-                    >
-                      <label
-                        htmlFor="Address"
-                        style={{ marginRight: "8px", width: "auto" }}
-                      >
+                  {/* Address */}
+                  <FormControl variant="outlined" component="fieldset">
+                    <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
+                      <label htmlFor="address" style={{ marginRight: "8px", width: "auto" }}>
                         Address:
                       </label>
                       <Input
-                        id="Address"
-                        value={Address}
-                        onChange={(e) => setAddress(e.target.value)}
+                        id="address"
+                        value={formData.address}
+                        onChange={handleChange}
                         fullWidth
-                        sx={{
-                          borderWidth: "1px",
-                          borderStyle: "solid",
-                          borderRadius: "4px",
-                          "& .MuiInputBase-input": {
-                            borderColor: "primary.main",
-                          },
-                        }}
                       />
                     </Box>
                   </FormControl>
-                  <FormControl
-                    variant="outlined"
-                    component="fieldset"
-                    sx={{ display: "flex", alignItems: "center" }}
-                  >
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        width: "100%",
-                      }}
-                    >
-                      <label
-                        htmlFor="PostalCode"
-                        style={{ marginRight: "8px", width: "auto" }}
-                      >
-                       Postal Code:
+                  {/* Postal Code */}
+                  <FormControl variant="outlined" component="fieldset">
+                    <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
+                      <label htmlFor="postalCode" style={{ marginRight: "8px", width: "auto" }}>
+                        Postal Code:
                       </label>
                       <Input
-                        id="PostalCode"
-                        value={PostalCode}
-                        onChange={(e) => setPostalCode(e.target.value)}
-                        
-                        sx={{
-                          borderWidth: "1px",
-                          borderStyle: "solid",
-                          borderRadius: "4px",
-                          "& .MuiInputBase-input": {
-                            borderColor: "primary.main",
-                          },
-                        }}
+                        id="postalCode"
+                        value={formData.postalCode}
+                        onChange={handleChange}
+                        fullWidth
                       />
                     </Box>
                   </FormControl>
-                </Stack>
-
-                <Stack spacing={2} direction="row" sx={{ marginBottom: 4 }}>
+                  {/* Total Unit */}
                   <FormControl>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        width: "100%",
-                      }}
-                    >
-                      <label
-                        htmlFor="TotalUnit"
-                        style={{ marginRight: "8px", width: "auto" }}
-                      >
-                        Total Unit
+                    <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
+                      <label htmlFor="totalUnit" style={{ marginRight: "8px", width: "auto" }}>
+                        Total Unit:
                       </label>
-
                       <Input
-                        id="TotalUnit"
-                        value={TotalUnit}
-                        onChange={(e) => setTotalUnit(e.target.value)}
+                        id="totalUnit"
+                        value={formData.totalUnit}
+                        onChange={handleChange}
                         fullWidth
-                        sx={{
-                          borderWidth: "1px",
-                          borderStyle: "solid",
-                          borderRadius: "4px",
-                          "& .MuiInputBase-input": {
-                            borderColor: "primary.main",
-                          },
-                        }}
                       />
                     </Box>
                   </FormControl>
-                  <FormControl
-                    variant="outlined"
-                    component="fieldset"
-                    sx={{ display: "flex", alignItems: "center", gap: 2 }}
-                  >
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        width: "100%",
-                      }}
-                    >
-                      <label
-                        htmlFor="ParkingSpaces"
-                        style={{ marginRight: "8px", width: "auto" }}
-                      >
+                  {/* Parking Spaces */}
+                  <FormControl variant="outlined" component="fieldset">
+                    <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
+                      <label htmlFor="parkingSpaces" style={{ marginRight: "8px", width: "auto" }}>
                         Parking Spaces:
                       </label>
                       <Input
-                        id="ParkingSpaces"
-                        value={ParkingSpaces}
-                        onChange={(e) => setParkingSpaces(e.target.value)}
+                        id="parkingSpaces"
+                        value={formData.parkingSpaces}
+                        onChange={handleChange}
                         fullWidth
-                        sx={{
-                          borderWidth: "1px",
-                          borderStyle: "solid",
-                          borderRadius: "4px",
-                          "& .MuiInputBase-input": {
-                            borderColor: "primary.main",
-                          },
-                        }}
                       />
                     </Box>
                   </FormControl>
@@ -210,67 +144,52 @@ const EditListingForm = () => {
               </Grid>
             </Grid>
 
+            {/* Amenities */}
             <Grid container spacing={2} marginBottom={5}>
               <FormControl fullWidth required>
                 <Box sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
-                  <label
-                    htmlFor="amenities"
-                    style={{ marginTop: "8px", alignSelf: "flex-start" }}
-                  >
+                  <label htmlFor="amenities" style={{ marginTop: "8px", alignSelf: "flex-start" }}>
                     Amenities:
                   </label>
                   <TextareaAutosize
-                    id="Amenities"
+                    id="amenities"
                     minRows={3}
-                    style={{
-                      width: "100%", // Adjust width as necessary to fill space
-                      borderColor: "#c4c4c4",
-                      borderWidth: "1px",
-                      borderStyle: "solid",
-                      borderRadius: "4px",
-                      padding: "8px",
-                      resize: "vertical", // Allows vertical resizing, remove or adjust as needed
-                    }}
-                    value={Amenities} // Ensure you update this for the correct variable
-                    onChange={(e) => setAmenities(e.target.value)} // And the correct handler
+                    style={{ width: "100%" }}
+                    value={formData.amenities}
+                    onChange={handleChange}
                   />
                 </Box>
               </FormControl>
             </Grid>
+            {/* Description */}
             <Grid container spacing={2}>
               <FormControl fullWidth required>
                 <Box sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
-                  <label
-                    htmlFor="Description"
-                    style={{ marginTop: "8px", alignSelf: "flex-start" }}
-                  >
+                  <label htmlFor="description" style={{ marginTop: "8px", alignSelf: "flex-start" }}>
                     Description:
                   </label>
                   <TextareaAutosize
-                    id="Description"
+                    id="description"
                     minRows={3}
-                    style={{
-                      width: "100%", // Adjust width as necessary to fill space
-                      borderColor: "#c4c4c4",
-                      borderWidth: "1px",
-                      borderStyle: "solid",
-                      borderRadius: "4px",
-                      padding: "8px",
-                      resize: "vertical", // Allows vertical resizing, remove or adjust as needed
-                    }}
-                    value={Description} // Ensure you update this for the correct variable
-                    onChange={(e) => setDescription(e.target.value)} // And the correct handler
-                    aria-label="amenities"
+                    style={{ width: "100%" }}
+                    value={formData.description}
+                    onChange={handleChange}
                   />
                 </Box>
               </FormControl>
             </Grid>
-          </Grid>
-          {/* Submit button */}
-          <Grid item >
-            <Button type="submit" variant="contained" color="error">
-              Submit
-            </Button>
+
+            <Grid container direction="column" padding={5}>
+              <Button 
+              type="submit" 
+              variant="contained" 
+              color="primary"
+              onClick={handleSubmit}
+              >
+                {isEditing ? "Save Changes" : "Submit"}
+                
+              </Button>
+            </Grid>
           </Grid>
         </form>
       </Paper>
