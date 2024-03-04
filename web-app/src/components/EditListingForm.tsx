@@ -12,10 +12,11 @@ import {
 } from "@mui/material";
 import Navbar from "./Navbar";
 import { Img } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 const EditListingForm = ({ propertyId }) => {
   const [isEditing, setIsEditing] = useState(false);
- 
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     address: '',
     postalCode: '',
@@ -61,6 +62,7 @@ const EditListingForm = ({ propertyId }) => {
       } else {
         console.error('Failed to submit listing data');
       }
+      navigate("/dashboard-company")
     } catch (error) {
       console.error('Error submitting listing data:', error);
     }
