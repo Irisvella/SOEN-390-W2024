@@ -1,47 +1,74 @@
-import express, { Request, Response } from "express";
-import prisma from "../prisma/client";
+import express from "express";
 const router = express.Router();
+import * as z from "zod";
+import prisma from "../prisma/client";
+import jwt from "jsonwebtoken";
+import verifyToken from "../middleware/verify-token";
+require("dotenv").config();
+
+import { Request, Response, NextFunction } from "express";
 
 // Route to handle the submission of a new listing
-router.post('/', async (req: Request, res: Response) => {
-    const { id, size, condo_fee, address, unit_id,image_url } = req.body;
+router.post("/", verifyToken, async function (req: Request, res: Response, next: NextFunction) {
+    try {
+      
+      jwt.verify(
+        req.token as string,
+        process.env.SECRET as jwt.Secret,
+        async (err, decoded) => {
+          if (err) {
+            return res.status(401).json("Unauthorized");
+          } else {
+            console.log("decoded ---- ", decoded);
+            const { id, role, email } = (<any>decoded).data;
+
+            if (role==="company"){
+              const body = req.body;//constant 
+
+              async function newProperty( address: string, ) {
+                const property = await prisma.property.create({
+                  data:{
+                    //address on the table to the left 
+                    //address on the body is to the right 
+                    address: address,
+                    size:0,
+                    condo_fee:0,
+                    unit_id:0,
+                    
+                   }
+                });  
+              } 
+  
+              newProperty(body.address);
+              console.log("a");
+              return res.status(200).json({
+  
+              });
+            }
+            return res.status(500).json({
+                message:"unexpected error"
+            });
+
+            }
+           
+
+
+        }
+      ) 
+
     
-    try {
-      const newListing = await prisma.property.create({
-        data: {
-            
-          id,
-          size,
-          condo_fee,
-          address,
-          unit_id,
-          image_url,
-          
-         
-        },
+      }catch(err){
+        return res.status(500).json({
+          message:"unexpected error"
       });
-      res.status(201).json(newListing); // Respond with the created listing
-    } catch (error) {
-      console.error("Failed to create listing:", error);
-      res.status(500).json({ message: "Failed to create listing" });
-    }
+      }
+    
+
+  
   });
   
   
-  
 
 
-
-// Route to get all listings
-router.get('/', async (req: Request, res: Response) => {
-    try {
-      // Retrieve all listings from the database
-      const listings = await prisma.property.findMany();
-      res.status(200).json(listings);
-    } catch (error) {
-      console.error("Failed to retrieve listings:", error);
-      res.status(500).json({ message: "Failed to retrieve listings" });
-    }
-  });
   
   export default router;

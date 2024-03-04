@@ -34,12 +34,15 @@ const EditListingForm = ({ propertyId }) => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
+   
+    const token = localStorage.getItem('token');
     try {
+
       const response = await fetch('http://localhost:3000/createEditListing', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,//checking if you are logged in or not 
         },
         body: JSON.stringify(formData),
       });
