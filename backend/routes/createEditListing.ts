@@ -9,9 +9,11 @@ require("dotenv").config();
 import { Request, Response, NextFunction } from "express";
 
 // Route to handle the submission of a new listing
-router.post("/", verifyToken, async function (req: Request, res: Response, next: NextFunction) {
+router.post(
+  "/",
+  verifyToken,
+  async function (req: Request, res: Response, next: NextFunction) {
     try {
-      
       jwt.verify(
         req.token as string,
         process.env.SECRET as jwt.Secret,
@@ -22,53 +24,51 @@ router.post("/", verifyToken, async function (req: Request, res: Response, next:
             console.log("decoded ---- ", decoded);
             const { id, role, email } = (<any>decoded).data;
 
-            if (role==="company"){
-              const body = req.body;//constant 
+            if (role === "company") {
+              const body = req.body; //constant
 
-              async function newProperty( address: string, ) {
+              async function createProperty(address: string) {
                 const property = await prisma.property.create({
-                  data:{
-                    //address on the table to the left 
-                    //address on the body is to the right 
+                  data: {
+                    //address on the table to the left
+                    //address on the body is to the right
                     address: address,
-                    size:0,
-                    condo_fee:0,
-                    unit_id:0,
+                    size: 0,
+                    condo_fee: 0,
+                    unit_id: 0,
+                  },
+                });
+              }
+              async function linkProperty(owner_id: number, property_id:number) {
+                const owner = await prisma.owned_by.create({
+                  data: {
                     
-                   }
-                });  
-              } 
-  
-              newProperty(body.address);
+                   owner_id:owner_id,
+                   property_id:property_id,
+                   
+                  },
+                });
+              }
+              
+              createProperty(body.address);
               console.log("a");
-              return res.status(200).json({
-  
-              });
+              return res.status(200).json({});
             }
             return res.status(500).json({
-                message:"unexpected error"
+              message: "unexpected error",
             });
-
-            }
-           
-
-
-        }
-      ) 
-
-    
-      }catch(err){
-        return res.status(500).json({
-          message:"unexpected error"
+          }
+        },
+      );
+    } catch (err) {
+      return res.status(500).json({
+        message: "unexpected error",
       });
-      }
-    
-
-  
-  });
-  
-  
+    }
+  },
+);
 
 
-  
-  export default router;
+
+
+export default router;
