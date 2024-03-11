@@ -8,12 +8,6 @@ require("dotenv").config();
 
 import { Request, Response, NextFunction } from "express";
 
-interface userData {
-  id: number;
-  role: string;
-  email: string;
-}
-
 router.get(
   "/",
   verifyToken,
@@ -24,89 +18,107 @@ router.get(
         process.env.SECRET as jwt.Secret,
         async (err, decoded) => {
           if (err) {
+            console.log("err from /profile GET ---- ", err);
             return res.status(401).json("Unauthorized");
+          }
+
+          const { id, role, email } = (<any>decoded).data;
+          if (role === "company") {
+            const companyUser = await prisma.management_companies.findFirst({
+              where: {
+                user_id: id,
+              },
+            });
+
+            return res.status(200).json({
+              id: id,
+              role: "company",
+              email: email,
+              companyName: companyUser?.company_name,
+              phoneNumber: companyUser?.phone_number,
+              unitCount: companyUser?.unit_count,
+            });
+          } else if (role === "publicUser") {
+            const publicUser = await prisma.public_users.findFirst({
+              where: {
+                user_id: id,
+              },
+            });
+            console.log("b");
+            return res.status(200).json({
+              id: id,
+              firstName: publicUser?.first_name,
+              lastName: publicUser?.last_name,
+              phoneNumber: publicUser?.phone_number,
+              role,
+              subRole: publicUser?.role,
+              profileImageKey: publicUser?.profile_image_key,
+            });
           } else {
-            console.log("decoded ---- ", decoded);
-            const { id, role, email } = (<any>decoded).data;
-            if (role === "company") {
-              const company = await prisma.management_companies.findFirst({
-                where: {
-                  id: id,
-                },
-              });
-              console.log("a");
-              return res.status(200).json({
-                id: id,
-                role: "company",
-                email: email,
-                companyName: company?.company_name,
-                address: company?.address,
-                unitCount: company?.unit_count,
-                parking_count: company?.parking_count,
-                locker_count: company?.locker_count,
-                phone: company?.phone_number,
-              });
-            } else if (role === "publicUser") {
-              const publicUser = await prisma.public_users.findFirst({
-                where: {
-                  id: id,
-                },
-              });
-              console.log("b");
-              return res.status(200).json({
-                id: id,
-                role: "publicUser",
-                email: email,
-                username: publicUser?.username,
-                phone: publicUser?.phone_number,
-                avatar: publicUser?.profile_image_key,
-              });
-            }
-            console.log("c");
-            return res.status(500).json({ message: "Unexpected error" });
+            const employeeUser = await prisma.employee_users.findFirst({
+              where: {
+                user_id: id,
+              },
+            });
+            return res.status(200).json({
+              id: id,
+              firstName: employeeUser?.first_name,
+              lastName: employeeUser?.last_name,
+              phoneNumber: employeeUser?.phone_number,
+              role,
+              profileImageKey: employeeUser?.profile_image_key,
+            });
           }
         },
       );
     } catch (err) {
-      console.log("error from /profile ---- ", err);
+      console.log("error from /profile GET ---- ", err);
       return res.status(500).json({ message: "Unexpected error" });
     }
   },
 );
 
 router.put("/", verifyToken, async (req: Request, res: Response) => {
-  console.log('Received payload for update:', req.body);
+  console.log("Received payload for update:", req.body);
   try {
-    const decoded = jwt.verify(req.token as string, process.env.SECRET as jwt.Secret);
-    const { id, role } = (<any>decoded).data; 
+    const decoded = jwt.verify(
+      req.token as string,
+      process.env.SECRET as jwt.Secret,
+    );
+    const { id, role } = (<any>decoded).data;
 
-    const { phoneNumber, userName, companyName, address} = req.body; // Extract fields from request body
+    const { phoneNumber, firstName, lastName, companyName, address } = req.body; // Extract fields from request body
 
     if (role === "company") {
-    
       const company = await prisma.management_companies.update({
-        where: { id },
+        where: { user_id: id },
         data: {
           company_name: companyName,
           phone_number: phoneNumber,
           address: address,
-         
         },
-      }); 
-      console.log('Updated user data:', company);
-      return res.json({ message: "Company Profile updated successfully", company });
+      });
+      console.log("Updated user data:", company);
+      return res.json({
+        message: "Company Profile updated successfully",
+        company,
+      });
     } else if (role === "publicUser") {
       // Update public user profile
       const public_users = await prisma.public_users.update({
-        where: { id },
+        where: { user_id: id },
         data: {
-          username : userName,
+          first_name: firstName,
+          last_name: lastName,
           phone_number: phoneNumber,
-         //profile_image_key: avatar,
-   
+          //profile_image_key: avatar,
         },
-      }); console.log('Updated user data:', public_users);
-      return res.json({ message: "Public User profile updated successfully", public_users });
+      });
+      console.log("Updated user data:", public_users);
+      return res.json({
+        message: "Public User profile updated successfully",
+        public_users,
+      });
     } else {
       return res.status(400).json({ message: "Invalid user role" });
     }
