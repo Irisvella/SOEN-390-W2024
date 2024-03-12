@@ -13,6 +13,8 @@ import './App.css';
 import Home from './pages/Home.jsx';
 import ManagementLanding from './pages/ManagementLanding.jsx';
 import CreateListingPage from './pages/CreateListingPage.tsx';
+import JoyOrderDashboardTemplate from './JoyOrderDashboardTemplate.tsx';
+
 
 function App() {
   const isAuthenticated = !!localStorage.getItem('token');
@@ -35,6 +37,9 @@ function App() {
             <Route path="/dashboard-company" element={<DashboardCompany />} />
             <Route path="/Employeesinfo" element={<Employeesinfo />} />
             <Route path="/Addemployee" element={<Addemployee />} />
+            <Route path="/JoyOrderDashboardTemplate" element={<JoyOrderDashboardTemplate />} />
+
+            
           </>
         ) : null}
       </Routes>
