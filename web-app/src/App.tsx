@@ -16,6 +16,7 @@ import CreateListingPage from './pages/CreateListingPage.tsx';
 import JoyOrderDashboardTemplate from './JoyOrderDashboardTemplate.tsx';
 import OpenRequestManagement from './components/OpenRequestManagement.tsx';
 import RequestManagement from './pages/RequestManagement.tsx';
+import CreateRequestPage from './pages/CreateRequestPage.tsx';
 
 
 function App() {
@@ -41,7 +42,8 @@ function App() {
             <Route path="/Addemployee" element={<Addemployee />} />
             <Route path="/JoyOrderDashboardTemplate" element={<JoyOrderDashboardTemplate />} />
             <Route path="/RequestManagement" element={<RequestManagement />} />
-            <Route path="/OpenRequestManagement" element={<OpenRequestManagement />} />
+            <Route path="/RequestManagement" element={<RequestManagement />} />
+            <Route path="/CreateRequestPage" element={<CreateRequestPage />} />
             
             
           </>

@@ -66,6 +66,8 @@ const EditListingForm = ({ propertyId }) => {
     }
   };
 
+  
+
   return (
     <>
       <Navbar />
