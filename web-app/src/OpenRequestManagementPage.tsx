@@ -1,27 +1,27 @@
-
+import * as React from 'react';
 import { CssVarsProvider } from '@mui/joy/styles';
 import CssBaseline from '@mui/joy/CssBaseline';
 import Box from '@mui/joy/Box';
-
+import Button from '@mui/joy/Button';
 import Breadcrumbs from '@mui/joy/Breadcrumbs';
 import Link from '@mui/joy/Link';
 import Typography from '@mui/joy/Typography';
 
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
-
+import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 
 import Sidebar from './components/Sidebar';
-import OpenRequestManagement from './components/OpenRequestManagement';
+import OrderRequestManagementForm from '../../web-app/src/components/OpenRequestManagementForm';
 import OrderList from './components/OrderList';
+import Header from './components/Header';
 
-
-export default function JoyOrderDashboardTemplate() {
+export default function OpenRequestManagementPage() {
   return (
     <CssVarsProvider disableTransitionOnChange>
       <CssBaseline />
       <Box sx={{ display: 'flex', minHeight: '100dvh' }}>
-      
+        <Header />
         <Sidebar />
         <Box
           component="main"
@@ -46,7 +46,7 @@ export default function JoyOrderDashboardTemplate() {
             <Breadcrumbs
               size="sm"
               aria-label="breadcrumbs"
-              separator={<ChevronRightRoundedIcon  />}
+              separator={<ChevronRightRoundedIcon fontSize="sm" />}
               sx={{ pl: 0 }}
             >
               <Link
@@ -67,7 +67,7 @@ export default function JoyOrderDashboardTemplate() {
                 Dashboard
               </Link>
               <Typography color="primary" fontWeight={500} fontSize={12}>
-                Open Requests
+                Orders
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -85,9 +85,15 @@ export default function JoyOrderDashboardTemplate() {
             <Typography level="h2" component="h1">
               Orders
             </Typography>
-            
+            <Button
+              color="primary"
+              startDecorator={<DownloadRoundedIcon />}
+              size="sm"
+            >
+              Download PDF
+            </Button>
           </Box>
-          <OpenRequestManagement />
+          <OrderRequestManagementForm />
           <OrderList />
         </Box>
       </Box>
