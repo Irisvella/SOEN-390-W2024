@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, CssBaseline } from "@mui/material";
+import { Button, Container, CssBaseline } from "@mui/material";
 import Navbar from "../components/Navbar";
 import PropertySlider from "./PropertySlider"; // Assuming correct export
 import { Property } from "./PropertySlider"; // Assuming Property is correctly exported as a type
@@ -10,6 +10,11 @@ const DashboardUser = () => {
   const userName = "John";
   const [properties, setProperties] = useState<Property[]>([]);
   const navigate = useNavigate();
+  const handleAddProperty = () => {
+    // Here you can handle the logic to add a property
+    // For example, opening a dialog or redirecting to a form page
+    navigate("/CreateRequestPage");
+  };
   const userProperties: Property[] = [
     {
       id: "1",
@@ -72,7 +77,16 @@ const DashboardUser = () => {
       <Navbar userName={userName} />
       <Container component="main" maxWidth="lg" sx={{ mt: 10, mb: 10 }}>
         <PropertySlider properties={properties} />
-        {/* Rest of your component */}
+       
+        {/* Add Property Button */}
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ mb: 2 }} // Adjust the margin as needed
+          onClick={handleAddProperty} // Replace with your actual event handler function
+        >
+          Submit a new request
+        </Button>
       </Container>
     </>
   );

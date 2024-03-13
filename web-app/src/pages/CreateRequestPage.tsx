@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   TextField,
@@ -14,15 +14,20 @@ import {
 import { Card } from "@mui/joy";
 import Grid from "@mui/joy/Grid";
 import Navbar from "../components/Navbar";
+import { useNavigate } from "react-router-dom"; // Make sure to import useNavigate
 
 function CreateRequestPage() {
-  const [isEditing, setIsEditing] = useState(false);
 
+  const navigate = useNavigate(); // Initialize useNavigate
+
+ 
   const [formData, setFormData] = useState({
     requestType: "",
     date: "",
     time: "",
     requestReason: "",
+    createdBy:"",
+    
   });
 
   const handleChange = (e) => {
@@ -33,10 +38,10 @@ function CreateRequestPage() {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async () => {
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch("http://localhost:3000/createEditListing", {
+      const response = await fetch("http://localhost:3000/createRequestPage", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -46,22 +51,34 @@ function CreateRequestPage() {
       });
 
       if (response.ok) {
-        console.log("Listing data submitted successfully");
-
+        console.log("Request data submitted successfully");
         setFormData({
           requestType: "",
           date: "",
           time: "",
           requestReason: "",
+          createdBy: "",
         });
       } else {
-        console.error("Failed to submit listing data");
+        const errorResponse = await response.text(); // Or response.json() if the server responds with JSON
+        console.error("Failed to submit data", errorResponse);
       }
+      
     } catch (error) {
       console.error("Error submitting listing data:", error);
     }
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+    }
+    const role = localStorage.getItem("role");
+    if (role !== 'publicUser'){
+      navigate("/dashboard-company")
+    }
+  }, []);
   return (
     <>
       <Navbar />
@@ -89,27 +106,31 @@ function CreateRequestPage() {
 
           <form noValidate autoComplete="off">
             <Grid container spacing={2} alignItems="flex-end">
-              <Grid  xs={12} sm={4}>
+              <Grid xs={6} sm={3}>
                 <FormControl fullWidth>
                   <InputLabel id="request-type-label">Request type</InputLabel>
                   <Select
                     labelId="request-type-label"
-                    name="requestType" 
+                    name="requestType"
                     label="Request type"
                     value={formData.requestType}
                     onChange={handleChange}
                   >
-                    <MenuItem value="maintenance">Maintenance</MenuItem>
-                    <MenuItem value="inquiry">Inquiry</MenuItem>
-                    
+                    <MenuItem value="maintenance">Moving out (Elevator) </MenuItem>
+                    <MenuItem value="inquiry">Intercom Changes</MenuItem>
+                    <MenuItem value="inquiry">Reporting a violation</MenuItem>
+                    <MenuItem value="inquiry">Deficiency in common areas</MenuItem>
+                    <MenuItem value="inquiry">Make Reservation</MenuItem>
+                    <MenuItem value="inquiry">Other</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid  xs={12} sm={4}>
+              <Grid xs={6} sm={3}>
                 <TextField
-                 name="date" 
+                  name="date"
                   label="Date"
                   type="date"
+                  variant="filled"
                   fullWidth
                   InputLabelProps={{
                     shrink: true,
@@ -118,22 +139,35 @@ function CreateRequestPage() {
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid xs={12} sm={4}>
+              <Grid xs={6} sm={3}>
                 <TextField
-                 name="time" 
+                  name="time"
                   label="Time"
                   type="time"
+                  variant="filled"
                   fullWidth
                   InputLabelProps={{
                     shrink: true,
                   }}
-                 value={formData.time}
-                 onChange={handleChange}
+                  value={formData.time}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid xs={6} sm={3}>
+                <TextField
+                  name="createdBy"
+                  label="createdBy"
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={formData.createdBy}
+                  onChange={handleChange}
                 />
               </Grid>
             </Grid>
             <TextField
-             name="requestReason" 
+              name="requestReason"
               label="Reason for request"
               multiline
               rows={4}
@@ -143,11 +177,12 @@ function CreateRequestPage() {
               onChange={handleChange}
             />
             <Box textAlign="center" mt={2}>
-              <Button variant="contained" 
-              color="primary"
-              onClick={handleSubmit}
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSubmit}
               >
-                   {isEditing ? "Save Changes" : "Submit"}
+                Submit
               </Button>
             </Box>
           </form>

@@ -13,7 +13,7 @@ import './App.css';
 import Home from './Pages/Home.jsx';
 import ManagementLanding from './Pages/ManagementLanding.jsx';
 import CreateListingPage from './Pages/CreateListingPage.tsx';
-import OpenRequestManagementPage from './OpenRequestManagementPage.tsx';
+import OpenRequestManagementPage from './Pages/OpenRequestManagementPage.tsx';
 
 import RequestManagement from './Pages/RequestManagement.tsx';
 import CreateRequestPage from './Pages/CreateRequestPage.tsx';
