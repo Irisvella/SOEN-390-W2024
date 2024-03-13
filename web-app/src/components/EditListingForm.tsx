@@ -12,17 +12,18 @@ import {
 } from "@mui/material";
 import Navbar from "./Navbar";
 import { Img } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 const EditListingForm = ({ propertyId }) => {
   const [isEditing, setIsEditing] = useState(false);
- 
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    address: '',
-    postalCode: '',
-    totalUnit: '',
-    parkingSpaces: '',
-    amenities: '',
-    description: '',
+    address: "",
+    postalCode: "",
+    totalUnit: "",
+    parkingSpaces: "",
+    amenities: "",
+    description: "",
   });
 
   const handleChange = (e) => {
@@ -34,35 +35,35 @@ const EditListingForm = ({ propertyId }) => {
   };
 
   const handleSubmit = async (e) => {
-   
-    const token = localStorage.getItem('token');
+    e.preventDefault();
+    const token = localStorage.getItem("token");
     try {
-
-      const response = await fetch('http://localhost:3000/createEditListing', {
-        method: 'POST',
+      const response = await fetch("http://localhost:3000/createEditListing", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,//checking if you are logged in or not 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, //checking if you are logged in or not
         },
         body: JSON.stringify(formData),
       });
 
       if (response.ok) {
-        console.log('Listing data submitted successfully');
-        
+        console.log("Listing data submitted successfully");
+
         setFormData({
-          address: '',
-          postalCode: '',
-          totalUnit: '',
-          parkingSpaces: '',
-          amenities: '',
-          description: '',
+          address: "",
+          postalCode: "",
+          totalUnit: "",
+          parkingSpaces: "",
+          amenities: "",
+          description: "",
         });
       } else {
-        console.error('Failed to submit listing data');
+        console.error("Failed to submit listing data");
       }
+      navigate("/dashboard-company");
     } catch (error) {
-      console.error('Error submitting listing data:', error);
+      console.error("Error submitting listing data:", error);
     }
   };
 
@@ -71,7 +72,14 @@ const EditListingForm = ({ propertyId }) => {
   return (
     <>
       <Navbar />
-      <Paper sx={{ p: 2, m: 10, backgroundColor: (theme) => theme.palette.mode === "dark" ? "#1A2027" : "#F0F0F0", }}>
+      <Paper
+        sx={{
+          p: 2,
+          m: 10,
+          backgroundColor: (theme) =>
+            theme.palette.mode === "dark" ? "#1A2027" : "#F0F0F0",
+        }}
+      >
         <form>
           <Grid container direction="column" padding={5}>
             <Grid item xs container direction="row" spacing={2}>
@@ -80,7 +88,10 @@ const EditListingForm = ({ propertyId }) => {
                   <Typography variant="h5" padding={2}>
                     Edit Listing
                   </Typography>
-                  <Img alt="complex" src="https://accescondos.org/app/uploads/2016/09/fc6_persp_principale.jpg" />
+                  <Img
+                    alt="complex"
+                    src="https://accescondos.org/app/uploads/2016/09/fc6_persp_principale.jpg"
+                  />
                 </Box>
               </Grid>
 
@@ -88,8 +99,17 @@ const EditListingForm = ({ propertyId }) => {
                 <Stack spacing={2} direction="column" sx={{ marginBottom: 6 }}>
                   {/* Address */}
                   <FormControl variant="outlined" component="fieldset">
-                    <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
-                      <label htmlFor="address" style={{ marginRight: "8px", width: "auto" }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        width: "100%",
+                      }}
+                    >
+                      <label
+                        htmlFor="address"
+                        style={{ marginRight: "8px", width: "auto" }}
+                      >
                         Address:
                       </label>
                       <Input
@@ -102,8 +122,17 @@ const EditListingForm = ({ propertyId }) => {
                   </FormControl>
                   {/* Postal Code */}
                   <FormControl variant="outlined" component="fieldset">
-                    <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
-                      <label htmlFor="postalCode" style={{ marginRight: "8px", width: "auto" }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        width: "100%",
+                      }}
+                    >
+                      <label
+                        htmlFor="postalCode"
+                        style={{ marginRight: "8px", width: "auto" }}
+                      >
                         Postal Code:
                       </label>
                       <Input
@@ -116,8 +145,17 @@ const EditListingForm = ({ propertyId }) => {
                   </FormControl>
                   {/* Total Unit */}
                   <FormControl>
-                    <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
-                      <label htmlFor="totalUnit" style={{ marginRight: "8px", width: "auto" }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        width: "100%",
+                      }}
+                    >
+                      <label
+                        htmlFor="totalUnit"
+                        style={{ marginRight: "8px", width: "auto" }}
+                      >
                         Total Unit:
                       </label>
                       <Input
@@ -130,8 +168,17 @@ const EditListingForm = ({ propertyId }) => {
                   </FormControl>
                   {/* Parking Spaces */}
                   <FormControl variant="outlined" component="fieldset">
-                    <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
-                      <label htmlFor="parkingSpaces" style={{ marginRight: "8px", width: "auto" }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        width: "100%",
+                      }}
+                    >
+                      <label
+                        htmlFor="parkingSpaces"
+                        style={{ marginRight: "8px", width: "auto" }}
+                      >
                         Parking Spaces:
                       </label>
                       <Input
@@ -150,7 +197,10 @@ const EditListingForm = ({ propertyId }) => {
             <Grid container spacing={2} marginBottom={5}>
               <FormControl fullWidth required>
                 <Box sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
-                  <label htmlFor="amenities" style={{ marginTop: "8px", alignSelf: "flex-start" }}>
+                  <label
+                    htmlFor="amenities"
+                    style={{ marginTop: "8px", alignSelf: "flex-start" }}
+                  >
                     Amenities:
                   </label>
                   <TextareaAutosize
@@ -167,7 +217,10 @@ const EditListingForm = ({ propertyId }) => {
             <Grid container spacing={2}>
               <FormControl fullWidth required>
                 <Box sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
-                  <label htmlFor="description" style={{ marginTop: "8px", alignSelf: "flex-start" }}>
+                  <label
+                    htmlFor="description"
+                    style={{ marginTop: "8px", alignSelf: "flex-start" }}
+                  >
                     Description:
                   </label>
                   <TextareaAutosize
@@ -182,14 +235,13 @@ const EditListingForm = ({ propertyId }) => {
             </Grid>
 
             <Grid container direction="column" padding={5}>
-              <Button 
-              type="submit" 
-              variant="contained" 
-              color="primary"
-              onClick={handleSubmit}
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                onClick={handleSubmit}
               >
                 {isEditing ? "Save Changes" : "Submit"}
-                
               </Button>
             </Grid>
           </Grid>
