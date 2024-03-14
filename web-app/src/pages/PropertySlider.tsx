@@ -6,7 +6,6 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Button } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import "../App.css";
 
