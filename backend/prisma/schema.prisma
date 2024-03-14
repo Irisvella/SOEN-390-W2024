@@ -5,7 +5,9 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
+
 
 model amenities {
   id          Int            @id @default(autoincrement())
@@ -50,7 +52,7 @@ model employed_by {
   yearly_salary        Decimal              @db.Decimal(10, 2)
   start_date           DateTime?            @default(now()) @db.Timestamp(6)
   end_date             DateTime?            @db.Timestamp(6)
-  role                 employee_role
+  role                 String
   management_companies management_companies @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   public_users         public_users         @relation(fields: [public_user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
@@ -176,12 +178,6 @@ enum amenities_type {
   other
 }
 
-enum employee_role {
-  manager
-  daily_operations @map("daily operations")
-  finance
-  other
-}
 
 enum file_type {
   declarations
