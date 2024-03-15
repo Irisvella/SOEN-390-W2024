@@ -58,6 +58,7 @@ model property {
   id                     Int                      @id @default(autoincrement())
   company_id             Int?
   size                   Int
+  image_url              String?
   unit_id                String
   address                String
   condo_fee              Decimal                  @db.Decimal(10, 2)
