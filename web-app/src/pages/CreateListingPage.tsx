@@ -1,4 +1,4 @@
-import React from 'react'
+
 import EditListingForm from '../components/EditListingForm'
 
 const CreateListingPage = () => {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Button,
   FormControl,
@@ -13,8 +13,8 @@ import {
 import Navbar from "./Navbar";
 import { Img } from "@chakra-ui/react";
 
-const EditListingForm = ({ propertyId }) => {
-  const [isEditing, setIsEditing] = useState(false);
+const EditListingForm = () => { 
+  const [isEditing] = useState(false); //check if you are editing or not   const [isEditing, setIsEditing] = useState(false); 
  
   const [formData, setFormData] = useState({
     address: '',
@@ -25,7 +25,7 @@ const EditListingForm = ({ propertyId }) => {
     description: '',
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: { target: { id: any; value: any; }; }) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -33,7 +33,7 @@ const EditListingForm = ({ propertyId }) => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async () => {
    
     const token = localStorage.getItem('token');
     try {
