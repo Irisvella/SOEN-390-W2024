@@ -6,6 +6,7 @@ datasource db {
   provider          = "postgresql"
   url               = env("DATABASE_URL")
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model amenities {
@@ -60,6 +61,7 @@ model property {
   unit_id                String
   address                String
   condo_fee              Decimal                  @db.Decimal(10, 2)
+  image_url              String?
   image_key              String?
   amenities              amenities[]
   condo_management_files condo_management_files[]

@@ -54,6 +54,7 @@ CREATE TABLE property (
     address TEXT NOT NULL,
     condo_fee NUMERIC(10, 2) NOT NULL,
     image_key TEXT,
+    image_url TEXT,
     UNIQUE (address, unit_id) 
 );
 
