@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+
 import {
   Container,
   TextField,
@@ -15,6 +15,7 @@ import { Card } from "@mui/joy";
 import Grid from "@mui/joy/Grid";
 import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom"; // Make sure to import useNavigate
+import { useEffect, useState } from "react";
 
 function CreateRequestPage() {
 
@@ -26,6 +27,7 @@ function CreateRequestPage() {
     date: "",
     time: "",
     requestReason: "",
+    priority:"",
     createdBy:"",
     
   });
@@ -57,7 +59,8 @@ function CreateRequestPage() {
           date: "",
           time: "",
           requestReason: "",
-          createdBy: "",
+          priority: "",
+          createdBy:"",
         });
       } else {
         const errorResponse = await response.text(); // Or response.json() if the server responds with JSON
@@ -108,24 +111,41 @@ function CreateRequestPage() {
             <Grid container spacing={2} alignItems="flex-end">
               <Grid xs={6} sm={3}>
                 <FormControl fullWidth>
-                  <InputLabel id="request-type-label">Request type</InputLabel>
+                  <InputLabel id="requestType">Request type</InputLabel>
                   <Select
-                    labelId="request-type-label"
+                    labelId="requestType"
                     name="requestType"
-                    label="Request type"
+                    label="requestType"
                     value={formData.requestType}
                     onChange={handleChange}
                   >
-                    <MenuItem value="maintenance">Moving out (Elevator) </MenuItem>
-                    <MenuItem value="inquiry">Intercom Changes</MenuItem>
-                    <MenuItem value="inquiry">Reporting a violation</MenuItem>
+                    <MenuItem value="Moving out">Moving out - Elevator</MenuItem>
+                    <MenuItem value="IntercomChanges">Intercom Changes</MenuItem>
+                    <MenuItem value="ReportingViolation">Reporting a violation</MenuItem>
                     <MenuItem value="inquiry">Deficiency in common areas</MenuItem>
-                    <MenuItem value="inquiry">Make Reservation</MenuItem>
-                    <MenuItem value="inquiry">Other</MenuItem>
+                    <MenuItem value="Reservation">Make Reservation</MenuItem>
+                    <MenuItem value="Other">Other</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
               <Grid xs={6} sm={3}>
+                <FormControl fullWidth>
+                  <InputLabel id="priority">Priority</InputLabel>
+                  <Select
+                    labelId="priority"
+                    name="priority"
+                    label="priority"
+                    value={formData.priority}
+                    onChange={handleChange}
+                  >
+                    <MenuItem value="High">High</MenuItem>
+                    <MenuItem value="Medium">Medium</MenuItem>
+                    <MenuItem value="Low">Low</MenuItem>
+                   
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid xs={6} sm={2}>
                 <TextField
                   name="date"
                   label="Date"
@@ -139,7 +159,7 @@ function CreateRequestPage() {
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid xs={6} sm={3}>
+              <Grid xs={6} sm={2}>
                 <TextField
                   name="time"
                   label="Time"
@@ -153,10 +173,12 @@ function CreateRequestPage() {
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid xs={6} sm={3}>
+              <Grid xs={6} sm={2}>
                 <TextField
                   name="createdBy"
                   label="createdBy"
+                  type="text"
+                  variant="filled"
                   fullWidth
                   InputLabelProps={{
                     shrink: true,
@@ -165,6 +187,7 @@ function CreateRequestPage() {
                   onChange={handleChange}
                 />
               </Grid>
+              
             </Grid>
             <TextField
               name="requestReason"
