@@ -38,19 +38,16 @@ router.get(
                         //create array to query all employees later
                         const employee_ids = [];
                         for(let i=0; i< employees.length; i++){
-                            employee_ids.push(employees[i]);
+                            employee_ids.push(employees[i].employee_user_id);
                         }
                         //query all employees from there ids, in employees table
                         const employee_data = await prisma.employee_users.findMany({
                             where: {
-                                user_id: { in: employee_ids }
+                                user_id: {in:  employee_ids }
                             }
                         })
                         return res.status(200).json({
-                            id: employee_data.user_id,
-                            first_name: employee_data.first_name,
-                            last_name: employee_data.last_name,
-                            role: employee_data.role
+                            employee_data
                         });
                     }
                     }
