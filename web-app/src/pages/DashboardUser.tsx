@@ -9,11 +9,7 @@ import "../App.css";
 const DashboardUser = () => {
   const [properties, setProperties] = useState<Property[]>([]);
   const navigate = useNavigate();
-  const handleAddProperty = () => {
-    // Here you can handle the logic to add a property
-    // For example, opening a dialog or redirecting to a form page
-    navigate("/CreateRequestPage");
-  };
+  /*
   const userProperties: Property[] = [
     {
       id: "1",
@@ -69,6 +65,10 @@ const DashboardUser = () => {
     };
     fetchProperties();
   }, []);
+
+  function handleAddProperty() {
+    navigate("/CreateRequestPage");
+  }
 
   return (
     <>
