@@ -45,14 +45,6 @@ router.post(
               
               createProperty(body.address, id);
               
-              const newProperty = await prisma.property.findFirst({
-                select: {
-                id: true,
-                },
-                where: {
-                address: body.address,
-                },
-                });
               console.log("a");
               return res.status(200).json({});
             }
