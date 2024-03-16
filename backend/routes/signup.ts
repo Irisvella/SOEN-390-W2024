@@ -29,6 +29,7 @@ const EmployeeUser = z.object({
   firstName: z.string().trim().toLowerCase().min(1),
   lastName: z.string().trim().toLowerCase().min(1),
   phoneNumber: z.string().trim().min(10),
+  role: z.enum(["manager", "daily_operations", "finance", "other"]),
 });
 
 /* Allow a public user to register */
@@ -187,6 +188,7 @@ router.post(
               first_name: parsedUser.firstName,
               last_name: parsedUser.lastName,
               phone_number: parsedUser.phoneNumber,
+              role: parsedUser.role,
             },
           });
         });

@@ -17,10 +17,13 @@ CREATE TABLE public_users (
     profile_image_key TEXT
 );
 
+CREATE TYPE employee_role AS ENUM('manager', 'daily operations', 'finance', 'other');
+
 CREATE TABLE employee_users (
     user_id INT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
     first_name TEXT NOT NULL,
     last_name TEXT NOT NULL,
+    role employee_role NOT NULL,
     phone_number TEXT NOT NULL,
     profile_image_key TEXT
 );
@@ -50,6 +53,7 @@ CREATE TABLE property (
     unit_id TEXT NOT NULL, -- sometimes condo unit ids are letters too
     address TEXT NOT NULL,
     condo_fee NUMERIC(10, 2) NOT NULL,
+    image_key TEXT,
     UNIQUE (address, unit_id) 
 );
 
@@ -76,15 +80,12 @@ CREATE TABLE registration ( -- omitted company_id since it could be found using 
     UNIQUE (property_id, start_date, end_date) -- only one person at a time can own/rent a specific property
 );
 
-CREATE TYPE employee_role AS ENUM('manager', 'daily operations', 'finance', 'other');
-
 CREATE TABLE employed_by (
     employee_user_id INT REFERENCES employee_users(user_id) ON DELETE CASCADE,
     company_id INT REFERENCES management_companies(user_id) ON DELETE CASCADE,
     start_date TIMESTAMP DEFAULT NOW(),
     end_date TIMESTAMP DEFAULT NULL, -- null for ongoing employee
-    role employee_role NOT NULL,
-    PRIMARY KEY (employee_user_id, company_id)
+    PRIMARY KEY (employee_user_id, end_date) -- an employee could work at one company at a time
 );
 
 CREATE TABLE amenities (

@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
@@ -32,14 +32,13 @@ model condo_management_files {
 
 model employed_by {
   employee_user_id     Int
-  company_id           Int
-  start_date           DateTime?            @default(now()) @db.Timestamp(6)
-  end_date             DateTime?            @db.Timestamp(6)
-  role                 employee_role
-  management_companies management_companies @relation(fields: [company_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
-  employee_users       employee_users       @relation(fields: [employee_user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+  company_id           Int?
+  start_date           DateTime?             @default(now()) @db.Timestamp(6)
+  end_date             DateTime              @db.Timestamp(6)
+  management_companies management_companies? @relation(fields: [company_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+  employee_users       employee_users        @relation(fields: [employee_user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
 
-  @@id([employee_user_id, company_id])
+  @@id([employee_user_id, end_date])
 }
 
 model management_companies {
@@ -58,10 +57,10 @@ model property {
   id                     Int                      @id @default(autoincrement())
   company_id             Int?
   size                   Int
-  image_url              String?
   unit_id                String
   address                String
   condo_fee              Decimal                  @db.Decimal(10, 2)
+  image_key              String?
   amenities              amenities[]
   condo_management_files condo_management_files[]
   management_companies   management_companies?    @relation(fields: [company_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
@@ -120,6 +119,7 @@ model employee_users {
   user_id                                     Int           @id
   first_name                                  String
   last_name                                   String
+  role                                        employee_role
   phone_number                                String
   profile_image_key                           String?
   employed_by                                 employed_by[]
