@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, CssBaseline } from "@mui/material";
 import Navbar from "../components/Navbar";
@@ -7,9 +7,9 @@ import { Property } from "./PropertySlider"; // Assuming Property is correctly e
 import "../App.css";
 
 const DashboardUser = () => {
-  const userName = "John";
   const [properties, setProperties] = useState<Property[]>([]);
   const navigate = useNavigate();
+  /*
   const userProperties: Property[] = [
     {
       id: "1",
@@ -41,7 +41,7 @@ const DashboardUser = () => {
     },
     // Add more properties as needed
   ];
-
+*/
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -69,7 +69,7 @@ const DashboardUser = () => {
   return (
     <>
       <CssBaseline />
-      <Navbar userName={userName} />
+      <Navbar />
       <Container component="main" maxWidth="lg" sx={{ mt: 10, mb: 10 }}>
         <PropertySlider properties={properties} />
         {/* Rest of your component */}

@@ -19,7 +19,6 @@ const DashboardCompany = () => {
     // For example, opening a dialog or redirecting to a form page
     navigate("/CreateListingPage");
   };
-  const companyName = "CoolCompany";
   const [properties, setProperties] = useState<Property[]>([]);
   const navigate = useNavigate();
 
@@ -55,7 +54,7 @@ const DashboardCompany = () => {
   return (
     <>
       <CssBaseline />
-      <Navbar userName={companyName} />
+      <Navbar />
       <Container component="main" maxWidth="lg" sx={{ mt: 10, mb: 10 }}>
         <PropertySlider properties={properties} />
         {/* Add Property Button */}
