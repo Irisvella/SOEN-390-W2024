@@ -69,7 +69,6 @@ router.post(
                     data: {
                       employee_user_id: userID,
                       company_id: id,
-                      yearly_salary: 100000,
                       role:body.role,
                     },
                   });
