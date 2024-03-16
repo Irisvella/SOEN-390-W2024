@@ -43,7 +43,7 @@ function CreateRequestPage() {
   const handleSubmit = async () => {
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch("http://localhost:3000/createRequestPage", {
+      const response = await fetch("http://localhost:3000", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
