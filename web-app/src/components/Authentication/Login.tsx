@@ -1,4 +1,3 @@
-
 // LoginPage.js
 import { SetStateAction, useState } from "react";
 import {
@@ -14,8 +13,6 @@ import FitbitIcon from "@mui/icons-material/Fitbit";
 import UserLoginForm from "../Authentication/UserLoginForm";
 import CompanyLoginForm from "../Authentication/CompanyLoginForm";
 import Navbar from "../Navbar";
-
-
 
 const LoginPage = () => {
   const [role, setRole] = useState("");
@@ -65,5 +62,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-
-

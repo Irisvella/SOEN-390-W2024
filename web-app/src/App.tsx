@@ -1,7 +1,4 @@
-// App.tsx
-
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SignUp from './components/Authentication/SignUp.tsx';
 import Login from './components/Authentication/Login.tsx';
 import MinApp from './components/EditProfile/src/container/MinApp.tsx';

@@ -144,13 +144,12 @@ body {
 }
 
 .home-background {
-  background-image: url("bg.png");
+  background-image: url("bg1.jpg");
   background-attachment: fixed;
   background-size: cover;
   background-position: center;
   height: 100vh;
   width: 100%;
-  z-index: 0;
 }
 
 .content {
@@ -163,13 +162,12 @@ body {
 
 .content h1 {
   font-size: 3rem;
-
   margin-top: -90px;
   padding-top: -90px;
   margin-bottom: 1rem;
   color: #fff;
   z-index: 4;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+  text-shadow: 0 0 1px #fff, 0 0 1px #fff, 0 0 15px #fff;
 }
 
 .content h2 {
@@ -213,261 +211,4 @@ body {
 /* Hide just the horizontal scrollbar */
 ::-webkit-scrollbar-track {
   display: none;
-}
-
-/* App.css */
-
-/* Styles for the form fields and button */
-/* App.css */
-/* App.css */
-.login-form-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 1rem;
-  width: 100%;
-  max-width: 320px; /* Smaller width */
-}
-/* For medium devices like tablets */
-@media (max-width: 768px) {
-  .login-form-container {
-    margin-top: 5vh; /* Less space from the top */
-    width: 90%; /* Take up more width on small screens */
-    max-width: 400px; /* Limit the maximum width */
-  }
-}
-
-/* For smaller devices like mobile phones */
-@media (max-width: 480px) {
-  .login-form-container {
-    margin-top: 5vh; /* Less space from the top */
-    width: 90%; /* Take up more width on very small screens */
-    max-width: 350px; /* Limit the maximum width */
-  }
-
-  /* Further adjustments to elements within the form container for small screens */
-  .form-field,
-  .MuiTextField-root,
-  .login-form-btn,
-  .MuiButton-root {
-    margin-bottom: 8px; /* Reduce space between form elements */
-  }
-
-  .background-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start; /* Align to the top */
-    align-items: center; /* Center align horizontally */
-    padding-top: 10vh; /* Add padding at the top to push content down */
-  }
-}
-
-.form-field {
-  width: 100%;
-}
-
-.login-form-btn {
-  width: 100%;
-  margin-top: 1rem;
-}
-
-/* Additional styles for the login box containing the form */
-.login-box {
-  margin-top: 0; /* Remove any additional top margin */
-  margin-bottom: 0; /* Remove any additional bottom margin */
-}
-
-/* Adjust the style for the TextField and Button components if needed */
-.MuiTextField-root {
-  margin: 0.5rem 0; /* Reduces space between text fields */
-}
-
-.MuiButton-root {
-  margin-top: 1rem; /* Adds space above the button */
-}
-ponents directly if needed */ .MuiTextField-root {
-  margin: 0px 0; /* Reduced space between text fields */
-}
-
-.MuiButton-root {
-  margin-top: 0px; /* Space above the button */
-}
-/* App.css or the relevant CSS file */
-.role-select {
-  padding: 1px;
-  margin-top: 0px;
-  margin-bottom: 0px;
-  border: 1px solid #ced4da; /* Grey border */
-  border-radius: 4px; /* Rounded corners */
-  width: 53%;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075); /* Inner shadow for some depth */
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; /* Transition for focus */
-}
-
-.role-select:focus {
-  border-color: #80bdff; /* Light blue border on focus */
-  outline: 0;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075),
-    0 0 5px rgba(128, 189, 255, 0.5); /* Glowing effect on focus */
-}
-/* Style for the link */
-.link-signup {
-  color: #007bff; /* Bootstrap primary blue color */
-  text-decoration: none; /* Removes underline */
-}
-
-.link-signup:hover {
-  text-decoration: underline; /* Adds underline on hover for better user interaction */
-}
-
-/* PropertySlider.css */
-
-.property-slide img {
-  max-width: 100%;
-  height: 50vh;
-  margin: 0 auto;
-  object-fit: cover;
-  object-position: center;
-}
-
-@keyframes gradientBorder {
-  0% {
-    border-image: linear-gradient(
-        60deg,
-        rgba(250, 128, 114, 0),
-        rgba(250, 128, 114, 0.8),
-        rgba(250, 128, 114, 0)
-      )
-      1;
-  }
-  50% {
-    border-image: linear-gradient(
-        120deg,
-        rgba(250, 128, 114, 0),
-        rgba(250, 128, 114, 0.8),
-        rgba(250, 128, 114, 0)
-      )
-      1;
-  }
-  100% {
-    border-image: linear-gradient(
-        60deg,
-        rgba(250, 128, 114, 0),
-        rgba(250, 128, 114, 0.8),
-        rgba(250, 128, 114, 0)
-      )
-      1;
-  }
-}
-
-.property-slide {
-  animation: gradientBorder 8s infinite linear;
-  background-color: #f0f0f0; /* Light grey background */
-  margin: 15px; /* Ensure there's space around the slides to see the animation */
-  border-radius: 0px; /* Optional: adds rounded corners */
-  border: 4px solid transparent;
-  background-color: transparent;
-  border-image: linear-gradient(
-      60deg,
-      rgba(250, 128, 114, 0),
-      rgba(250, 128, 114, 1),
-      rgba(250, 128, 114, 0)
-    )
-    1;
-  border-image-slice: 1;
-}
-
-.property-details {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 10px;
-
-  padding: 0em;
-  background-color: rgba(255, 255, 255, 0.9);
-}
-
-.property-actions button {
-  margin: 3px;
-  padding: 1px 20px;
-  margin-right: 10px;
-  margin-bottom: 10px;
-  margin-top: 5px;
-}
-
-@media (max-width: 768px) {
-  .property-slide img {
-    max-height: 200px;
-  }
-  .slick-list {
-    margin: 0 -30px;
-  }
-
-  .property-slide img {
-    max-height: 200px;
-  }
-}
-.custom-slick-next,
-.custom-slick-prev {
-  position: absolute;
-  top: 50%;
-  transform: translate(0, -50%);
-  cursor: pointer;
-  width: auto;
-  height: auto;
-  /* Ensures the clickable area is not too large or too small */
-}
-
-.custom-slick-next {
-  right: 30px; /* Increased right margin for the 'next' arrow */
-}
-
-.custom-slick-prev {
-  left: 30px; /* Increased left margin for the 'prev' arrow */
-}
-
-.property-slide {
-  /* Adds padding to prevent content from hiding behind arrows, adjust as necessary */
-  padding: 0 50px; /* Increase this value if more space is needed */
-}
-
-/* This ensures that the arrows are visible above the slider images */
-.slick-prev:before,
-.slick-next:before {
-  opacity: 0; /* Hides the default arrows */
-}
-
-/* Additional styles to ensure the arrows are not too prominent */
-.custom-slick-next div,
-.custom-slick-prev div {
-  background: rgba(
-    255,
-    255,
-    255,
-    0.5
-  ); /* Semi-transparent background for arrow buttons */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%; /* Circular shape for the arrow buttons */
-  /* Adjust the size of the arrow buttons */
-  width: 40px; /* Width of the arrow buttons */
-  height: 40px; /* Height of the arrow buttons */
-}
-
-/* Style for the Material-UI icons used in arrows */
-.custom-slick-next svg,
-.custom-slick-prev svg {
-  /* Adjust the size and color of the arrow icons */
-  color: rgba(
-    250,
-    128,
-    114,
-    0.8
-  ); /* Semi-transparent salmon color for the icons */
-  font-size: 2rem; /* Size of the arrow icons */
 }

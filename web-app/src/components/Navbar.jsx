@@ -76,8 +76,8 @@ const Navbar = ({  }) => {
       <div className="logo">
         <Avatar sx={{ m: 1, bgcolor: "salmon" }}>
           <FitbitIcon />
-        </Avatar>
-        <h6 className='logotext'>EstateFlow</h6>
+        </Avatar><h6 className='logotext'>EstateFlow</h6>
+        
       </div>
       <ul className={mobile ? "nav-links-mobile" : "nav-links"} onClick={() => setMobile(false)}>
         <li><Link to='/' className='nav-link home'>Home</Link></li>

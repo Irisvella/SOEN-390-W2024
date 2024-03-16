@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Button,
   FormControl,
@@ -26,7 +26,7 @@ const EditListingForm = ({ propertyId }) => {
     description: "",
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: { target: { id: any; value: any; }; }) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
