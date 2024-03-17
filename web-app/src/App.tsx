@@ -2,19 +2,19 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SignUp from './components/Authentication/SignUp.tsx';
 import Login from './components/Authentication/Login.tsx';
 import MinApp from './components/EditProfile/src/container/MinApp.tsx';
-import DashboardUser from '../../web-app/src/Pages/DashboardUser.tsx';
-import DashboardCompany from '../../web-app/src/Pages/DashboardCompany.tsx';
-import Employeesinfo from '../../web-app/src/Pages/employeesinfo.jsx';
-import Addemployee from '../../web-app/src/Pages/addemployee.jsx';
+import DashboardUser from './pages/DashboardUser.tsx';
+import DashboardCompany from './pages/DashboardCompany.tsx';
+import Employeesinfo from './pages/employeesinfo.jsx';
+import Addemployee from './pages/addemployee.jsx';
 import './App.css';
-import Home from '../../web-app/src/Pages/Home.jsx';
-import ManagementLanding from '../../web-app/src/Pages/ManagementLanding.jsx';
-import CreateListingPage from '../../web-app/src/Pages/CreateListingPage.tsx';
-import OpenRequestManagementPage from '../../web-app/src/Pages/OpenRequestManagementPage.tsx';
+import Home from './pages/Home.jsx';
+import ManagementLanding from './pages/ManagementLanding.jsx';
+import CreateListingPage from './pages/CreateListingPage.tsx';
+import OpenRequestManagementPage from './pages/OpenRequestManagementPage.tsx';
 
-import RequestManagement from '../../web-app/src/Pages/RequestManagement.tsx';
-import CreateRequestPage from '../../web-app/src/Pages/CreateRequestPage.tsx';
-import NewManagementLanding from '../../web-app/src/Pages/NewManagementLanding.tsx';
+import RequestManagement from './pages/RequestManagement.tsx';
+import CreateRequestPage from './pages/CreateRequestPage.tsx';
+import NewManagementLanding from './pages/NewManagementLanding.tsx';
 
 
 function App() {
