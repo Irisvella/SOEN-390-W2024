@@ -37,16 +37,10 @@ function App() {
             <Route path="/dashboard-company" element={<DashboardCompany />} />
             <Route path="/Employeesinfo" element={<Employeesinfo />} />
             <Route path="/Addemployee" element={<Addemployee />} />
-            <Route
-              path="/OpenRequestManagementPage"
-              element={<OpenRequestManagementPage />}
-            />
+            <Route path="/OpenRequestManagementPage"element={<OpenRequestManagementPage />} />
             <Route path="/RequestManagement" element={<RequestManagement />} />
             <Route path="/CreateRequestPage" element={<CreateRequestPage />} />
-            <Route
-              path="/new-management-landing"
-              element={<NewManagementLanding />}
-            />
+            <Route path="/new-management-landing" element={<NewManagementLanding />} />
           </>
         ) : null}
       </Routes>

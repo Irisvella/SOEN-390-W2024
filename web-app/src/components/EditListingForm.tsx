@@ -34,7 +34,7 @@ const EditListingForm = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
     try {
