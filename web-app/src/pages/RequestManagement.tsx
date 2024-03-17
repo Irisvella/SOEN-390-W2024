@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import {
   CardContent,
   Typography,
@@ -24,7 +24,7 @@ function RequestManagement() {
   });
 
   // Function to determine the chip color based on request status
-  const getColor = (status) => {
+  const getColor = (status: string) => {
     switch (status) {
       case 'Completed':
         return 'success';
