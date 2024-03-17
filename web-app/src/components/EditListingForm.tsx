@@ -14,7 +14,7 @@ import Navbar from "./Navbar";
 import { Img } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
-const EditListingForm = ({ propertyId }) => {
+const EditListingForm = () => {
   const [isEditing] = useState(false);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({

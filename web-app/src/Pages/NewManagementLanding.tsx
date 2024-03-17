@@ -18,6 +18,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import Typography from "@mui/joy/Typography";
 import ListItemContent from "@mui/joy/ListItemContent";
 import Sheet from "@mui/joy/Sheet";
+import { closeSidebar } from "../utilis";
 //This is related to css
 function Toggler({
   defaultExpanded = false,

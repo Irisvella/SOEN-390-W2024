@@ -17,18 +17,6 @@ import OrderList from '../components/OrderList';
 import Header from '../components/Header';
 
 
-// Define the type for each property item
-interface ownerRequests {
-
-  requestType: string;
-  date: number;
-  time: number;
-  requestReason:string;
-}
-// Define the type for the props expected by PropertySlider
-interface ownerRequestsTable {
-  properties: ownerRequests[];
-}
 
 
 

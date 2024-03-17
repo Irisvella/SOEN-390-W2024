@@ -132,8 +132,6 @@ function stableSort<T>(
 
 export default function OrderTable() {
   const [order, setOrder] = React.useState<Order>("desc");
-  const [selected, setSelected] = React.useState<readonly string[]>([]);
-  const [open, setOpen] = React.useState(false);
   const renderFilters = () => (
     <React.Fragment>
       <FormControl size="sm">
