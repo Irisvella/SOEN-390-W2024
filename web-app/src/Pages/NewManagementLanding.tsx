@@ -302,7 +302,7 @@ const ManagementLanding = () => {
             {/* Main Content */}
           </Box>
 
-          <Typography variant="h4" sx={{ mb: 4 }}>
+          <Typography  sx={{ mb: 4 }}>
             Welcome, Condo Management User!
           </Typography>
         </Box>

@@ -48,12 +48,9 @@ export default function OpenRequestManagementPage() {
           }}
         >
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Breadcrumbs
-              size="sm"
-              aria-label="breadcrumbs"
-              separator={<ChevronRightRoundedIcon fontSize="sm" />}
-              sx={{ pl: 0 }}
-            >
+            <Breadcrumbs>
+
+
               <Link
                 underline="none"
                 color="neutral"

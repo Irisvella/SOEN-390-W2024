@@ -1,17 +1,8 @@
-import  { useState } from 'react';
-import {
-  CardContent,
-  Typography,
-  Chip,
-  Button,
-  Stack,
-  Container,
-  CardMedia,
-  Grid,
-  TextField,
-  Card,
-} from '@mui/material';
+import { useState } from 'react';
+import { Container, Typography, Chip, Button, Stack, CardMedia, Grid, TextField } from '@mui/material';
+import { Card, CardContent } from '@mui/joy'; // Import Card and CardContent from @mui/joy
 import Navbar from '../components/Navbar';
+
 
 function RequestManagement() {
   const [requestData, setRequestData] = useState({
@@ -38,22 +29,22 @@ function RequestManagement() {
   };
 
   // Function to handle changes in the initial response
-  const handleInitialResponseChange = (event) => {
+  const handleInitialResponseChange = (event: { target: { value: any; }; }) => {
     setRequestData({ ...requestData, initialResponse: event.target.value });
   };
 
   // Function to handle changes in the assigned personnel
-  const handleAssignedPersonnelChange = (event) => {
+  const handleAssignedPersonnelChange = (event: { target: { value: any; }; }) => {
     setRequestData({ ...requestData, assignedPersonnel: event.target.value });
   };
 
 // Function to handle the "Update" action
-const handleUpdate = () => {
-  // Assuming you would have some mechanism to save these changes,
-  // for now, we'll just log the updated request data
-  console.log("Updated Request:", requestData);
-  // Here you would typically send a request to your backend to update the request in the database
-};
+  function handleUpdate() {
+    // Assuming you would have some mechanism to save these changes,
+    // for now, we'll just log the updated request data
+    console.log("Updated Request:", requestData);
+    // Here you would typically send a request to your backend to update the request in the database
+  }
 
 // Function to handle the "Resolve" action
 const handleResolve = () => {

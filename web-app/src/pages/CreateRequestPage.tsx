@@ -16,6 +16,7 @@ import Grid from "@mui/joy/Grid";
 import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom"; // Make sure to import useNavigate
 import { useEffect, useState } from "react";
+import { SelectChangeEvent } from '@mui/material/Select';
 
 function CreateRequestPage() {
 
@@ -32,11 +33,25 @@ function CreateRequestPage() {
     
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target; // Use name instead of id
-    setFormData((prevData) => ({
+
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<string>
+  ) => {
+    const isSelectEvent = (event: any): event is SelectChangeEvent<string> => 'target' in event && 'value' in event.target;
+    
+    let name: string, value: string;
+    
+    if (isSelectEvent(event)) {
+      name = event.target.name;
+      value = event.target.value as string; // For Select, value is already a string.
+    } else {
+      name = event.target.name;
+      value = event.target.value;
+    }
+
+    setFormData(prevData => ({
       ...prevData,
-      [name]: value, // Use name to update the correct key in the state
+      [name]: value,
     }));
   };
 
