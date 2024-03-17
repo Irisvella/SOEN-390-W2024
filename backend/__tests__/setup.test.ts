@@ -1,6 +1,7 @@
 import express from 'express';
 import signupRouter from '../routes/signup';
 import logInRouter from '../routes/login';
+import profileRouter from '../routes/profile';
 import prisma from '../prisma/client';
 import bcrypt from 'bcryptjs';
 
@@ -53,5 +54,6 @@ const app = express();
 app.use(express.json());
 app.use('/signup', signupRouter);
 app.use('/login', logInRouter);
+app.use('/profile', profileRouter);
 
 export { app };
