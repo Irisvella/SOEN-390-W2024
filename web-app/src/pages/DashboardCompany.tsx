@@ -17,7 +17,7 @@ const DashboardCompany = () => {
   const handleAddProperty = () => {
     // Here you can handle the logic to add a property
     // For example, opening a dialog or redirecting to a form page
-    navigate("/CreateListingPage");
+    navigate("/CreateListing");
   };
   const [properties, setProperties] = useState<Property[]>([]);
   const navigate = useNavigate();

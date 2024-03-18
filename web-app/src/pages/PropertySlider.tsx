@@ -8,6 +8,10 @@ import { Button } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import "../App.css";
+import { useNavigate } from "react-router-dom";
+
+
+
 
 // Define the type for each property item
 interface Property {
@@ -56,6 +60,15 @@ const PrevArrow: React.FC<ArrowProps> = ({ className, style, onClick }) => {
 };
 
 const PropertySlider: React.FC<PropertySliderProps> = ({ properties }) => {
+ 
+  const navigate = useNavigate(); // Initialize the navigate function
+
+  const handleEditClick = (id: string) => {
+    navigate(`/edit/${id}`); // Correctly navigates to the edit page for the property with this ID
+  };
+  
+  
+ 
   const settings = {
     dots: true,
     infinite: true,
@@ -79,10 +92,12 @@ const PropertySlider: React.FC<PropertySliderProps> = ({ properties }) => {
           <img src={property.imageUrl} alt={property.address} />
           <div className="property-details">
             <h3>{property.address}</h3>
+
             <div className="property-actions">
               <Button variant="outlined">Visit Employee List</Button>
               <Button variant="outlined">Requests</Button>
-              <Button variant="outlined">Edit</Button>
+              <Button variant="outlined" 
+              onClick={() => handleEditClick(property.id)}>Edit</Button>
             </div>
           </div>
         </div>

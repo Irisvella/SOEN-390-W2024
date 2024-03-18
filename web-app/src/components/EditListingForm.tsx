@@ -1,254 +1,135 @@
-import { useState } from "react";
-import {
-  Button,
-  FormControl,
-  TextareaAutosize,
-  Grid,
-  Input,
-  Paper,
-  Stack,
-  Typography,
-  Box,
-} from "@mui/material";
-import Navbar from "./Navbar";
-import { Img } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import { FormControl, FormLabel, Grid, Input, Button } from '@chakra-ui/react';
 
-const EditListingForm = () => {
-  const [isEditing] = useState(false);
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    address: "",
-    postalCode: "",
-    totalUnit: "",
-    parkingSpaces: "",
-    amenities: "",
-    description: "",
-  });
 
-  const handleChange = (e: { target: { id: any; value: any; }; }) => {
-    const { id, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [id]: value,
-    }));
-  };
 
-  const handleSubmit = async (e: { preventDefault: () => void; }) => {
-    e.preventDefault();
-    const token = localStorage.getItem("token");
+
+
+function EditListingForm() {
+  const [address, setAddress] = useState('');
+  const [postalCode, setPostalCode] = useState('');
+  const [totalUnit, setTotalUnit] = useState('');
+  const [parkingSpaces, setParkingSpaces] = useState('');
+  
+
+
+
+  useEffect(() => {
+    const fetchPropertyDetails = async () => {
+     
+      const token = localStorage.getItem('token');
+      try {
+        const response = await fetch(`http://localhost:3000/createEditListing/?propertyId=${property.id}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        const propertyDetails = await response.json();
+        if (response.ok) {
+          // Assuming you have the state setup to hold the fetched data
+          setAddress(propertyDetails.address);
+          setPostalCode(propertyDetails.postalCode); // And so on for other fields
+        } else {
+          console.error('Failed to fetch property details:', propertyDetails.message);
+        }
+      } catch (error) {
+        console.error('Error fetching property details:', error);
+      }
+    };
+  
+    fetchPropertyDetails();
+  }, []);
+  
+
+
+
+
+  const updateProfile = async () => {
+    const token = localStorage.getItem('token');
+    const payload = {
+      address,
+      // Include other state variables in your payload as needed
+    };
+    console.log('Sending payload:', payload);
     try {
-      const response = await fetch("http://localhost:3000/createEditListing", {
-        method: "POST",
+      const response = await fetch('http://localhost:3000/createEditListing', {
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, //checking if you are logged in or not
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
-      if (response.ok) {
-        console.log("Listing data submitted successfully");
-
-        setFormData({
-          address: "",
-          postalCode: "",
-          totalUnit: "",
-          parkingSpaces: "",
-          amenities: "",
-          description: "",
-        });
-      } else {
-        console.error("Failed to submit listing data");
+      if (!response.ok) {
+        throw new Error('Failed to update profile');
       }
-      navigate("/dashboard-company");
+
+      console.log('Profile updated successfully');
     } catch (error) {
-      console.error("Error submitting listing data:", error);
+      console.error('Error updating profile:', error);
     }
   };
 
-  
-
   return (
     <>
-      <Navbar />
-      <Paper
-        sx={{
-          p: 2,
-          m: 10,
-          backgroundColor: (theme) =>
-            theme.palette.mode === "dark" ? "#1A2027" : "#F0F0F0",
-        }}
+      <Grid
+        templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+        gap={6}
       >
-        <form>
-          <Grid container direction="column" padding={5}>
-            <Grid item xs container direction="row" spacing={2}>
-              <Grid item xs marginBottom={5}>
-                <Box>
-                  <Typography variant="h5" padding={2}>
-                    Edit Listing
-                  </Typography>
-                  <Img
-                    alt="complex"
-                    src="https://accescondos.org/app/uploads/2016/09/fc6_persp_principale.jpg"
-                  />
-                </Box>
-              </Grid>
+        <FormControl id="address">
+          <FormLabel>Property.address</FormLabel>
+          <Input
+            focusBorderColor="brand.blue"
+            type="text" // Changed from 'address' to 'text'
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+          />
+        </FormControl>
+        <FormControl id="postalCode">
+          <FormLabel>Postal Code</FormLabel> {/* Updated label */}
+          <Input
+            focusBorderColor="brand.blue"
+            type="tel"
+            value={postalCode}
+            onChange={(e) => setPostalCode(e.target.value)}
+          />
+        </FormControl>
+        <FormControl id="totalUnit">
+          <FormLabel>totalUnit</FormLabel> {/* Updated label */}
+          <Input
+            focusBorderColor="brand.blue"
+            type="text"
+            value={totalUnit}
+            onChange={(e) => setTotalUnit(e.target.value)}
+          />
+        </FormControl>
 
-              <Grid item xs marginTop={10}>
-                <Stack spacing={2} direction="column" sx={{ marginBottom: 6 }}>
-                  {/* Address */}
-                  <FormControl variant="outlined" component="fieldset">
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        width: "100%",
-                      }}
-                    >
-                      <label
-                        htmlFor="address"
-                        style={{ marginRight: "8px", width: "auto" }}
-                      >
-                        Address:
-                      </label>
-                      <Input
-                        id="address"
-                        value={formData.address}
-                        onChange={handleChange}
-                        fullWidth
-                      />
-                    </Box>
-                  </FormControl>
-                  {/* Postal Code */}
-                  <FormControl variant="outlined" component="fieldset">
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        width: "100%",
-                      }}
-                    >
-                      <label
-                        htmlFor="postalCode"
-                        style={{ marginRight: "8px", width: "auto" }}
-                      >
-                        Postal Code:
-                      </label>
-                      <Input
-                        id="postalCode"
-                        value={formData.postalCode}
-                        onChange={handleChange}
-                        fullWidth
-                      />
-                    </Box>
-                  </FormControl>
-                  {/* Total Unit */}
-                  <FormControl>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        width: "100%",
-                      }}
-                    >
-                      <label
-                        htmlFor="totalUnit"
-                        style={{ marginRight: "8px", width: "auto" }}
-                      >
-                        Total Unit:
-                      </label>
-                      <Input
-                        id="totalUnit"
-                        value={formData.totalUnit}
-                        onChange={handleChange}
-                        fullWidth
-                      />
-                    </Box>
-                  </FormControl>
-                  {/* Parking Spaces */}
-                  <FormControl variant="outlined" component="fieldset">
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        width: "100%",
-                      }}
-                    >
-                      <label
-                        htmlFor="parkingSpaces"
-                        style={{ marginRight: "8px", width: "auto" }}
-                      >
-                        Parking Spaces:
-                      </label>
-                      <Input
-                        id="parkingSpaces"
-                        value={formData.parkingSpaces}
-                        onChange={handleChange}
-                        fullWidth
-                      />
-                    </Box>
-                  </FormControl>
-                </Stack>
-              </Grid>
-            </Grid>
+        <FormControl id="totalUnit">
+          <FormLabel>totalUnit</FormLabel> {/* Updated label */}
+          <Input
+            focusBorderColor="brand.blue"
+            type="text"
+            value={totalUnit}
+            onChange={(e) => setTotalUnit(e.target.value)}
+          />
+        </FormControl>
 
-            {/* Amenities */}
-            <Grid container spacing={2} marginBottom={5}>
-              <FormControl fullWidth required>
-                <Box sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
-                  <label
-                    htmlFor="amenities"
-                    style={{ marginTop: "8px", alignSelf: "flex-start" }}
-                  >
-                    Amenities:
-                  </label>
-                  <TextareaAutosize
-                    id="amenities"
-                    minRows={3}
-                    style={{ width: "100%" }}
-                    value={formData.amenities}
-                    onChange={handleChange}
-                  />
-                </Box>
-              </FormControl>
-            </Grid>
-            {/* Description */}
-            <Grid container spacing={2}>
-              <FormControl fullWidth required>
-                <Box sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
-                  <label
-                    htmlFor="description"
-                    style={{ marginTop: "8px", alignSelf: "flex-start" }}
-                  >
-                    Description:
-                  </label>
-                  <TextareaAutosize
-                    id="description"
-                    minRows={3}
-                    style={{ width: "100%" }}
-                    value={formData.description}
-                    onChange={handleChange}
-                  />
-                </Box>
-              </FormControl>
-            </Grid>
-
-            <Grid container direction="column" padding={5}>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                onClick={handleSubmit}
-              >
-                {isEditing ? "Save Changes" : "Submit"}
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
-      </Paper>
+        <FormControl id="parkingSpaces">
+          <FormLabel>Postal Code</FormLabel> {/* Updated label */}
+          <Input
+            focusBorderColor="brand.blue"
+            type="text"
+            value={parkingSpaces}
+            onChange={(e) => setParkingSpaces(e.target.value)}
+          />
+        </FormControl>
+        {/* Include other form controls for totalUnit, parkingSpaces, amenities, and description */}
+        <Button onClick={updateProfile}>Update</Button>
+      </Grid>
     </>
   );
-};
+}
 
 export default EditListingForm;

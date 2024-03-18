@@ -9,13 +9,15 @@ import Employeesinfo from "./pages/employeesinfo.jsx";
 import "./App.css";
 import Home from "./pages/Home.jsx";
 import ManagementLanding from "./pages/ManagementLanding.jsx";
-import CreateListingPage from "./pages/CreateListingPage.tsx";
+
 
 import OpenRequestManagementPage from "./pages/OpenRequestManagementPage.tsx";
 import RequestManagement from "./pages/RequestManagement.tsx";
 import CreateRequestPage from "./pages/CreateRequestPage.tsx";
 import NewManagementLanding from "./pages/NewManagementLanding.tsx";
 import Addemployee from "./pages/addemployee.jsx";
+import CreateListingForm from "./components/CreateListingForm.tsx";
+import EditListingForm from "./components/CreateListingForm.tsx";
 
 function App() {
   const isAuthenticated = !!localStorage.getItem("token");
@@ -30,7 +32,8 @@ function App() {
         {/* Use the PrivateRoute directly for the protected routes */}
         {isAuthenticated ? (
           <>
-            <Route path="/CreateListingPage" element={<CreateListingPage />} />
+            <Route path="/CreateListing" element={<CreateListingForm />} />
+            <Route path="/edit/:id" element={<EditListingForm />} />
             <Route path="/ManagementLanding" element={<ManagementLanding />} />
             <Route path="/ProfileDash" element={<MinApp />} />
             <Route path="/dashboard-user" element={<DashboardUser />} />
