@@ -27,14 +27,9 @@ router.post(
             if (role === "company") {
               const body = req.body; //constant
 
+
               async function createProperty(addr: string, company_id: number) {
-                const property = await prisma.property.create({
-                  data: {
-                    //address on the table to the left
-                    //address on the body is to the right
-                    address: addr,
-                    size: 0,
-                    condo_fee: 0,
+                
                     unit_id: 0,
 
                   },
@@ -44,6 +39,7 @@ router.post(
               
               createProperty(body.address, id);
               
+
               console.log("a");
               return res.status(200).json({});
             }
@@ -60,8 +56,5 @@ router.post(
     }
   },
 );
-
-
-
 
 export default router;
