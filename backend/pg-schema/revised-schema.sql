@@ -48,7 +48,7 @@ CREATE TABLE management_companies (
 
 CREATE TABLE property (
     id SERIAL PRIMARY KEY,
-    company_id INT REFERENCES management_companies(user_id),
+    company_id INT NOT NULL REFERENCES management_companies(user_id),
     address TEXT UNIQUE NOT NULL,
     flat_fee NUMERIC(10, 2) DEFAULT 0, -- a flat fee all tenants are suppoed to pay (optional)
     parking_fee NUMERIC(5, 2) DEFAULT 0, -- fee per parking spot
@@ -60,7 +60,7 @@ CREATE TABLE property (
 
 CREATE TABLE condo_unit (
     id SERIAL PRIMARY KEY,
-    property_id INT REFERENCES property(id),
+    property_id INT NOT NULL REFERENCES property(id),
     unit_number TEXT NOT NULL, -- like apartment number but could be letters too
     square_feet NUMERIC(5, 2) NOT NULL,
     image_key TEXT,
@@ -86,14 +86,14 @@ CREATE TABLE registration ( -- omitted company_id since it could be found using 
     issued_at TIMESTAMP DEFAULT NOW(),
     start_date TIMESTAMP DEFAULT NOW(),
     end_date TIMESTAMP, -- null means ongoing renter or owner
-    public_user_id INT REFERENCES public_users(user_id) ON DELETE CASCADE,
-    condo_id INT REFERENCES condo_unit(id) ON DELETE CASCADE,
+    public_user_id INT NOT NULL REFERENCES public_users(user_id) ON DELETE CASCADE,
+    condo_id INT NOT NULL REFERENCES condo_unit(id) ON DELETE CASCADE,
     UNIQUE (condo_id, start_date, end_date) -- only one person at a time can own/rent a specific property
 );
 
 CREATE TABLE employed_by (
-    employee_user_id INT REFERENCES employee_users(user_id) ON DELETE CASCADE,
-    company_id INT REFERENCES management_companies(user_id) ON DELETE CASCADE,
+    employee_user_id INT NOT NULL REFERENCES employee_users(user_id) ON DELETE CASCADE,
+    company_id INT NOT NULL REFERENCES management_companies(user_id) ON DELETE CASCADE,
     start_date TIMESTAMP DEFAULT NOW(),
     end_date TIMESTAMP DEFAULT NULL, -- null for ongoing employee
     PRIMARY KEY (employee_user_id, end_date) -- an employee could work at one company at a time
@@ -102,15 +102,15 @@ CREATE TABLE employed_by (
 CREATE TABLE amenities (
     id SERIAL PRIMARY KEY,
     text_id TEXT, -- lockers, parking spots and other amenities might have some kind of identifier
-    property_id INT REFERENCES property(id) ON DELETE CASCADE,
+    property_id INT NOT NULL REFERENCES property(id) ON DELETE CASCADE,
     description TEXT NOT NULL, -- 'locker', 'parking spot' or anything else
     fee NUMERIC(5, 2) NOT NULL,
     UNIQUE (id, property_id)
 );
 
 CREATE TABLE reserved_by (
-    public_user_id INT REFERENCES public_users(user_id) ON DELETE CASCADE,
-    amenities_id INT REFERENCES amenities(id),
+    public_user_id INT NOT NULL REFERENCES public_users(user_id) ON DELETE CASCADE,
+    amenities_id INT NOT NULL REFERENCES amenities(id),
     start_date TIMESTAMP DEFAULT NOW(),
     end_date TIMESTAMP DEFAULT NULL,
     PRIMARY KEY (public_user_id, amenities_id, start_date) -- included start date cause same user could reserve same amenities later also

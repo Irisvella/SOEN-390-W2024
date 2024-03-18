@@ -11,32 +11,32 @@ datasource db {
 model amenities {
   id          Int           @id @default(autoincrement())
   text_id     String?
-  property_id Int?
+  property_id Int
   description String
   fee         Decimal       @db.Decimal(5, 2)
-  property    property?     @relation(fields: [property_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  property    property      @relation(fields: [property_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   reserved_by reserved_by[]
 
   @@unique([id, property_id])
 }
 
 model condo_management_files {
-  file_key             String                @id
-  file_type            file_type?            @default(other)
-  company_id           Int?
-  property_id          Int?
+  file_key             String               @id
+  file_type            file_type?           @default(other)
+  company_id           Int
+  property_id          Int
   description          String?
-  management_companies management_companies? @relation(fields: [company_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
-  property             property?             @relation(fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  management_companies management_companies @relation(fields: [company_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+  property             property             @relation(fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model employed_by {
   employee_user_id     Int
-  company_id           Int?
-  start_date           DateTime?             @default(now()) @db.Timestamp(6)
-  end_date             DateTime              @db.Timestamp(6)
-  management_companies management_companies? @relation(fields: [company_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
-  employee_users       employee_users        @relation(fields: [employee_user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+  company_id           Int
+  start_date           DateTime?            @default(now()) @db.Timestamp(6)
+  end_date             DateTime             @db.Timestamp(6)
+  management_companies management_companies @relation(fields: [company_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+  employee_users       employee_users       @relation(fields: [employee_user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
 
   @@id([employee_user_id, end_date])
 }
@@ -55,7 +55,7 @@ model management_companies {
 
 model property {
   id                     Int                      @id @default(autoincrement())
-  company_id             Int?
+  company_id             Int
   address                String                   @unique
   image_key              String?
   flat_fee               Decimal                  @db.Decimal(10, 2)
@@ -65,7 +65,7 @@ model property {
   amenities              amenities[]
   condo_management_files condo_management_files[]
   condo_unit             condo_unit[]
-  management_companies   management_companies?    @relation(fields: [company_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+  management_companies   management_companies     @relation(fields: [company_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model public_users {
@@ -132,22 +132,22 @@ model registration {
   issued_at        DateTime?         @default(now()) @db.Timestamp(6)
   start_date       DateTime?         @default(now()) @db.Timestamp(6)
   end_date         DateTime?         @db.Timestamp(6)
-  public_user_id   Int?
-  condo_id         Int?
-  condo_unit       condo_unit?       @relation(fields: [condo_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  public_users     public_users?     @relation(fields: [public_user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+  public_user_id   Int
+  condo_id         Int
+  condo_unit       condo_unit        @relation(fields: [condo_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  public_users     public_users      @relation(fields: [public_user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
 
   @@unique([condo_id, start_date, end_date], map: "registration_condo_id_start_date_end_date_unique")
 }
 
 model condo_unit {
   id           Int            @id @default(autoincrement())
-  property_id  Int?
+  property_id  Int
   unit_number  String
   square_feet  Decimal        @db.Decimal(5, 2)
   image_key    String?
   image_url    String?
-  property     property?      @relation(fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  property     property       @relation(fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   registration registration[]
 
   @@unique([property_id, unit_number])
