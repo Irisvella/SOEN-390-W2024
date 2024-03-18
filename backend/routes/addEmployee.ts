@@ -67,10 +67,9 @@ router.post(
                 await prisma.$transaction(async (tx) => {
                   const employeeUser = await prisma.employed_by.create({
                     data: {
-                      public_user_id: userID,
+                      employee_user_id: userID,
                       company_id: id,
-                      yearly_salary: 100000,
-                      role:body.role,
+                      end_date: new Date(), 
                     },
                   });
                 });

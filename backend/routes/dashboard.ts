@@ -7,7 +7,7 @@ import verifyToken from "../middleware/verify-token";
 require("dotenv").config();
 
 import { Request, Response, NextFunction } from "express";
-
+/*
 interface companyData {
   id: number;
   address: string;
@@ -39,8 +39,8 @@ router.get(
               const company = await prisma.$queryRaw<
                 companyData[]
               >`SELECT m.id, p.address, p.image_url AS "imageUrl", m.company_name AS "companyName", 'company' AS "propertyType"
-              FROM property AS p, management_companies as m, owned_by as o
-                WHERE m.id = o.owner_id and m.id = ${id} and p.id = property_id;
+              FROM property AS p, management_companies as m
+                WHERE m.id = ${id} and m.id = p.company_id and p.id = property_id;
                 `;
 
               console.log("a");
@@ -49,8 +49,8 @@ router.get(
               const publicUser = await prisma.$queryRaw<
                 userData[]
               >`SELECT pu.id, p.address, p.image_url AS "imageUrl", pu.username, 'user' AS "propertyType"
-              FROM property AS p, public_users as pu, owned_by as o
-                WHERE pu.id = o.owner_id and pu.id = ${id} and p.id = property_id;
+              FROM property AS p, public_users as pu, registration as r
+                WHERE pu.id = ${id} and pu.id = r.user_id and p.id = r.property_id;
                 `;
               console.log("b");
               return res.status(200).json(publicUser);
@@ -68,3 +68,4 @@ router.get(
 );
 
 export default router;
+*/

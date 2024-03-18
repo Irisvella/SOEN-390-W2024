@@ -5,7 +5,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import Grid from '@mui/material/Grid';
 import sampleAddressImage from '../assets/images/sampleproperty.png';
 import { Typography, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
-import AddEmployee from '../../src/pages/addemployee';
+import AddEmployee from './addemployee';
 import { Pages } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
