@@ -49,8 +49,8 @@ router.get(
               const publicUser = await prisma.$queryRaw<
                 userData[]
               >`SELECT pu.user_id, p.address, p.image_key AS "imageUrl", pu.first_name, 'user' AS "propertyType"
-              FROM property AS p, public_users as pu, registration as r
-                WHERE pu.user_id = ${id} and pu.user_id = r.user_id and p.id = r.property_id;
+              FROM property AS p, public_users as pu, registration as r, condo_unit as c
+                WHERE pu.user_id = ${id} and pu.user_id = r.public_user_id and c.id = r.condo_id;
                 `;
               console.log("b");
               return res.status(200).json(publicUser);
