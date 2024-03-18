@@ -10,6 +10,7 @@ import './App.css';
 import Home from './pages/Home.jsx';
 import ManagementLanding from './pages/ManagementLanding.jsx';
 import CreateListingPage from './pages/CreateListingPage.tsx';
+import UserLanding from './pages/UserLanding.jsx';
 
 function App() {
   const isAuthenticated = !!localStorage.getItem('token');
@@ -27,6 +28,7 @@ function App() {
           <>
             <Route path="/CreateListingPage" element={<CreateListingPage />} />
             <Route path="/ManagementLanding" element={<ManagementLanding />} />
+            <Route path="/UserLanding" element={<UserLanding />} />
             <Route path="/ProfileDash" element={<MinApp />} />
             <Route path="/dashboard-user" element={<DashboardUser />} />
             <Route path="/dashboard-company" element={<DashboardCompany />} />
