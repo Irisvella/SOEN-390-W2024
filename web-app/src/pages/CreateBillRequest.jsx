@@ -16,11 +16,13 @@ const CreateBillRequest = () => {
 
   const [billData, setBillData] = useState({
     unitId: '',
+    propertyAddress: '',
     totalPrice: 0,
     date: '',
   });
 
   const [showBillInfo, setShowBillInfo] = useState(false);
+  const [inputError, setInputError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,6 +33,11 @@ const CreateBillRequest = () => {
   };
 
   const handleGenerateInfo = async () => {
+    if (billData.unitId === '' || billData.propertyAddress === '') {
+      setInputError('Please fill in both Unit ID and Property Address.');
+      return;
+    }
+
     // Simulate fetching unit info and properties based on unit ID
     // Replace this with your actual fetch logic
     setUnitInfo({
@@ -42,6 +49,7 @@ const CreateBillRequest = () => {
       pricePerParking: 10,
     });
     setShowBillInfo(true);
+    setInputError('');
   };
 
   const handleCalculateTotalPrice = () => {
@@ -58,6 +66,7 @@ const CreateBillRequest = () => {
     // Optionally, reset the form
     setBillData({
       unitId: '',
+      propertyAddress: '',
       totalPrice: 0,
       date: '',
     });
@@ -81,6 +90,20 @@ const CreateBillRequest = () => {
             onChange={handleChange}
             margin="normal"
           />
+          <TextField
+            fullWidth
+            label="Property Address"
+            variant="outlined"
+            name="propertyAddress"
+            value={billData.propertyAddress}
+            onChange={handleChange}
+            margin="normal"
+          />
+          {inputError && (
+            <Typography variant="body2" color="error" mb={2}>
+              {inputError}
+            </Typography>
+          )}
           <Button variant="contained" color="primary" onClick={handleGenerateInfo} mt={2}>
             Generate Info
           </Button>
