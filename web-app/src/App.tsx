@@ -12,6 +12,8 @@ import ManagementLanding from './pages/ManagementLanding.jsx';
 import CreateListingPage from './pages/CreateListingPage.tsx';
 import AddUnit from './pages/AddUnit.jsx';
 import CreateBillRequest from './pages/CreateBillRequest.jsx';
+import ManagementSentBills from './pages/ManagementSentBills.jsx';
+import AddOperationalCost from './pages/AddOperationalCost.jsx';
 
 function App() {
   const isAuthenticated = !!localStorage.getItem('token');
@@ -37,6 +39,8 @@ function App() {
             <Route path="/Addemployee" element={<Addemployee />} />
             <Route path="/AddUnit" element={<AddUnit />} />
             <Route path="/createbillrequest" element={<CreateBillRequest/>} />
+            <Route path="/managementsentbills" element={<ManagementSentBills/>} />
+            <Route path="/AddOperationalCost" element={<AddOperationalCost/>} />
           </>
         ) : null}
       </Routes>

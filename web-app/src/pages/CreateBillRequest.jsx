@@ -78,7 +78,7 @@ const CreateBillRequest = () => {
       <Navbar userName="Your Company" />
       <Box mt={10} display="flex" flexDirection="column" alignItems="center">
         <Typography variant="h5" mb={4}>
-          Create Bill Request
+          Create condo fee payment request
         </Typography>
         <form>
           <TextField
@@ -129,13 +129,13 @@ const CreateBillRequest = () => {
                 </Grid>
                 <Grid item>
                   <Typography variant="h6">
-                    Total Price: ${billData.totalPrice}
+                    Total Condo Fee: ${billData.totalPrice}
                   </Typography>
                 </Grid>
               </Grid>
               <TextField
                 fullWidth
-                label="Date"
+                label="Due Date"
                 type="date"
                 variant="outlined"
                 name="date"
