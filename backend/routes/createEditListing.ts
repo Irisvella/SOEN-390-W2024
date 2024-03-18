@@ -33,7 +33,7 @@ router.post(
                     //address on the table to the left
                     //address on the body is to the right
                     address: addr,
-                    flat_fee: 0,
+                    flat_fee: 0.00,
                     company_id: company_id,
                   },
                 });
