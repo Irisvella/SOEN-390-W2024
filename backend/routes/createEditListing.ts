@@ -33,17 +33,14 @@ router.post(
                     //address on the table to the left
                     //address on the body is to the right
                     address: addr,
-                    size: 0,
-                    condo_fee: 0,
-                    unit_id: 0,
-
+                    flat_fee: 0,
+                    company_id: company_id,
                   },
                 });
               }
-             
-              
+
               createProperty(body.address, id);
-              
+
               console.log("a");
               return res.status(200).json({});
             }
@@ -60,8 +57,5 @@ router.post(
     }
   },
 );
-
-
-
 
 export default router;
