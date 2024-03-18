@@ -69,7 +69,7 @@ router.post(
                     data: {
                       employee_user_id: userID,
                       company_id: id,
-                      role:body.role,
+                      end_date: new Date(), 
                     },
                   });
                 });

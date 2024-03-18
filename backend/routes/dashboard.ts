@@ -7,7 +7,7 @@ import verifyToken from "../middleware/verify-token";
 require("dotenv").config();
 
 import { Request, Response, NextFunction } from "express";
-
+/*
 interface companyData {
   id: number;
   address: string;
@@ -68,3 +68,4 @@ router.get(
 );
 
 export default router;
+*/

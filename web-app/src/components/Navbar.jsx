@@ -36,7 +36,7 @@ const Navbar = ({}) => {
         if (response.ok) {
           setUserRole(data.role);
           setUserProfile(data.avatar);
-          setUserName(data.username);
+          setUserName(data.firstName + " " + data.lastName);
           setCompanyName(data.companyName);
         } else {
           console.error("Failed to fetch profile:", data.message);
@@ -114,7 +114,11 @@ const Navbar = ({}) => {
       <div className="welcome-message">
         {isLoggedIn ? (
           <p>
-            Welcome, {userName} {companyName}
+            Welcome,  
+            {userRole === "publicUser" && (
+            " " + userName )}
+            {userRole === "company" && (
+            " " + companyName )}
           </p>
         ) : (
           <p></p>

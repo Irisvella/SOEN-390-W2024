@@ -36,6 +36,7 @@ router.get(
               email: email,
               companyName: companyUser?.company_name,
               phoneNumber: companyUser?.phone_number,
+              address: companyUser?.address,
               unitCount: companyUser?.unit_count,
             });
           } else if (role === "publicUser") {
@@ -47,6 +48,7 @@ router.get(
             console.log("b");
             return res.status(200).json({
               id: id,
+              email: email,
               firstName: publicUser?.first_name,
               lastName: publicUser?.last_name,
               phoneNumber: publicUser?.phone_number,

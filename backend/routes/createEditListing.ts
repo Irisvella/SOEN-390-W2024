@@ -36,7 +36,6 @@ router.post(
                     size: 0,
                     condo_fee: 0,
                     unit_id: 0,
-                    company_id: company_id,
 
                   },
                 });
