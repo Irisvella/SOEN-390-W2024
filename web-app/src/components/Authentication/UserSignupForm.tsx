@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { Grid, TextField, Button } from "@mui/material";
 
 const UserSignupForm = () => {
-  const [username, setUsername] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -34,7 +33,6 @@ const UserSignupForm = () => {
         body: JSON.stringify({
           firstName,
           lastName,
-          username,
           email,
           password,
           phoneNumber: phone,
