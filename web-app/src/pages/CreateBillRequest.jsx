@@ -1,33 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
-import { Box, Typography, TextField, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Box, Typography, TextField, Button, Grid } from '@mui/material';
 
 const CreateBillRequest = () => {
-  
-  // TODO: Fetch unit properties and unit info
-  const [unitProperties, setUnitProperties] = useState({
-    pricePerSquareFoot: 0,
-    pricePerParking: 0,
-  });
   
   const [unitInfo, setUnitInfo] = useState({
     squareFootage: 0,
     parkingSpaces: 0,
   });
 
-  useEffect(() => {
-    // Fetch unit properties and unit info based on unit id
-    // Example fetchUnitData(unitId)
-    // Update unitProperties and unitInfo states accordingly
-  }, []); // Run once on component mount
+  const [unitProperties, setUnitProperties] = useState({
+    pricePerSquareFoot: 0,
+    pricePerParking: 0,
+  });
 
   const [billData, setBillData] = useState({
     unitId: '',
-    priceOfSquareFootage: 0,
-    priceOfParking: 0,
     totalPrice: 0,
     date: '',
   });
+
+  const [showBillInfo, setShowBillInfo] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -37,8 +30,22 @@ const CreateBillRequest = () => {
     }));
   };
 
+  const handleGenerateInfo = async () => {
+    // Simulate fetching unit info and properties based on unit ID
+    // Replace this with your actual fetch logic
+    setUnitInfo({
+      squareFootage: 1000,
+      parkingSpaces: 2,
+    });
+    setUnitProperties({
+      pricePerSquareFoot: 5,
+      pricePerParking: 10,
+    });
+    setShowBillInfo(true);
+  };
+
   const handleCalculateTotalPrice = () => {
-    const totalPrice = (billData.priceOfSquareFootage * unitInfo.squareFootage) + (billData.priceOfParking * unitInfo.parkingSpaces);
+    const totalPrice = (unitInfo.squareFootage * unitProperties.pricePerSquareFoot) + (unitInfo.parkingSpaces * unitProperties.pricePerParking);
     setBillData((prevData) => ({
       ...prevData,
       totalPrice: totalPrice,
@@ -51,11 +58,10 @@ const CreateBillRequest = () => {
     // Optionally, reset the form
     setBillData({
       unitId: '',
-      priceOfSquareFootage: 0,
-      priceOfParking: 0,
       totalPrice: 0,
       date: '',
     });
+    setShowBillInfo(false);
   };
 
   return (
@@ -75,46 +81,53 @@ const CreateBillRequest = () => {
             onChange={handleChange}
             margin="normal"
           />
-          <TextField
-            fullWidth
-            label="Price of Square Footage"
-            variant="outlined"
-            name="priceOfSquareFootage"
-            value={billData.priceOfSquareFootage}
-            onChange={handleChange}
-            margin="normal"
-          />
-          <TextField
-            fullWidth
-            label="Price of Parking"
-            variant="outlined"
-            name="priceOfParking"
-            value={billData.priceOfParking}
-            onChange={handleChange}
-            margin="normal"
-          />
-          <Button variant="contained" color="primary" onClick={handleCalculateTotalPrice} mt={2}>
-            Calculate Total Price
+          <Button variant="contained" color="primary" onClick={handleGenerateInfo} mt={2}>
+            Generate Info
           </Button>
-          <Typography variant="h6" mt={2}>
-            Total Price: ${billData.totalPrice}
-          </Typography>
-          <TextField
-            fullWidth
-            label="Date"
-            type="date"
-            variant="outlined"
-            name="date"
-            value={billData.date}
-            onChange={handleChange}
-            margin="normal"
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-          <Button variant="contained" color="primary" onClick={handleSubmit} mt={2}>
-            Submit
-          </Button>
+          {showBillInfo && (
+            <>
+              <Typography variant="h6" mt={2}>
+                Unit Square Footage: {unitInfo.squareFootage}
+              </Typography>
+              <Typography variant="h6">
+                Number of Parking Spaces: {unitInfo.parkingSpaces}
+              </Typography>
+              <Typography variant="h6">
+                Price per Square Foot: ${unitProperties.pricePerSquareFoot}
+              </Typography>
+              <Typography variant="h6">
+                Price per Parking Space: ${unitProperties.pricePerParking}
+              </Typography>
+              <Grid container spacing={2} mt={2}>
+                <Grid item>
+                  <Button variant="contained" color="primary" onClick={handleCalculateTotalPrice}>
+                    Calculate Total Price
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Typography variant="h6">
+                    Total Price: ${billData.totalPrice}
+                  </Typography>
+                </Grid>
+              </Grid>
+              <TextField
+                fullWidth
+                label="Date"
+                type="date"
+                variant="outlined"
+                name="date"
+                value={billData.date}
+                onChange={handleChange}
+                margin="normal"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              <Button variant="contained" color="primary" onClick={handleSubmit} mt={2}>
+                Submit
+              </Button>
+            </>
+          )}
         </form>
       </Box>
     </div>
