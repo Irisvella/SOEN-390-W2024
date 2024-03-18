@@ -123,8 +123,8 @@ CREATE TABLE requests (
     description TEXT NOT NULL,
     request_priority priority DEFAULT 'low',
     issued_at TIMESTAMP DEFAULT NOW(),
-    condo_owner_id INT REFERENCES public_users(user_id),
-    employee_id INT REFERENCES employee_users(user_id),
+    condo_owner_id INT NOT NULL REFERENCES public_users(user_id),
+    employee_id INT NOT NULL REFERENCES employee_users(user_id),
     PRIMARY KEY (condo_owner_id, employee_id, title, issued_at)
 );
 
@@ -133,9 +133,17 @@ CREATE TYPE file_type AS ENUM('declarations', 'annual budgets', 'board meeting m
 CREATE TABLE condo_management_files (
     file_key TEXT PRIMARY KEY,
     file_type file_type DEFAULT 'other',
-    company_id INT REFERENCES management_companies(user_id),
-    property_id INT REFERENCES property(id),
+    company_id INT NOT NULL REFERENCES management_companies(user_id),
+    property_id INT NOT NULL REFERENCES property(id),
     description TEXT
+);
+
+CREATE TABLE operating_fees (
+    id SERIAL PRIMARY KEY,
+    property_id INT NOT NULL REFERENCES property(id),
+    fee NUMERIC(10, 2) NOT NULL,
+    description TEXT NOT NULL,
+    payed_on TIMESTAMP DEFAULT NOW()
 );
 
 -- trigger for incrementing unit_count of management companies whenever
