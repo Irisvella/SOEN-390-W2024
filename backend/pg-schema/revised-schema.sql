@@ -49,13 +49,23 @@ CREATE TABLE management_companies (
 CREATE TABLE property (
     id SERIAL PRIMARY KEY,
     company_id INT REFERENCES management_companies(user_id),
-    size INT NOT NULL, -- square feet
-    unit_id TEXT NOT NULL, -- sometimes condo unit ids are letters too
-    address TEXT NOT NULL,
-    condo_fee NUMERIC(10, 2) NOT NULL,
+    address TEXT UNIQUE NOT NULL,
+    flat_fee NUMERIC(10, 2) DEFAULT 0, -- a flat fee all tenants are suppoed to pay (optional)
+    parking_fee NUMERIC(5, 2) DEFAULT 0, -- fee per parking spot
+    locker_fee NUMERIC(5, 2) DEFAULT 0,
+    price_per_square_foot NUMERIC(5, 2) DEFAULT 0,
+    image_key TEXT,
+    image_url TEXT
+);
+
+CREATE TABLE condo_unit (
+    id SERIAL PRIMARY KEY,
+    property_id INT REFERENCES property(id),
+    unit_number TEXT NOT NULL, -- like apartment number but could be letters too
+    square_feet NUMERIC(5, 2) NOT NULL,
     image_key TEXT,
     image_url TEXT,
-    UNIQUE (address, unit_id) 
+    UNIQUE (property_id, unit_number)
 );
 
 -- CREATE TABLE property_address (
@@ -77,8 +87,8 @@ CREATE TABLE registration ( -- omitted company_id since it could be found using 
     start_date TIMESTAMP DEFAULT NOW(),
     end_date TIMESTAMP, -- null means ongoing renter or owner
     public_user_id INT REFERENCES public_users(user_id) ON DELETE CASCADE,
-    property_id INT REFERENCES property(id) ON DELETE CASCADE,
-    UNIQUE (property_id, start_date, end_date) -- only one person at a time can own/rent a specific property
+    condo_id INT REFERENCES condo_unit(id) ON DELETE CASCADE,
+    UNIQUE (condo_id, start_date, end_date) -- only one person at a time can own/rent a specific property
 );
 
 CREATE TABLE employed_by (
@@ -141,7 +151,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER increment_unit_count
-AFTER INSERT ON property
+AFTER INSERT ON condo_unit
 FOR EACH ROW
 EXECUTE FUNCTION increment_unit_count_function();
 
@@ -158,6 +168,6 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER decrement_unit_count
-AFTER DELETE ON property
+AFTER DELETE ON condo_unit
 FOR EACH ROW
 EXECUTE FUNCTION decrement_unit_count_function();
