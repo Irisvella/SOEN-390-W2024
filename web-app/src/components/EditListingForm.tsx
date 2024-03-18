@@ -1,200 +1,96 @@
-import { useState } from "react";
-import {
-  Button,
-  FormControl,
-  TextareaAutosize,
-  Grid,
-  Input,
-  Paper,
-  Stack,
-  Typography,
-  Box,
-} from "@mui/material";
-import Navbar from "./Navbar";
-import { Img } from "@chakra-ui/react";
+import {useState, useEffect} from 'react';
+import { FormControl, FormLabel, Grid, Input, Button, Container } from '@mui/material'
+import { useParams } from 'react-router-dom';
 
-const EditListingForm = () => { 
-  const [isEditing] = useState(false); //check if you are editing or not   const [isEditing, setIsEditing] = useState(false); 
- 
-  const [formData, setFormData] = useState({
-    address: '',
-    postalCode: '',
-    totalUnit: '',
-    parkingSpaces: '',
-    amenities: '',
-    description: '',
-  });
 
-  const handleChange = (e: { target: { id: any; value: any; }; }) => {
-    const { id, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [id]: value,
-    }));
-  };
 
-  const handleSubmit = async () => {
-   
-    const token = localStorage.getItem('token');
-    try {
+function EditListingForm() {
+ const { propertyId } = useParams();  // You need to determine how you're getting this ID
+const [address, setAddress] = useState('');
 
-      const response = await fetch('http://localhost:3000/createEditListing', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,//checking if you are logged in or not 
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        console.log('Listing data submitted successfully');
-        
-        setFormData({
-          address: '',
-          postalCode: '',
-          totalUnit: '',
-          parkingSpaces: '',
-          amenities: '',
-          description: '',
+useEffect(() => {
+    const fetchPropertyDetails = async () => {
+      const token = localStorage.getItem('token');
+    
+      try {
+        const response = await fetch(`http://localhost:3000/properties/${propertyId}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
         });
-      } else {
-        console.error('Failed to submit listing data');
+        const data = await response.json();
+        console.log(data);
+        if (response.ok) {
+          setAddress(data.address); // Assuming you're only fetching the address for editing
+        } else {
+          console.error('Failed to fetch property details:', data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching property details:', error);
       }
-    } catch (error) {
-      console.error('Error submitting listing data:', error);
-    }
+    };
+  
+    fetchPropertyDetails();
+  },
+  
+  
+  [propertyId]); // Adding propertyId as a dependency);
+  
+
+const updatePropertyDetails = async () => {
+  const token = localStorage.getItem('token');
+  const payload = {
+    address
   };
+  console.log('Sending payload:', payload);
+  try {
+    const response = await fetch('http://localhost:3000/createEditListing', { 
+      method: 'PUT', 
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to PropertyDetails');
+    }
+
+    console.log('Profile updated successfully');
+  } catch (error) {
+    console.error('Error updating profile:', error);
+  }
+};
 
   return (
     <>
-      <Navbar />
-      <Paper sx={{ p: 2, m: 10, backgroundColor: (theme) => theme.palette.mode === "dark" ? "#1A2027" : "#F0F0F0", }}>
-        <form>
-          <Grid container direction="column" padding={5}>
-            <Grid item xs container direction="row" spacing={2}>
-              <Grid item xs marginBottom={5}>
-                <Box>
-                  <Typography variant="h5" padding={2}>
-                    Edit Listing
-                  </Typography>
-                  <Img alt="complex" src="https://accescondos.org/app/uploads/2016/09/fc6_persp_principale.jpg" />
-                </Box>
-              </Grid>
-
-              <Grid item xs marginTop={10}>
-                <Stack spacing={2} direction="column" sx={{ marginBottom: 6 }}>
-                  {/* Address */}
-                  <FormControl variant="outlined" component="fieldset">
-                    <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
-                      <label htmlFor="address" style={{ marginRight: "8px", width: "auto" }}>
-                        Address:
-                      </label>
-                      <Input
-                        id="address"
-                        value={formData.address}
-                        onChange={handleChange}
-                        fullWidth
-                      />
-                    </Box>
-                  </FormControl>
-                  {/* Postal Code */}
-                  <FormControl variant="outlined" component="fieldset">
-                    <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
-                      <label htmlFor="postalCode" style={{ marginRight: "8px", width: "auto" }}>
-                        Postal Code:
-                      </label>
-                      <Input
-                        id="postalCode"
-                        value={formData.postalCode}
-                        onChange={handleChange}
-                        fullWidth
-                      />
-                    </Box>
-                  </FormControl>
-                  {/* Total Unit */}
-                  <FormControl>
-                    <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
-                      <label htmlFor="totalUnit" style={{ marginRight: "8px", width: "auto" }}>
-                        Total Unit:
-                      </label>
-                      <Input
-                        id="totalUnit"
-                        value={formData.totalUnit}
-                        onChange={handleChange}
-                        fullWidth
-                      />
-                    </Box>
-                  </FormControl>
-                  {/* Parking Spaces */}
-                  <FormControl variant="outlined" component="fieldset">
-                    <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
-                      <label htmlFor="parkingSpaces" style={{ marginRight: "8px", width: "auto" }}>
-                        Parking Spaces:
-                      </label>
-                      <Input
-                        id="parkingSpaces"
-                        value={formData.parkingSpaces}
-                        onChange={handleChange}
-                        fullWidth
-                      />
-                    </Box>
-                  </FormControl>
-                </Stack>
-              </Grid>
-            </Grid>
-
-            {/* Amenities */}
-            <Grid container spacing={2} marginBottom={5}>
-              <FormControl fullWidth required>
-                <Box sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
-                  <label htmlFor="amenities" style={{ marginTop: "8px", alignSelf: "flex-start" }}>
-                    Amenities:
-                  </label>
-                  <TextareaAutosize
-                    id="amenities"
-                    minRows={3}
-                    style={{ width: "100%" }}
-                    value={formData.amenities}
-                    onChange={handleChange}
-                  />
-                </Box>
-              </FormControl>
-            </Grid>
-            {/* Description */}
-            <Grid container spacing={2}>
-              <FormControl fullWidth required>
-                <Box sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
-                  <label htmlFor="description" style={{ marginTop: "8px", alignSelf: "flex-start" }}>
-                    Description:
-                  </label>
-                  <TextareaAutosize
-                    id="description"
-                    minRows={3}
-                    style={{ width: "100%" }}
-                    value={formData.description}
-                    onChange={handleChange}
-                  />
-                </Box>
-              </FormControl>
-            </Grid>
-
-            <Grid container direction="column" padding={5}>
-              <Button 
-              type="submit" 
-              variant="contained" 
-              color="primary"
-              onClick={handleSubmit}
-              >
-                {isEditing ? "Save Changes" : "Submit"}
-                
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
-      </Paper>
+    
+    <Container>
+    <Grid
+      templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+      gap={6}
+    >
+        <FormControl id="address">
+        <FormLabel>Address</FormLabel>
+        <Input
+          focusBorderColor="brand.blue"
+          type="address"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+        />
+        </FormControl>
+      
+      <Button 
+      onClick={updatePropertyDetails}>Update</Button>
+    </Grid>
+    </Container>
     </>
-  );
-};
+  )
+}
 
 export default EditListingForm;
+
+
