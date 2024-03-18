@@ -28,12 +28,12 @@ router.post(
             if (role === "publicUser") {
               const body = req.body; //constant
 
-              async function createRequest(employee_id:number , company_id: number) {
+              async function createRequest(employee_id:number) {
                 const property = await prisma.requests.create({
                   data: {
                     title: title, //change to what the front end sends us in body
                     employee_id: employee_id,
-                    condo_owner_id: company_id,
+                    condo_owner_id: company_id,// change with the company ID
                     issued_at: new Date(),
                     description: body.description, //change to what the front end sends us in body
                     request_priority: body.priority //change to what the front end sends us in body
@@ -42,7 +42,7 @@ router.post(
                 });
               }
 
-              createRequest();
+              createRequest(id); //company id missing
 
               console.log("a");
               return res.status(200).json({});
