@@ -7,7 +7,7 @@ import verifyToken from "../middleware/verify-token";
 require("dotenv").config();
 
 import { Request, Response, NextFunction } from "express";
-/*
+
 interface companyData {
   id: number;
   address: string;
@@ -38,9 +38,9 @@ router.get(
             if (role === "company") {
               const company = await prisma.$queryRaw<
                 companyData[]
-              >`SELECT m.id, p.address, p.image_url AS "imageUrl", m.company_name AS "companyName", 'company' AS "propertyType"
+              >`SELECT m.user_id, p.address, p.image_key AS "imageUrl", m.company_name AS "companyName", 'company' AS "propertyType"
               FROM property AS p, management_companies as m
-                WHERE m.id = ${id} and m.id = p.company_id and p.id = property_id;
+                WHERE m.user_id = ${id} and m.user_id = p.company_id and p.id = id;
                 `;
 
               console.log("a");
@@ -48,9 +48,9 @@ router.get(
             } else if (role === "publicUser") {
               const publicUser = await prisma.$queryRaw<
                 userData[]
-              >`SELECT pu.id, p.address, p.image_url AS "imageUrl", pu.username, 'user' AS "propertyType"
-              FROM property AS p, public_users as pu, registration as r
-                WHERE pu.id = ${id} and pu.id = r.user_id and p.id = r.property_id;
+              >`SELECT pu.user_id, p.address, p.image_key AS "imageUrl", pu.first_name, 'user' AS "propertyType"
+              FROM property AS p, public_users as pu, registration as r, condo_unit as c
+                WHERE pu.user_id = ${id} and pu.user_id = r.public_user_id and c.id = r.condo_id;
                 `;
               console.log("b");
               return res.status(200).json(publicUser);
@@ -68,4 +68,3 @@ router.get(
 );
 
 export default router;
-*/
