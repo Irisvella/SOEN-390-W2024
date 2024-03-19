@@ -13,16 +13,10 @@ const ManagementFinancialOverview = () => {
         <Typography variant="h6">
           Management Financial Overview
         </Typography>
-        <Box mt={4} width="80%">
-          <Typography variant="h6" mb={2}>
-            Outgoing Invoices
-          </Typography>
+        
           <ManagementSentBills />
-          <Typography variant="h6" mt={4} mb={2}>
-            Operational Costs
-          </Typography>
           <OperationalCostsTable />
-        </Box>
+
       </Box>
     </div>
   );

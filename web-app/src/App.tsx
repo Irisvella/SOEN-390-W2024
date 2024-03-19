@@ -13,6 +13,7 @@ import CreateListingPage from './pages/CreateListingPage.tsx';
 import AddUnit from './pages/AddUnit.jsx';
 import CreateBillRequest from './pages/CreateBillRequest.jsx';
 import ManagementFinancialOverview from './pages/ManagementFinancialOveriew.jsx';
+import AddOperationalCost from './pages/AddOperationalCost.jsx';
 
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
             <Route path="/AddUnit" element={<AddUnit />} />
             <Route path="/createbillrequest" element={<CreateBillRequest/>} />
             <Route path="/ManagementFinancialOverview" element={<ManagementFinancialOverview/>} />
+            <Route path="/AddOperationalCost" element={<AddOperationalCost/>} />
           </>
         ) : null}
       </Routes>

@@ -7,12 +7,18 @@ import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
 
+
+
+
+
 const AddOperationalCost = () => {
   const [operationalCostData, setOperationalCostData] = useState({
     propertyAddress: '',
     amount: '',
     description: '',
+    date: null, // Add date field to state
   });
+  
 
   const [errors, setErrors] = useState({
     propertyAddress: false,
@@ -33,6 +39,14 @@ const AddOperationalCost = () => {
       propertyNotFound: false, // Reset property not found error when input changes
     }));
   };
+
+  const handleDateChange = (date) => {
+    setOperationalCostData((prevData) => ({
+      ...prevData,
+      date: date,
+    }));
+  };
+  
 
   const handleSubmit = () => {
     if (!operationalCostData.propertyAddress || !operationalCostData.amount || !operationalCostData.description) {
@@ -130,6 +144,24 @@ const AddOperationalCost = () => {
               Property not found. Please check the address.
             </Typography>
           )}
+        <FormControl fullWidth variant="outlined" margin="normal" error={errors.date}>
+        <TextField
+          label="Due Date"
+          type="date"
+          variant="outlined"
+          name="date"
+          value={operationalCostData.date}
+          onChange={handleChange}
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+        {errors.date && <FormHelperText>This field is required</FormHelperText>}
+      </FormControl>
+
+
+
+
           <Button variant="contained" color="primary" onClick={handleSubmit} mt={2}>
             Submit
           </Button>

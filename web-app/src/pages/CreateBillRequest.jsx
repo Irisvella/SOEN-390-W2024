@@ -75,7 +75,7 @@ const CreateBillRequest = () => {
 
   return (
     <div>
-      <Navbar userName="Your Company" />
+      <Navbar/>
       <Box mt={10} display="flex" flexDirection="column" alignItems="center">
         <Typography variant="h5" mb={4}>
           Create condo fee payment request

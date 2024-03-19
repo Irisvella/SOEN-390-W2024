@@ -5,16 +5,17 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Typography, Button, Dialog, DialogActions, DialogContent, DialogTitle, Select, MenuItem } from '@mui/material';
 
 const columns = [
-  { field: 'propertyAddress', headerName: 'Property Address', width: 300 }, // Adjusted width for Property Address column
+  { field: 'propertyAddress', headerName: 'Property Address', width: 300 },
   { field: 'unit', headerName: 'Unit', width: 90 },
   { field: 'amount', headerName: 'Amount', width: 150, editable: true },
   { field: 'status', headerName: 'Status', width: 150, editable: false },
+  { field: 'dueDate', headerName: 'Due Date', width: 150 }, // New column for due date
 ];
 
 const initialRows = [
-  { id: 1, propertyAddress: '123 Main St', unit: 'A101', amount: 100, status: 'Unpaid' },
-  { id: 2, propertyAddress: '456 Elm St', unit: 'B202', amount: 150, status: 'Paid' },
-  { id: 3, propertyAddress: '789 Oak St', unit: 'C303', amount: 120, status: 'Unpaid' },
+  { id: 1, propertyAddress: '123 Main St', unit: 'A101', amount: 100, status: 'Unpaid', dueDate: '2024-03-31' },
+  { id: 2, propertyAddress: '456 Elm St', unit: 'B202', amount: 150, status: 'Paid', dueDate: '2024-03-29' },
+  { id: 3, propertyAddress: '789 Oak St', unit: 'C303', amount: 120, status: 'Unpaid', dueDate: '2024-04-02' },
 ];
 
 const ManagementSentBills = () => {
@@ -48,37 +49,36 @@ const ManagementSentBills = () => {
 
   return (
     <div>
+      <Navbar />
       <Box mt={10} display="flex" flexDirection="column" alignItems="center">
         <Typography variant="h6">
           Outgoing Invoices
         </Typography>
-        <Box mt={2} width="80%">
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            pageSize={5}
-            checkboxSelection
-            onCellClick={handleCellClick}
-            onSelectionModelChange={(newSelection) => setSelectedRow(rows.find(row => row.id === newSelection.selectionModel[0]))}
-          />
-          <Dialog open={openEditDialog} onClose={handleEditDialogClose}>
-            <DialogTitle>Edit Status</DialogTitle>
-            <DialogContent>
-              <Select
-                fullWidth
-                value={editedStatus}
-                onChange={handleStatusChange}
-              >
-                <MenuItem value="Paid">Paid</MenuItem>
-                <MenuItem value="Unpaid">Unpaid</MenuItem>
-              </Select>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleEditDialogClose}>Cancel</Button>
-              <Button onClick={handleEditDialogSave}>Save</Button>
-            </DialogActions>
-          </Dialog>
-        </Box>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          pageSize={5}
+          checkboxSelection
+          onCellClick={handleCellClick}
+          onSelectionModelChange={(newSelection) => setSelectedRow(rows.find(row => row.id === newSelection.selectionModel[0]))}
+        />
+        <Dialog open={openEditDialog} onClose={handleEditDialogClose}>
+          <DialogTitle>Edit Status</DialogTitle>
+          <DialogContent>
+            <Select
+              fullWidth
+              value={editedStatus}
+              onChange={handleStatusChange}
+            >
+              <MenuItem value="Paid">Paid</MenuItem>
+              <MenuItem value="Unpaid">Unpaid</MenuItem>
+            </Select>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleEditDialogClose}>Cancel</Button>
+            <Button onClick={handleEditDialogSave}>Save</Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </div>
   );
