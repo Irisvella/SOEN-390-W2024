@@ -1,21 +1,8 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import {
- 
-  ThemeProvider,
-  CssBaseline,
-  Box,
-  Container,
-  Grid,
- 
-  Divider,
-
-} from '@mui/material';
-import FitbitIcon from "@mui/icons-material/Fitbit";
 import { Link } from 'react-router-dom'; // Import Link for navigation
 import "../App.css";
-import { GlobalStyles, IconButton, List, ListItem } from '@mui/joy';
+import { GlobalStyles, List, ListItem } from '@mui/joy';
 import  ListItemButton, { listItemButtonClasses } from "@mui/joy/ListItemButton";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
@@ -29,6 +16,7 @@ import Typography from "@mui/joy/Typography";
 import ListItemContent from "@mui/joy/ListItemContent";
 import Sheet from "@mui/joy/Sheet";
 import { closeSidebar } from '../utilis.ts';
+import { Box } from '@mui/material';
 //This is related to css
 function Toggler({
     defaultExpanded = false,
