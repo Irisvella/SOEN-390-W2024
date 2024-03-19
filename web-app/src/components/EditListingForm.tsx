@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import { FormControl, FormLabel, Grid, Input, Button, Container } from '@mui/material'
+import { FormControl, FormLabel, Grid, Input, Button, Container } from '@mui/material';
 import { useParams } from 'react-router-dom';
 
 
@@ -13,7 +13,7 @@ useEffect(() => {
       const token = localStorage.getItem('token');
     
       try {
-        const response = await fetch(`http://localhost:3000/properties/${propertyId}`, {
+        const response = await fetch(`http://localhost:3000/createEditListing/?propertyId=${propertyId}`, {//http://localhost:3000/property/${propertyId}
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -69,14 +69,10 @@ const updatePropertyDetails = async () => {
     <>
     
     <Container>
-    <Grid
-      templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
-      gap={6}
-    >
+    <Grid>
         <FormControl id="address">
         <FormLabel>Address</FormLabel>
         <Input
-          focusBorderColor="brand.blue"
           type="address"
           value={address}
           onChange={(e) => setAddress(e.target.value)}

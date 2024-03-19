@@ -60,6 +60,7 @@ router.post(
 
 // Assuming your base URL is something like "/properties" and this handler is for "/properties/:propertyId"
 router.get("/:propertyId", verifyToken, async (req: Request, res: Response) => {
+  console.log("is it working");
   try {
     jwt.verify(req.token as string,
        process.env.SECRET as jwt.Secret,
@@ -75,6 +76,7 @@ router.get("/:propertyId", verifyToken, async (req: Request, res: Response) => {
       }
 
       const { propertyId } = req.params;
+      console.log(req.params, "checking property id is working");
       const property = await prisma.property.findFirst({
         where: {
           id: parseInt(propertyId),
