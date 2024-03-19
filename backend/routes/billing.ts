@@ -2,7 +2,7 @@ import express from "express";
 const router = express.Router();
 import * as z from "zod";
 import prisma from "../prisma/client";
-import jwt from "jsonwebtoken";
+import jwt, { Jwt } from "jsonwebtoken";
 import { Prisma } from "@prisma/client";
 import verifyToken from "../middleware/verify-token";
 require("dotenv").config();
@@ -27,7 +27,7 @@ router.post(
         async (err, decoded) => {
           if (err) {
             console.log("err from /billing POST ---- ", err);
-            return res.status(401).json({ message: "Unauthorized" });
+            return res.status(401).json("Unauthorized");
           }
 
           const { id, role, email } = (<any>decoded).data;
@@ -35,7 +35,7 @@ router.post(
             console.log(
               `user with email ${email} and role ${role} tried to access /billing POST`,
             );
-            return res.status(401).json({ message: "Unauthorized" });
+            return res.status(401).json("Unauthorized");
           }
 
           const parse = Billing.safeParse(req.body);
@@ -64,7 +64,9 @@ router.post(
             },
           });
           if (!condoExists) {
-            return res.status(400).json({ message: "Condo does not exist" });
+            return res.status(400).json({
+              message: "Condo with provided unit number does not exist",
+            });
           }
 
           const condoUser = await prisma.registration.findFirst({
@@ -93,6 +95,90 @@ router.post(
       );
     } catch (err) {
       console.log("err from /billing POST ---- ", err);
+      return res.status(500).json({ message: "Unexpected error" });
+    }
+  },
+);
+
+router.get(
+  "/",
+  verifyToken,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      jwt.verify(
+        req.token as string,
+        process.env.SECRET as jwt.Secret,
+        async (err, decoded) => {
+          if (err) {
+            console.log("err from /billing GET ---- ", err);
+            return res.status(401).json("Unauthorized");
+          }
+
+          const { id, role, email } = (<any>decoded).data;
+          if (role === "employeeUser") {
+            console.log(
+              `user with email ${email} and role employeeUser accessed /billing GET`,
+            );
+            return res.status(401).json("Unauthorized");
+          } else if (role === "publicUser") {
+            const publicUserExists = await prisma.public_users.findFirst({
+              where: {
+                user_id: id,
+              },
+              include: {
+                billing: true,
+              },
+            });
+
+            if (!publicUserExists) {
+              console.log("public user doesn't exist");
+              return res.status(401).json("Unauthorized");
+            }
+
+            return res
+              .status(200)
+              .json({ message: "success", data: publicUserExists.billing });
+          } else if (role === "company") {
+            const companyUserExists =
+              await prisma.management_companies.findFirst({
+                where: {
+                  user_id: id,
+                },
+                include: {
+                  property: {
+                    include: {
+                      condo_unit: {
+                        include: {
+                          billing: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              });
+
+            if (!companyUserExists) {
+              console.log("company user doesn't exist");
+              return res.status(401).json("Unauthorized");
+            }
+
+            const data = [];
+            const properties = companyUserExists.property;
+            for (let i = 0; i < properties.length; i += 1) {
+              const condos = properties[i].condo_unit;
+              for (let j = 0; j < condos.length; j += 1) {
+                data.push(condos[i].billing);
+              }
+            }
+
+            return res.status(200).json({ message: "success", data });
+          }
+
+          return res.status(500).json({ message: "Unexpected error" });
+        },
+      );
+    } catch (err) {
+      console.log("err from /billing GET ---- ", err);
       return res.status(500).json({ message: "Unexpected error" });
     }
   },
