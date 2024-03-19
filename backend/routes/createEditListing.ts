@@ -33,7 +33,7 @@ router.post(
                     //address on the table to the left
                     //address on the body is to the right
                     address: addr,
-                    flat_fee: 0,
+                    flat_fee: 0.0,
                     company_id: company_id,
                   },
                 });
@@ -57,5 +57,60 @@ router.post(
     }
   },
 );
+
+// Assuming your base URL is something like "/properties" and this handler is for "/properties/:propertyId"
+router.get("/:propertyId", verifyToken, async (req: Request, res: Response) => {
+  console.log("is it working");
+  try {
+    jwt.verify(req.token as string,
+       process.env.SECRET as jwt.Secret,
+        async (err, decoded) => {
+      if (err) {
+        console.log("err from /properties/:propertyId GET ---- ", err);
+        return res.status(401).json("Unauthorized");
+      }
+
+      const { role } = (<any>decoded).data;
+      if (role !== "company") {
+        return res.status(403).json({ message: "Forbidden" });
+      }
+
+      const { propertyId } = req.params;
+      console.log(req.params, "checking property id is working");
+      const property = await prisma.property.findFirst({
+        where: {
+          id: parseInt(propertyId),
+        },
+      });
+
+      if (property) {
+        return res.status(200).json(property);
+      } else {
+        return res.status(404).json({ message: "Property not found" });
+      }
+    });
+  } catch (err) {
+    console.log("error from /properties/:propertyId GET ---- ", err);
+    return res.status(500).json({ message: "Unexpected error" });
+  }
+});
+
+
+router.put("/:propertyId", verifyToken, async (req, res) => {
+  const { propertyId } = req.params;
+  const { address } = req.body; // Extracting address directly from req.body
+
+  try {
+    const updatedProperty = await prisma.property.update({
+      where: { id: parseInt(propertyId) },
+      data: { address }, // Only updating address field
+    });
+    res.json(updatedProperty);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error updating property");
+  }
+});
+
 
 export default router;

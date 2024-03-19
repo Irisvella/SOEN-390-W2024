@@ -8,16 +8,14 @@ import { useNavigate } from "react-router-dom";
 
 // Assuming you have a similar structure for company properties
 // Explicitly define the type for each property in the array
-const companyProperties: Property[] = [
-
-];
+const companyProperties: Property[] = [];
 
 const DashboardCompany = () => {
 
   const handleAddProperty = () => {
     // Here you can handle the logic to add a property
     // For example, opening a dialog or redirecting to a form page
-    navigate("/CreateListingPage");
+    navigate("/CreateListing");
   };
   const [properties, setProperties] = useState<Property[]>([]);
   const navigate = useNavigate();
