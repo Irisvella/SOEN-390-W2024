@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Navbar from '../components/Navbar';
+import Navbar from '../Navbar';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import { Typography, Button, Dialog, DialogActions, DialogContent, DialogTitle, Select, MenuItem } from '@mui/material';
@@ -48,7 +48,6 @@ const ManagementSentBills = () => {
 
   return (
     <div>
-      <Navbar />
       <Box mt={10} display="flex" flexDirection="column" alignItems="center">
         <Typography variant="h6">
           Outgoing Invoices
