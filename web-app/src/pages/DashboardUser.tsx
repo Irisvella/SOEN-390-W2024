@@ -67,7 +67,7 @@ const DashboardUser = () => {
   }, []);
     
   const handleCreateRequest = () => {
-    navigate("/CreateRequestPage");
+    navigate("/CreateRequest");
   };
 
   return (
