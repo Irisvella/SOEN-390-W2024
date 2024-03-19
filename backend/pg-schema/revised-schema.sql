@@ -88,7 +88,7 @@ CREATE TABLE registration ( -- omitted company_id since it could be found using 
     end_date TIMESTAMP, -- null means ongoing renter or owner
     public_user_id INT NOT NULL REFERENCES public_users(user_id) ON DELETE CASCADE,
     condo_id INT NOT NULL REFERENCES condo_unit(id) ON DELETE CASCADE,
-    UNIQUE (condo_id, start_date, end_date) -- only one person at a time can own/rent a specific property
+    UNIQUE (condo_id, end_date) -- only one person at a time can own/rent a specific property
 );
 
 CREATE TABLE employed_by (
