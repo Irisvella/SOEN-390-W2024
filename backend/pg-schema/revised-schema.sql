@@ -146,6 +146,15 @@ CREATE TABLE operating_fees (
     payed_on TIMESTAMP DEFAULT NOW()
 );
 
+CREATE TABLE billing (
+    id SERIAL PRIMARY KEY,
+    condo_id INT NOT NULL REFERENCES condo_unit(id),
+    public_user_id INT NOT NULL REFERENCES public_users(user_id),
+    pay_before DATE DEFAULT CURRENT_DATE + INTERVAL '30 days',
+    amount NUMERIC(10, 2) NOT NULL,
+    UNIQUE (condo_id, public_user_id, pay_before)
+);
+
 -- trigger for incrementing unit_count of management companies whenever
 -- a new property that belongs to that management company is inserted
 CREATE FUNCTION increment_unit_count_function()
