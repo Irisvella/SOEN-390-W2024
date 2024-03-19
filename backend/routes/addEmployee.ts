@@ -18,7 +18,6 @@ interface userData {
   role: string;
 }
 
-
 router.post(
   "/",
   verifyToken,
@@ -67,11 +66,15 @@ router.post(
                 await prisma.$transaction(async (tx) => {
                   const employeeUser = await prisma.employed_by.create({
                     data: {
-                      public_user_id: userID,
+                      employee_user_id: userID,
                       company_id: id,
-                      yearly_salary: 100000,
-                      role:body.role,
                     },
+                  });
+                });
+                await prisma.$transaction(async (tx) => {
+                  const employeeUserRole = await prisma.employee_users.update({
+                    where:{ user_id: userID, }, 
+                    data:{ role:body.role, },
                   });
                 });
               }
@@ -94,6 +97,3 @@ router.post(
 
 export default router;
 
-                  
-
-  
