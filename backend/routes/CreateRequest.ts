@@ -6,7 +6,7 @@ import verifyToken from "../middleware/verify-token";
 require("dotenv").config();
 
 import { Request, Response, NextFunction } from "express";
-
+import {priority } from "@prisma/client";
 // Route to handle the submission of a new listing
 router.post(
   "/",
@@ -26,20 +26,31 @@ router.post(
             if (role === "publicUser") {
               const body = req.body; //constant
 
+             
+              
+            const company = await prisma.property.findFirst({
+              where:{
+                id:body.propertyID
+              },
+              select: {
+                company_id: true,
+              }                  
+            });
+            
+             
               async function createRequest(
                 employee_id:number , 
                 company_id: number, 
                 requestType:string,
-               // date: number,
-               // time: number,
+                date: Date,
                 requestReason:string,
-                priority:string,
-                
+                priority:priority,
                 ) {
                 const property = await prisma.requests.create({
                   data: {
                     title: requestType, //title = reason of request change to what the front end sends us in body
-                    //issued_at: new Date(),
+                    issued_at: new Date(),
+
                     condo_owner_id: company_id,
                     employee_id: employee_id,
                     description: requestReason, //change to what the front end sends us in body
@@ -49,7 +60,7 @@ router.post(
                 });
               }
 
-              createRequest( body.employee_id, body.company_id, body.requestType, body.requestReason, body.request_priority);
+              createRequest( body.employee_id, company!.company_id!, body.requestType, body.date, body.requestReason, body.request_priority);
 
               console.log("a");
               return res.status(200).json({});
