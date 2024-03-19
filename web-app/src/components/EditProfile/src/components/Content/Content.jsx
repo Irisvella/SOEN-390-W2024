@@ -5,7 +5,7 @@ import Actions from './Actions'
 import { Link } from 'react-router-dom'
 
 const Content = () => {
-  const tabs = ['Account Settings', 'Dashboard']
+  const tabs = ['Account Settings', 'Dashboard', "Link Condo"]
 
   return (
     <Box

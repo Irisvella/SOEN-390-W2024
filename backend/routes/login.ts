@@ -6,14 +6,13 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
-import { Prisma } from "@prisma/client";
 
 import { Request, Response, NextFunction } from "express";
 
 const User = z.object({
-  role: z.enum(["publicUser", "company"]),
-  email: z.string().email(),
-  password: z.string().min(6),
+  role: z.enum(["publicUser", "company", "employeeUser"]),
+  email: z.string().trim().toLowerCase().email(),
+  password: z.string().min(6).max(64),
 });
 
 router.post(
@@ -27,18 +26,18 @@ router.post(
         return res.status(400).json(result.error.issues);
       }
 
+      const parsedUser = result.data;
       const userExists = await prisma.users.findFirst({
         where: {
-          email: body.email,
+          email: parsedUser.email,
         },
       });
       if (!userExists) {
-        console.log("a");
         return res.status(401).json({ message: "User does not exist" });
       }
 
       const checkPassword = bcrypt.compareSync(
-        body.password,
+        parsedUser.password,
         userExists.hashed_password,
       );
       if (!checkPassword) {
@@ -48,47 +47,71 @@ router.post(
       const token = jwt.sign(
         {
           exp: Math.floor(Date.now() / 1000) + 60 * 60,
-          data: { id: userExists.id, role: body.role, email: body.email },
+          data: {
+            id: userExists.id,
+            role: parsedUser.role,
+            email: parsedUser.email,
+          },
         },
         process.env.SECRET as jwt.Secret,
       );
 
-      let subUserExists;
-      if (body.role === "publicUser") {
-        subUserExists = await prisma.public_users.findFirst({
+      if (parsedUser.role === "publicUser") {
+        const publicUserExists = await prisma.public_users.findFirst({
           where: {
-            id: userExists.id,
+            user_id: userExists.id,
           },
         });
-        if (!subUserExists) {
+        if (!publicUserExists) {
           return res.status(401).json({ message: "Unauthorized" });
-        } else {
-          return res.status(200).json({
-            token,
-            data: {
-              username: subUserExists.username,
-              imageKey: subUserExists.profile_image_key,
-              role: "publicUser",
-            },
-          });
         }
+        return res.status(200).json({
+          token,
+          data: {
+            email: parsedUser.email,
+            firstName: publicUserExists.first_name,
+            lastName: publicUserExists.last_name,
+            role: "publicUser",
+            subRole: publicUserExists.role,
+            imageKey: publicUserExists.profile_image_key,
+          },
+        });
+      } else if (parsedUser.role === "company") {
+        const companyUserExists = await prisma.management_companies.findFirst({
+          where: {
+            user_id: userExists.id,
+          },
+        });
+        if (!companyUserExists) {
+          return res.status(401).json({ message: "Unauthorized" });
+        }
+        return res.status(200).json({
+          token,
+          data: {
+            email: parsedUser.email,
+            companyName: companyUserExists.company_name,
+            role: parsedUser.role,
+          },
+        });
       } else {
-        subUserExists = await prisma.management_companies.findFirst({
+        const employeeUserExists = await prisma.employee_users.findFirst({
           where: {
-            id: userExists.id,
+            user_id: userExists.id,
           },
         });
-        if (!subUserExists) {
+        if (!employeeUserExists) {
           return res.status(401).json({ message: "Unauthorized" });
-        } else {
-          return res.status(200).json({
-            token,
-            data: {
-              companyName: subUserExists.company_name,
-              role: "company",
-            },
-          });
         }
+        return res.status(200).json({
+          token,
+          data: {
+            email: parsedUser.email,
+            firstName: employeeUserExists.first_name,
+            lastName: employeeUserExists.last_name,
+            role: "employeeUser",
+            imageKey: employeeUserExists.profile_image_key,
+          },
+        });
       }
     } catch (err) {
       console.log("error from /login ---- ", err);

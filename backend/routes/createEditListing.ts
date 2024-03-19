@@ -27,44 +27,20 @@ router.post(
             if (role === "company") {
               const body = req.body; //constant
 
-              async function createProperty(address: string) {
+              async function createProperty(addr: string, company_id: number) {
                 const property = await prisma.property.create({
                   data: {
                     //address on the table to the left
                     //address on the body is to the right
-                    address: address,
-                    size: 0,
-                    condo_fee: 0,
-                    unit_id: 0,
-                  },
-                });
-                await new Promise(f => setTimeout(f, 1000));  // wait so that the database has time to update the added property
-              }
-             
-              async function linkProperty(owner_id: number, property_id:number) {
-                const owner = await prisma.owned_by.create({
-                  data: {
-                    
-                   owner_id:owner_id,
-                   property_id:property_id,
-                   
+                    address: addr,
+                    flat_fee: 0.00,
+                    company_id: company_id,
                   },
                 });
               }
-              
-              createProperty(body.address);
-              
-              const newProperty = await prisma.property.findFirst({
-                select: {
-                id: true,
-                },
-                where: {
-                address: body.address,
-                },
-                });
-                // id is id of token, newProperty!.id is id of newly created property
-              linkProperty(id, newProperty!.id);
-              
+
+              createProperty(body.address, id);
+
               console.log("a");
               return res.status(200).json({});
             }
@@ -81,8 +57,5 @@ router.post(
     }
   },
 );
-
-
-
 
 export default router;

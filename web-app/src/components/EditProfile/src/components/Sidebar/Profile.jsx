@@ -26,6 +26,7 @@ function Profile() {
   const [companyName, setCompanyName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumer, setPhoneNumber] = useState("");
+  const [userRole, setUserRole] = useState("");
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -41,11 +42,12 @@ function Profile() {
         const data = await response.json();
         console.log(data);
         if (response.ok) {
+          setUserRole(data.role);
           setEmail(data.email);
           setUserProfile(data.avatar); 
-          setUserName(data.username); 
+          setUserName(data.firstName + ' ' + data.lastName); 
           setCompanyName(data.companyName);
-          setPhoneNumber(data.phone);
+          setPhoneNumber(data.phoneNumber);
         } else {
           console.error('Failed to fetch profile:', data.message);
         }
@@ -123,13 +125,17 @@ function Profile() {
       </Modal>
       <VStack spacing={1}>
         <Heading as="h3" fontSize="xl" color="brand.dark">
-          {userName || companyName || "User Name" }
+        {userRole === "publicUser" && (
+            " " + userName )}
+            {userRole === "company" && (
+            " " + companyName )}
+
         </Heading>
         <Text  fontSize="sm">
-          {email}
+          {email || "email here"}
         </Text>
         <Text>
-          {phoneNumer}
+          {phoneNumer || "phone number here"}
         </Text>
       </VStack>
     </VStack>

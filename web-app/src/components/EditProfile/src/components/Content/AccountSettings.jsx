@@ -30,7 +30,7 @@ useEffect(() => {
         setUserProfile(data.avatar); 
         setUserName(data.username); 
         setCompanyName(data.companyName);
-        setPhoneNumber(data.phone);
+        setPhoneNumber(data.phoneNumber);
         setAddress(data.address);
       } else {
         console.error('Failed to fetch profile:', data.message);
@@ -112,8 +112,17 @@ const updateProfile = async () => {
 
       </>
       )}
+      
+      <Button onClick={updateProfile}>Update</Button>
+    </Grid>
+    
+  )
+}
+
+export default AccountSettings
 
 
+/*    removing  username change for now.
       {userRole === 'publicUser' && (
       
       <FormControl id="userName">
@@ -127,10 +136,5 @@ const updateProfile = async () => {
       </FormControl>
 
       )}
-      <Button onClick={updateProfile}>Update</Button>
-    </Grid>
-    
-  )
-}
 
-export default AccountSettings
+*/
