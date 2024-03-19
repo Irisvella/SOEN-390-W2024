@@ -166,13 +166,14 @@ model users {
 }
 
 model billing {
-  id             Int          @id @default(autoincrement())
+  id             Int             @id @default(autoincrement())
   condo_id       Int
   public_user_id Int
-  pay_before     DateTime?    @default(dbgenerated("(CURRENT_DATE + '30 days'::interval)")) @db.Date
-  amount         Decimal      @db.Decimal(10, 2)
-  condo_unit     condo_unit   @relation(fields: [condo_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  public_users   public_users @relation(fields: [public_user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+  pay_before     DateTime?       @default(dbgenerated("(CURRENT_DATE + '30 days'::interval)")) @db.Date
+  amount         Decimal         @db.Decimal(10, 2)
+  status         billing_status? @default(unpaid)
+  condo_unit     condo_unit      @relation(fields: [condo_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  public_users   public_users    @relation(fields: [public_user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
 
   @@unique([condo_id, public_user_id, pay_before])
 }
@@ -206,4 +207,9 @@ enum user_role {
   renter
   owner
   none
+}
+
+enum billing_status {
+  paid
+  unpaid
 }
