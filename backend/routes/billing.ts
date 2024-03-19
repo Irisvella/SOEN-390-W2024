@@ -16,6 +16,11 @@ const Billing = z.object({
   payBefore: z.date(),
 });
 
+const StatusChange = z.object({
+  billingId: z.number(),
+  status: z.enum(["paid", "unpaid"]),
+});
+
 router.post(
   "/",
   verifyToken,
@@ -53,7 +58,7 @@ router.post(
           });
           if (!propertyExists) {
             return res.status(400).json({
-              message: "Property with provided address doesn't exist",
+              message: "Property with provided address does not exist",
             });
           }
 
@@ -179,6 +184,90 @@ router.get(
       );
     } catch (err) {
       console.log("err from /billing GET ---- ", err);
+      return res.status(500).json({ message: "Unexpected error" });
+    }
+  },
+);
+
+router.patch(
+  "/",
+  verifyToken,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      jwt.verify(
+        req.token as string,
+        process.env.SECRET as jwt.Secret,
+        async (err, decoded) => {
+          if (err) {
+            console.log("err from /billing PATCH ---- ", err);
+            return res.status(401).json("Unauthorized");
+          }
+
+          const { id, role, email } = (<any>decoded).data;
+          if (role !== "company") {
+            console.log(
+              `user with email ${email} and role ${role} accessed /billing GET`,
+            );
+            return res.status(401).json("Unauthorized");
+          }
+
+          const parse = StatusChange.safeParse(req.body);
+          if (!parse.success) {
+            console.log(parse.error.issues);
+            return res.status(400);
+          }
+
+          const parsedBody = parse.data;
+          const billingExists = await prisma.billing.findFirst({
+            where: {
+              id: parsedBody.billingId,
+            },
+          });
+          if (!billingExists) {
+            return res
+              .status(400)
+              .json({ message: "Billing with provided id does not exist" });
+          }
+
+          const condoExists = await prisma.condo_unit.findFirst({
+            where: {
+              id: billingExists.condo_id,
+            },
+          });
+          if (!condoExists) {
+            throw new Error("condo does not exist");
+          }
+
+          const propertyExists = await prisma.property.findFirst({
+            where: {
+              id: condoExists.property_id,
+            },
+          });
+          if (!propertyExists) {
+            throw new Error("property does not exist");
+          }
+
+          if (propertyExists.company_id !== id) {
+            console.log("condo and property does not belong to user");
+            return res.status(401).json("Unauthorized");
+          }
+
+          const updateBilling = await prisma.billing.update({
+            where: {
+              id: parsedBody.billingId,
+            },
+            data: {
+              status: parsedBody.status,
+            },
+          });
+
+          return res
+            .status(200)
+            .json({ message: "success", data: updateBilling });
+        },
+      );
+    } catch (err) {
+      console.log("err from /billing PATCH ---- ", err);
       return res.status(500).json({ message: "Unexpected error" });
     }
   },
