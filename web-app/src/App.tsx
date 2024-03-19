@@ -11,6 +11,9 @@ import Home from './pages/Home.jsx';
 import ManagementLanding from './pages/ManagementLanding.jsx';
 import CreateListingForm from './components/CreateListingForm.tsx';
 import EditListingForm from './components/EditListingForm.tsx';
+import CreateRequestPage from './pages/CreateRequestPage.tsx';
+import RequestManagement from './pages/RequestManagement.tsx';
+import OpenRequestManagementPage from './pages/OpenRequestManagementPage.tsx';
 
 function App() {
   const isAuthenticated = !!localStorage.getItem('token');
@@ -34,6 +37,11 @@ function App() {
             <Route path="/dashboard-company" element={<DashboardCompany />} />
             <Route path="/Employeesinfo" element={<Employeesinfo />} />
             <Route path="/Addemployee" element={<Addemployee />} />
+            <Route path="/CreateRequestPage" element={<CreateRequestPage />} />
+            <Route path="/RequestManagement" element={<RequestManagement />} />
+            <Route path="/OpenRequestManagementPage" element={<OpenRequestManagementPage />} />
+            <Route path="/new-management-landing" element={<OpenRequestManagementPage />} />
+            
           </>
         ) : null}
       </Routes>
