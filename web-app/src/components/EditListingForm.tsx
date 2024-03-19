@@ -7,7 +7,7 @@ import {
   Button,
   Container,
 } from "@mui/material";
-import { json, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 function EditListingForm() {
   const { propertyId } = useParams(); // You need to determine how you're getting this ID
