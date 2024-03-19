@@ -12,7 +12,7 @@ import ManagementLanding from './pages/ManagementLanding.jsx';
 import CreateListingPage from './pages/CreateListingPage.tsx';
 import AddUnit from './pages/AddUnit.jsx';
 import CreateBillRequest from './pages/CreateBillRequest.jsx';
-import ManagementFinancialOverview from './pages/ManagementFinancialOveriew.jsx';
+import ManagementFinancialOverview from './pages/ManagementFinancialOverview.jsx';
 import AddOperationalCost from './pages/AddOperationalCost.jsx';
 
 
