@@ -8,6 +8,9 @@ import { Button } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import "../App.css";
+import { useNavigate } from 'react-router-dom';
+
+
 
 // Define the type for each property item
 interface Property {
@@ -56,6 +59,11 @@ const PrevArrow: React.FC<ArrowProps> = ({ className, style, onClick }) => {
 };
 
 const PropertySlider: React.FC<PropertySliderProps> = ({ properties }) => {
+  console.log(properties);
+  const navigate = useNavigate();
+  
+ 
+ 
   const settings = {
     dots: true,
     infinite: true,
@@ -69,6 +77,8 @@ const PropertySlider: React.FC<PropertySliderProps> = ({ properties }) => {
     // ...other settings
   };
   const renderSlideContent = (property: Property) => {
+  
+   
     // Special slide for adding a new property or other company-specific slides
     if (property.isSpecial && property.propertyType === "company") {
       // Render a special company slide
@@ -82,7 +92,8 @@ const PropertySlider: React.FC<PropertySliderProps> = ({ properties }) => {
             <div className="property-actions">
               <Button variant="outlined">Visit Employee List</Button>
               <Button variant="outlined">Requests</Button>
-              <Button variant="outlined">Edit</Button>
+              <Button variant="outlined"
+               onClick={() => navigate(`/EditListing/${property.id}`)}>Edit</Button>
             </div>
           </div>
         </div>
