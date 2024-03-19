@@ -48,11 +48,11 @@ function EditListingForm() {
   const updatePropertyDetails = async () => {
     const token = localStorage.getItem("token");
     const payload = {
-      address,
+      address, // This is the updated address from your form
     };
     console.log("Sending payload:", payload);
     try {
-      const response = await fetch("http://localhost:3000/createEditListing", {
+      const response = await fetch(`http://localhost:3000/createEditListing/${propertyId}`, { // Ensuring propertyId is part of the URL
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -60,16 +60,17 @@ function EditListingForm() {
         },
         body: JSON.stringify(payload),
       });
-
+  
       if (!response.ok) {
-        throw new Error("Failed to PropertyDetails");
+        throw new Error("Failed to update property details");
       }
-
-      console.log("Profile updated successfully");
+  
+      console.log("Property updated successfully");
     } catch (error) {
-      console.error("Error updating profile:", error);
+      console.error("Error updating property:", error);
     }
   };
+  
 
   return (
     <>

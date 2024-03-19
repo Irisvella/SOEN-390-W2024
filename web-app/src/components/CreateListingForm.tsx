@@ -15,9 +15,9 @@ import { Img } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
 const CreateListingForm = () => { 
-  const navigate = useNavigate();
-  const [isEditing] = useState(false); //check if you are editing or not   const [isEditing, setIsEditing] = useState(false); 
  
+  
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     address: '',
     postalCode: '',
@@ -34,6 +34,7 @@ const CreateListingForm = () => {
       [id]: value,
     }));
   };
+ 
 
   const handleSubmit = async () => {
    
@@ -50,9 +51,10 @@ const CreateListingForm = () => {
       });
 
       if (response.ok) {
-        console.log('Listing data submitted successfully');
+        // Navigate to dashboard-company
+        console.log('About to navigate');
         navigate("/dashboard-company");
-
+        console.log('Listing data submitted successfully');
         setFormData({
           address: '',
           postalCode: '',
@@ -61,6 +63,7 @@ const CreateListingForm = () => {
           amenities: '',
           description: '',
         });
+        
       } else {
         console.error('Failed to submit listing data');
       }
@@ -189,7 +192,7 @@ const CreateListingForm = () => {
               color="primary"
               onClick={handleSubmit}
               >
-                {isEditing ? "Save Changes" : "Submit"}
+               Submit
                 
               </Button>
             </Grid>

@@ -98,16 +98,17 @@ router.get("/:propertyId", verifyToken, async (req: Request, res: Response) => {
 
 router.put("/:propertyId", verifyToken, async (req, res) => {
   const { propertyId } = req.params;
-  const updatedData = req.body;
+  const { address } = req.body; // Extracting address directly from req.body
 
   try {
     const updatedProperty = await prisma.property.update({
       where: { id: parseInt(propertyId) },
-      data: updatedData,
+      data: { address }, // Only updating address field
     });
     res.json(updatedProperty);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send("Error updating property");
   }
 });
 

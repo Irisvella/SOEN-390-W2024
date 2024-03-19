@@ -38,7 +38,7 @@ router.get(
             if (role === "company") {
               const company = await prisma.$queryRaw<
                 companyData[]
-              >`SELECT m.user_id, p.id,  p.address, p.image_key AS "imageUrl", m.company_name AS "companyName", 'company' AS "propertyType"
+              >`SELECT m.user_id, p.id,  p.address, p.image_url AS "imageUrl", m.company_name AS "companyName", 'company' AS "propertyType"
               FROM property AS p, management_companies as m
                 WHERE m.user_id = ${id} and m.user_id = p.company_id and p.id = id;
                 `;
