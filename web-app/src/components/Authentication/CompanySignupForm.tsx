@@ -59,7 +59,7 @@ const CompanySignupForm = () => {
   };
 
   return (
-    <form onSubmit={handleRegister}>
+    <form onSubmit={handleRegister} data-testid="company-signup-form">
       {successMessage && (
         <div
           style={{ color: "green", textAlign: "center", marginBottom: "10px" }}
@@ -83,6 +83,7 @@ const CompanySignupForm = () => {
             fullWidth
             id="companyName"
             label="Company Name"
+            inputProps={{ 'data-testid': 'companyName' }}
             autoFocus
             value={companyName}
             onChange={(e) => setCompanyName(e.target.value)}
@@ -131,6 +132,7 @@ const CompanySignupForm = () => {
             label="Address"
             name="address"
             value={address}
+            inputProps={{ 'data-testid': 'CompanyAddress' }}
             onChange={(e) => setAddress(e.target.value)}
           />
         </Grid>
@@ -144,6 +146,7 @@ const CompanySignupForm = () => {
             type="password"
             id="password"
             value={password}
+            inputProps={{ 'data-testid': 'passwordInput' }}
             onChange={(e) => setPassword(e.target.value)}
           />
         </Grid>
@@ -162,6 +165,7 @@ const CompanySignupForm = () => {
                 : ""
             }
             value={confirmPassword}
+            inputProps={{ 'data-testid': 'ConfirmPasswordInput' }}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </Grid>

@@ -51,6 +51,7 @@ const CompanyLoginForm = () => {
         id="email"
         label="Email Address"
         name="email"
+        inputProps={{ 'data-testid': 'companyEmail' }}
         autoFocus
         error={!validateEmail(email) && email.length > 0}
         helperText={!validateEmail(email) && email.length > 0 ? "Invalid email format" : ""}

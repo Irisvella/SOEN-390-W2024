@@ -83,6 +83,7 @@ const UserSignupForm = () => {
             label="First name"
             autoFocus
             value={firstName}
+            inputProps={{ 'data-testid': 'firstName' }}
             onChange={(e) => setFirstName(e.target.value)}
             aria-required
           />

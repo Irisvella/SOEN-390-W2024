@@ -5,7 +5,7 @@ function Actions() {
   
   return (
     <Box mt={5} py={5} px={8} borderTopWidth={1} borderColor="brand.light">
-       <Button onClick={updateProfile}>Update</Button>
+       <Button onClick={updateProfile} data-testid="update">Update</Button>
     </Box>
   )
 }
