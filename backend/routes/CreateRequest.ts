@@ -27,33 +27,24 @@ router.post(
               const body = req.body; //constant
 
              
-              
-            const company = await prisma.property.findFirst({
-              where:{
-                id:body.propertyID
-              },
-              select: {
-                company_id: true,
-              }                  
-            });
             
-
-             
               async function createRequest(
+                property_id : number,
                // employee_id:number , //has to be null
                 company_id: number, 
                 requestType:string,
-                date: Date,
+                //date: Date,
                 requestReason:string,
                 priority: priority,
                 ) {
                 const property = await prisma.requests.create({
                   data: {
+                    property_id : property_id,
                     title: requestType, //title = reason of request change to what the front end sends us in body
                     //issued_at: new Date(),
-                    date_needed: date,
+                    //date_needed: "2002/05/24",
                     condo_owner_id: company_id,
-                    employee_id: 2,
+                   // employee_id: 2,
                     description: requestReason, //change to what the front end sends us in body
                     request_priority: priority //change to what the front end sends us in body
                     
@@ -72,7 +63,7 @@ router.post(
               }
 
 
-              createRequest( company!.company_id!, body.requestType, body.date, body.requestReason,request_priority);
+              createRequest(body.property_id, id, body.requestType, body.requestReason,request_priority);  //async funtion 
 
               console.log("a");
               return res.status(200).json({});

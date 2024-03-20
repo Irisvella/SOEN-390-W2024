@@ -66,7 +66,9 @@ model property {
   condo_management_files condo_management_files[]
   condo_unit             condo_unit[]
   management_companies   management_companies     @relation(fields: [company_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
-}
+  property_requests_property_idToid requests[]   @relation("requests_property_idToid") 
+ 
+  }
 
 model public_users {
   user_id                                        Int            @id
@@ -82,6 +84,7 @@ model public_users {
 }
 
 model requests {
+  property_id                                        Int
   title                                              String
   description                                        String
   request_priority                                   priority?      @default(low)
@@ -91,7 +94,7 @@ model requests {
   date_needed                                        DateTime?
   public_users_requests_condo_owner_idTopublic_users public_users   @relation("requests_condo_owner_idTopublic_users", fields: [condo_owner_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
   public_users_requests_employee_idTopublic_users    employee_users? @relation("requests_employee_idTopublic_users", fields: [employee_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
-
+  property_requests_property_idToid   property       @relation("requests_property_idToid", fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   @@id([condo_owner_id, title, issued_at])
 }
 

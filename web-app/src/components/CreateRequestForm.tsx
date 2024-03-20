@@ -19,9 +19,9 @@ import { useNavigate } from "react-router-dom"; // Make sure to import useNaviga
 
 function CreateRequestForm() {
   const navigate = useNavigate(); // Initialize useNavigate
-  const { propertyId } = useParams();
+  const { property_id } = useParams();
   const [formData, setFormData] = useState({
-    propertyId: propertyId,
+    property_id: property_id,
     requestType: "",
     date: "",
 
@@ -54,7 +54,7 @@ function CreateRequestForm() {
       if (response.ok) {
         console.log("Request data submitted successfully");
         setFormData({
-          propertyId: propertyId,
+          property_id: property_id,
           requestType: "",
           date: "",
 
