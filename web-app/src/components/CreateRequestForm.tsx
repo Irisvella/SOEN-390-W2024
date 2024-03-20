@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import {
   Container,
   TextField,
@@ -16,10 +17,12 @@ import Grid from "@mui/joy/Grid";
 import Navbar from "./Navbar";
 import { useNavigate } from "react-router-dom"; // Make sure to import useNavigate
 
+
 function CreateRequestForm() {
   const navigate = useNavigate(); // Initialize useNavigate
-
+  const { propertyId } = useParams(); 
   const [formData, setFormData] = useState({
+    propertyId:propertyId,
     requestType: "",
     date: "",
     time: "",
@@ -50,6 +53,7 @@ function CreateRequestForm() {
       if (response.ok) {
         console.log("Request data submitted successfully");
         setFormData({
+          propertyId:propertyId,
           requestType: "",
           date: "",
           time: "",
