@@ -56,7 +56,7 @@ const UserSignupForm = () => {
   };
 
   return (
-    <form onSubmit={handleRegister}>
+    <form onSubmit={handleRegister} data-testid="user-signup-form">
       {successMessage && (
         <div
           style={{ color: "green", textAlign: "center", marginBottom: "10px" }}
@@ -145,6 +145,7 @@ const UserSignupForm = () => {
             type="password"
             id="password"
             value={password}
+            inputProps={{ 'data-testid': 'passwordInput' }}
             onChange={(e) => setPassword(e.target.value)}
           />
         </Grid>
@@ -163,6 +164,7 @@ const UserSignupForm = () => {
                 : ""
             }
             value={confirmPassword}
+            inputProps={{ 'data-testid': 'confirmPasswordInput' }}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </Grid>
