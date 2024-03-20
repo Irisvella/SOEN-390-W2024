@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, CssBaseline } from "@mui/material";
+import { Button, Container, CssBaseline } from "@mui/material";
 import Navbar from "../components/Navbar";
 import PropertySlider from "./PropertySlider"; // Assuming correct export
 import { Property } from "./PropertySlider"; // Assuming Property is correctly exported as a type
@@ -65,6 +65,10 @@ const DashboardUser = () => {
     };
     fetchProperties();
   }, []);
+    
+  const handleCreateRequest = () => {
+    navigate("/CreateRequestPage");
+  };
 
   return (
     <>
@@ -73,6 +77,14 @@ const DashboardUser = () => {
       <Container component="main" maxWidth="lg" sx={{ mt: 10, mb: 10 }}>
         <PropertySlider properties={properties} />
         {/* Rest of your component */}
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleCreateRequest}
+        >
+          Create A Request
+        </Button>
+
       </Container>
     </>
   );
