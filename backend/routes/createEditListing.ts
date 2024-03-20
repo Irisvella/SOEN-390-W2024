@@ -27,44 +27,20 @@ router.post(
             if (role === "company") {
               const body = req.body; //constant
 
-              async function createProperty(address: string) {
+              async function createProperty(addr: string, company_id: number) {
                 const property = await prisma.property.create({
                   data: {
                     //address on the table to the left
                     //address on the body is to the right
-                    address: address,
-                    size: 0,
-                    condo_fee: 0,
-                    unit_id: 0,
-                  },
-                });
-                await new Promise(f => setTimeout(f, 1000));  // wait so that the database has time to update the added property
-              }
-             
-              async function linkProperty(owner_id: number, property_id:number) {
-                const owner = await prisma.owned_by.create({
-                  data: {
-                    
-                   owner_id:owner_id,
-                   property_id:property_id,
-                   
+                    address: addr,
+                    flat_fee: 0.0,
+                    company_id: company_id,
                   },
                 });
               }
-              
-              createProperty(body.address);
-              
-              const newProperty = await prisma.property.findFirst({
-                select: {
-                id: true,
-                },
-                where: {
-                address: body.address,
-                },
-                });
-                // id is id of token, newProperty!.id is id of newly created property
-              linkProperty(id, newProperty!.id);
-              
+
+              createProperty(body.address, id);
+
               console.log("a");
               return res.status(200).json({});
             }
@@ -82,7 +58,59 @@ router.post(
   },
 );
 
+// Assuming your base URL is something like "/properties" and this handler is for "/properties/:propertyId"
+router.get("/:propertyId", verifyToken, async (req: Request, res: Response) => {
+  console.log("is it working");
+  try {
+    jwt.verify(req.token as string,
+       process.env.SECRET as jwt.Secret,
+        async (err, decoded) => {
+      if (err) {
+        console.log("err from /properties/:propertyId GET ---- ", err);
+        return res.status(401).json("Unauthorized");
+      }
 
+      const { role } = (<any>decoded).data;
+      if (role !== "company") {
+        return res.status(403).json({ message: "Forbidden" });
+      }
+
+      const { propertyId } = req.params;
+      console.log(req.params, "checking property id is working");
+      const property = await prisma.property.findFirst({
+        where: {
+          id: parseInt(propertyId),
+        },
+      });
+
+      if (property) {
+        return res.status(200).json(property);
+      } else {
+        return res.status(404).json({ message: "Property not found" });
+      }
+    });
+  } catch (err) {
+    console.log("error from /properties/:propertyId GET ---- ", err);
+    return res.status(500).json({ message: "Unexpected error" });
+  }
+});
+
+
+router.put("/:propertyId", verifyToken, async (req, res) => {
+  const { propertyId } = req.params;
+  const { address } = req.body; // Extracting address directly from req.body
+
+  try {
+    const updatedProperty = await prisma.property.update({
+      where: { id: parseInt(propertyId) },
+      data: { address }, // Only updating address field
+    });
+    res.json(updatedProperty);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error updating property");
+  }
+});
 
 
 export default router;
