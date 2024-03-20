@@ -1,102 +1,123 @@
-// OpenRequestManagementPage.tsx
-import React from 'react';
-import { CssVarsProvider } from '@mui/joy/styles';
-import CssBaseline from '@mui/joy/CssBaseline';
-import Box from '@mui/joy/Box';
-import Button from '@mui/joy/Button';
-import Breadcrumbs from '@mui/joy/Breadcrumbs';
-import Link from '@mui/joy/Link';
-import Typography from '@mui/joy/Typography';
+// OpenRequestManagementForm.tsx
+import * as React from "react";
+import { ColorPaletteProp } from "@mui/joy/styles";
+import Box from "@mui/joy/Box";
+import Chip from "@mui/joy/Chip";
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
+import Link from "@mui/joy/Link";
+import Select from "@mui/joy/Select";
+import Option from "@mui/joy/Option";
+import Table from "@mui/joy/Table";
+import Sheet from "@mui/joy/Sheet";
+import Typography from "@mui/joy/Typography";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
+import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
+import BlockIcon from "@mui/icons-material/Block";
 
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
-import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
+// Sample rows for demonstration
+const rows = [
+  {
+    id: 1,
+    requestType: "Moving Out (Elevator Request)",
+    date: "18/03/2024",
+    time: "12pm - 3pm",
+    status: "Awaiting Response"
+  },
+  {
+    id: 2,
+    requestType: "Deficiency in common areas",
+    details: "No more snacks in the common area, we...",
+    status: "Task assigned"
+  },
+  {
+    id: 3,
+    requestType: "Reporting a violation",
+    details: "Unit 4 has been practicing tap dancing during...",
+    status: "Resolved"
+  },
+];
 
-import Sidebar from '../components/Sidebar';
-import OpenRequestManagementForm from '../components/OpenRequestManagementForm';
-import OrderList from '../components/OrderList';
-import Header from '../components/Header';
+// The following functions can be adjusted as necessary for sorting
+// ...
 
-// Add your property details here
-const propertyDetails = {
-  name: "36 Lee drive",
-  address: "H8B 3M6"
-};
+export default function OpenRequestManagementForm() {
+  // State and other logic can be added here
 
-export default function OpenRequestManagementPage() {
-  // You can manage state or perform other logic here
+  // The renderFilters function would need to be updated to filter open requests
+  const renderFilters = () => (
+    <Box sx={{
+      display: { xs: "none", sm: "flex" },
+      gap: 1.5,
+      mb: 2,
+    }}>
+      <FormControl size="sm">
+        <FormLabel htmlFor="status-filter">Status</FormLabel>
+        <Select
+          id="status-filter"
+          size="sm"
+          placeholder="Filter by status"
+          slotProps={{ button: { sx: { whiteSpace: "nowrap" } } }}
+        >
+          <Option value="Awaiting Response">Awaiting Response</Option>
+          <Option value="Task Assigned">Task Assigned</Option>
+          <Option value="Resolved">Resolved</Option>
+        </Select>
+      </FormControl>
+    </Box>
+  );
 
   return (
-    <CssVarsProvider disableTransitionOnChange>
-      <CssBaseline />
-      <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-        <Header />
-        <Sidebar />
-        <Box
-          component="main"
-          sx={{
-            px: { xs: 2, md: 6 },
-            pt: {
-              xs: 'calc(12px + var(--Header-height))',
-              sm: 'calc(12px + var(--Header-height))',
-              md: 3,
-            },
-            pb: { xs: 2, sm: 2, md: 3 },
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            minWidth: 0,
-            height: '100vh',
-            gap: 1,
-          }}
-        >
-          <Breadcrumbs
-            size
-="sm"
-aria-label="breadcrumbs"
-separator={<ChevronRightRoundedIcon />}
+    <React.Fragment>
+      {renderFilters()}
+      <Sheet
+        variant="outlined"
+        sx={{
+          borderRadius: "sm",
+          overflow: "auto",
+        }}
+      >
+        <Table aria-label="Open Requests Table" stickyHeader>
+          <thead>
+            <tr>
+              <th>
+                <Link
+                  component="button"
+                  color="primary"
+                  endDecorator={<ArrowDropDownIcon />}
+                >
+                  Request Type
+                </Link>
+              </th>
+              <th>Date & Time</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr key={row.id}>
+                <td>{row.requestType}</td>
+                <td>{row.date} {row.time}</td>
+                <td>
+                <Chip  variant="soft"
+        size="sm"
+        color={
+        row.status === "Awaiting Response" ? "warning" :
+        row.status === "Task Assigned" ? "primary" : // Changed 'info' to 'primary'
+        "success" // You may need to adjust this if 'success' is not a valid color either
+   }
 >
-<Link underline="none" color="neutral" href="#home" aria-label="Home">
-<HomeRoundedIcon />
-</Link>
-<Link underline="hover" color="neutral" href="#dashboard" fontSize={12} fontWeight={500}>
-Dashboard
-</Link>
-<Typography color="primary" fontWeight={500} fontSize={12}>
-Open Requests
-</Typography>
-</Breadcrumbs>
-<Box
-sx={{
-display: 'flex',
-mb: 1,
-gap: 1,
-flexDirection: { xs: 'column', sm: 'row' },
-alignItems: { xs: 'start', sm: 'center' },
-flexWrap: 'wrap',
-justifyContent: 'space-between',
-}}
->
-<Typography level="h2" component="h1">
-Open Requests
-</Typography>
-<Button
-color="primary"
-startDecorator={<DownloadRoundedIcon />}
-size="sm"
->
-Download PDF
-</Button>
-</Box>
-{/* Property Name and Address */}
-<Box sx={{ my: 2 }}>
-  <Typography level="h4" component="h2">{propertyDetails.name}</Typography>
-  <Typography>{propertyDetails.address}</Typography>
-</Box>
-<OpenRequestManagementForm />
-<OrderList />
-</Box>
-</Box>
-</CssVarsProvider>
-);
+  {row.status}
+</Chip>
+
+ 
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      </Sheet>
+    </React.Fragment>
+  );
 }
