@@ -65,16 +65,16 @@ const PropertySlider: React.FC<PropertySliderProps> = ({ properties }) => {
  
  
   const settings = {
-    dots: true,
-    infinite: true,
+    dots: properties.length > 1, // Only show dots if there are more than one slide
+    infinite: properties.length > 1, // Only enable infinite mode if there are more than one slide
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    centerMode: true,
-    centerPadding: "15%",
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
-    // ...other settings
+    centerMode: properties.length > 1, // Only enable center mode if there are more than one slide
+    centerPadding: properties.length > 1 ? "15%" : "0%", // Adjust center padding based on the number of slides
+    nextArrow: properties.length > 1 ? <NextArrow /> : <></>, // Hide navigation arrows if only one slide
+    prevArrow: properties.length > 1 ? <PrevArrow /> : <></>, // Hide navigation arrows if only one slide
+    // ...other settings you might need
   };
   const renderSlideContent = (property: Property) => {
   
