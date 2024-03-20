@@ -17,15 +17,14 @@ import Grid from "@mui/joy/Grid";
 import Navbar from "./Navbar";
 import { useNavigate } from "react-router-dom"; // Make sure to import useNavigate
 
-
 function CreateRequestForm() {
   const navigate = useNavigate(); // Initialize useNavigate
-  const { propertyId } = useParams(); 
+  const { propertyId } = useParams();
   const [formData, setFormData] = useState({
-    propertyId:propertyId,
+    propertyId: propertyId,
     requestType: "",
     date: "",
-    time: "",
+
     requestReason: "",
     priority: "",
   });
@@ -38,10 +37,12 @@ function CreateRequestForm() {
     }));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    console.log("abcd");
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch(`http://localhost:3000/CreateRequest/${propertyId}`, {
+      const response = await fetch(`http://localhost:3000/CreateRequest`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -53,10 +54,10 @@ function CreateRequestForm() {
       if (response.ok) {
         console.log("Request data submitted successfully");
         setFormData({
-          propertyId:propertyId,
+          propertyId: propertyId,
           requestType: "",
           date: "",
-          time: "",
+
           requestReason: "",
           priority: "",
         });
@@ -117,14 +118,16 @@ function CreateRequestForm() {
                     onChange={handleChange}
                   >
                     <MenuItem value="MovingOut">Moving out </MenuItem>
-                    <MenuItem value="MovingIn">Moving In  </MenuItem>
-                    <MenuItem value="Request">Request Access (Fobs, keys) </MenuItem>
+                    <MenuItem value="MovingIn">Moving In </MenuItem>
+                    <MenuItem value="Request">
+                      Request Access (Fobs, keys){" "}
+                    </MenuItem>
                     <MenuItem value="Intercom">Intercom Changes</MenuItem>
                     <MenuItem value="Reporting">Reporting a violation</MenuItem>
                     <MenuItem value="Deficiency">
                       Deficiency in common areas
                     </MenuItem>
-                    
+
                     <MenuItem value="Other">Other</MenuItem>
                   </Select>
                 </FormControl>
@@ -159,7 +162,6 @@ function CreateRequestForm() {
                   onChange={handleChange}
                 />
               </Grid>
-             
             </Grid>
             <TextField
               name="requestReason"
@@ -173,9 +175,10 @@ function CreateRequestForm() {
             />
             <Box textAlign="center" mt={2}>
               <Button
+                type="submit"
                 variant="contained"
                 color="primary"
-                onSubmit={handleSubmit}
+                onClick={(e) => handleSubmit(e)}
               >
                 Submit
               </Button>

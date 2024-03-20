@@ -6,7 +6,7 @@ import verifyToken from "../middleware/verify-token";
 require("dotenv").config();
 
 import { Request, Response, NextFunction } from "express";
-import {priority } from "@prisma/client";
+import { priority } from "@prisma/client";
 // Route to handle the submission of a new listing
 router.post(
   "/",
@@ -37,30 +37,42 @@ router.post(
               }                  
             });
             
+
              
               async function createRequest(
-                employee_id:number , 
+               // employee_id:number , //has to be null
                 company_id: number, 
                 requestType:string,
                 date: Date,
                 requestReason:string,
-                priority:priority,
+                priority: priority,
                 ) {
                 const property = await prisma.requests.create({
                   data: {
                     title: requestType, //title = reason of request change to what the front end sends us in body
-                    issued_at: new Date(),
-
+                    //issued_at: new Date(),
+                    date_needed: date,
                     condo_owner_id: company_id,
-                    employee_id: employee_id,
+                    employee_id: 2,
                     description: requestReason, //change to what the front end sends us in body
                     request_priority: priority //change to what the front end sends us in body
                     
                   },
                 });
               }
+              let request_priority:priority = priority.low; 
+              if(body.request_priority === "low"){
+                request_priority = priority.low;
+              }
+              else if(body.request_priority === "high"){
+                request_priority = priority.high
+              }
+              else if(body.request_priority === "medium"){
+                request_priority = priority.medium
+              }
 
-              createRequest( body.employee_id, company!.company_id!, body.requestType, body.date, body.requestReason, body.request_priority);
+
+              createRequest( company!.company_id!, body.requestType, body.date, body.requestReason,request_priority);
 
               console.log("a");
               return res.status(200).json({});

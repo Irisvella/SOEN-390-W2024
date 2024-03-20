@@ -14,6 +14,7 @@ import createEditListing from "./routes/createEditListing";
 import addEmployeeRouter from "./routes/addEmployee";
 import employeeList from "./routes/employeeList";
 import { Request, Response, NextFunction } from "express";
+import CreateRequest from "./routes/CreateRequest";
 
 declare global {
   namespace Express {
@@ -42,6 +43,7 @@ app.get("/createEditListing", (req: Request, res: Response, next: NextFunction) 
 app.use("/createEditListing", createEditListing);
 app.use("/add-employee", addEmployeeRouter);
 app.use("/employeeList", employeeList);
+app.use("/CreateRequest", CreateRequest);
 
 const port = process.env.PORT || 3000;
 app.listen(port || 3000, () => {
