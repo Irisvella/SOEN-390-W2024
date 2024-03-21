@@ -75,7 +75,7 @@ const AddEmployee = () => {
               value={employeeData.role}
               onChange={handleChange}
             >
-              <MenuItem value="management">Management</MenuItem>
+              <MenuItem value="manager">Manager</MenuItem>
               <MenuItem value="operations">Operations</MenuItem>
               <MenuItem value="finance">Finance</MenuItem>
               <MenuItem value="other">Other</MenuItem>
