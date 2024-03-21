@@ -19,9 +19,8 @@ import { useNavigate } from "react-router-dom"; // Make sure to import useNaviga
 
 function CreateRequestForm() {
   const navigate = useNavigate(); // Initialize useNavigate
-  const { property_id } = useParams();
+  const { propertyId } = useParams();
   const [formData, setFormData] = useState({
-    property_id: property_id,
     requestType: "",
     date: "",
 
@@ -39,7 +38,6 @@ function CreateRequestForm() {
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    console.log("abcd");
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(`http://localhost:3000/CreateRequest`, {
@@ -48,13 +46,12 @@ function CreateRequestForm() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`, //checking if you are logged in or not
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, property_id: propertyId }),
       });
 
       if (response.ok) {
         console.log("Request data submitted successfully");
         setFormData({
-          property_id: property_id,
           requestType: "",
           date: "",
 
@@ -142,9 +139,9 @@ function CreateRequestForm() {
                     value={formData.priority}
                     onChange={handleChange}
                   >
-                    <MenuItem value="High">High</MenuItem>
-                    <MenuItem value="Medium">Medium</MenuItem>
-                    <MenuItem value="Low">Low</MenuItem>
+                    <MenuItem value="high">High</MenuItem>
+                    <MenuItem value="medium">Medium</MenuItem>
+                    <MenuItem value="low">Low</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>

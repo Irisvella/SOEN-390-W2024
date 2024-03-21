@@ -48,8 +48,8 @@ const DashboardUser = () => {
       navigate("/login");
     }
     const role = localStorage.getItem("role");
-    if (role !== 'publicUser'){
-      navigate("/dashboard-company")
+    if (role !== "publicUser") {
+      navigate("/dashboard-company");
     }
 
     const fetchProperties = async () => {
@@ -65,7 +65,7 @@ const DashboardUser = () => {
     };
     fetchProperties();
   }, []);
-    
+
   const handleCreateRequest = () => {
     navigate("/CreateRequest");
   };
@@ -77,14 +77,13 @@ const DashboardUser = () => {
       <Container component="main" maxWidth="lg" sx={{ mt: 10, mb: 10 }}>
         <PropertySlider properties={properties} />
         {/* Rest of your component */}
-        <Button
+        {/* <Button
           variant="contained"
           color="primary"
           onClick={handleCreateRequest}
         >
           Create A Request
-        </Button>
-
+        </Button> */}
       </Container>
     </>
   );
