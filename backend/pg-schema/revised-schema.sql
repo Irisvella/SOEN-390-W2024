@@ -143,9 +143,11 @@ CREATE TABLE condo_management_files (
 CREATE FUNCTION increment_unit_count_function()
 RETURNS TRIGGER AS $$
 BEGIN
-    UPDATE management_companies AS mc
-    SET mc.unit_count = mc.unit_count + NEW.unit_count
-    WHERE mc.user_id = NEW.company_id;
+    UPDATE management_companies mc
+    SET unit_count = unit_count + 1
+    WHERE mc.user_id = (SELECT company_id 
+                        FROM property 
+                        WHERE property.id = NEW.property_id);
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -160,9 +162,11 @@ EXECUTE FUNCTION increment_unit_count_function();
 CREATE FUNCTION decrement_unit_count_function()
 RETURNS TRIGGER AS $$
 BEGIN
-    UPDATE management_companies AS mc
-    SET mc.unit_count = mc.unit_count - OLD.unit_count
-    WHERE mc.user_id = OLD.company_id;
+    UPDATE management_companies mc
+    SET unit_count = unit_count - 1
+    WHERE mc.user_id = (SELECT company_id 
+                        FROM property 
+                        WHERE property.id = NEW.property_id);
     RETURN OLD;
 END;
 $$ LANGUAGE plpgsql;
