@@ -29,16 +29,27 @@ model condo_management_files {
   property             property?             @relation(fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
+model employees {
+  employee_id          Int                   @id
+  company_id           Int      
+  first_name           String
+  last_name            String
+  role                 employee_role?       @default(other)
+  employed_by          employed_by[]
+  management_companies management_companies @relation(fields: [company_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+  requests             requests[]           @relation("requests_employee_idToemployees")
+}
+
 model employed_by {
-  public_user_id       Int
+  employee_id          Int
   company_id           Int
   start_date           DateTime?            @default(now()) @db.Timestamp(6)
   end_date             DateTime?            @db.Timestamp(6)
   role                 employee_role
   management_companies management_companies @relation(fields: [company_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
-  public_users         public_users         @relation(fields: [public_user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+  employees            employees         @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade, onUpdate: NoAction)
 
-  @@id([public_user_id, company_id])
+  @@id([employee_id, company_id])
 }
 
 model management_companies {
@@ -51,6 +62,7 @@ model management_companies {
   employed_by            employed_by[]
   users                  users                    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   property               property[]
+  employees              employees[]
 }
 
 model property {
@@ -75,25 +87,26 @@ model public_users {
   phone_number                                   String
   role                                           user_role?     @default(none)
   profile_image_key                              String?
-  employed_by                                    employed_by[]
   users                                          users          @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   registration                                   registration[]
   requests_requests_condo_owner_idTopublic_users requests[]     @relation("requests_condo_owner_idTopublic_users")
-  requests_requests_employee_idTopublic_users    requests[]     @relation("requests_employee_idTopublic_users")
   reserved_by                                    reserved_by[]
 }
 
 model requests {
   title                                              String
   description                                        String
+  initial_response                                   String?
+  status                                             status? @default(awaiting_response)
   request_priority                                   priority?    @default(low)
   issued_at                                          DateTime     @default(now()) @db.Timestamp(6)
+  user_id                                            Int
   condo_owner_id                                     Int
-  employee_id                                        Int
+  employee_id                                        Int?
   public_users_requests_condo_owner_idTopublic_users public_users @relation("requests_condo_owner_idTopublic_users", fields: [condo_owner_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
-  public_users_requests_employee_idTopublic_users    public_users @relation("requests_employee_idTopublic_users", fields: [employee_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+  employees_requests_employee_idToemlpoyees    employees? @relation("requests_employee_idToemployees", fields: [employee_id], references: [employee_id], onDelete: NoAction, onUpdate: NoAction)
 
-  @@id([condo_owner_id, employee_id, title, issued_at])
+  @@id([condo_owner_id, user_id, title, issued_at])
 }
 
 model reserved_by {
@@ -180,4 +193,10 @@ enum user_role {
   renter
   owner
   none
+}
+
+enum status {
+  awaiting_response @map("Awaiting Response")
+  in_progress @map("In Progress")
+  resolved 
 }

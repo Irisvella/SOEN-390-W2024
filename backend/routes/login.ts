@@ -13,7 +13,7 @@ import { Request, Response, NextFunction } from "express";
 const User = z.object({
   role: z.enum(["publicUser", "company"]),
   email: z.string().trim().toLowerCase().email(),
-  password: z.string().trim().min(6),
+  password: z.string().min(6).max(64),
 });
 
 router.post(
