@@ -20,6 +20,7 @@ const AddEmployee = () => {
     }));
   };
 
+  
   const handleSubmit = async () => {
     const token = localStorage.getItem('token');
     try {

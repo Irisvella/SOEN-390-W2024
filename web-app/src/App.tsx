@@ -14,6 +14,11 @@ import EditListingForm from './components/EditListingForm.tsx';
 import CreateRequestPage from './pages/CreateRequestPage.tsx';
 import RequestManagement from './pages/RequestManagement.tsx';
 import OpenRequestManagementPage from './pages/OpenRequestManagementPage.tsx';
+import AddUnit from './pages/AddUnit.jsx';
+import CreateBillRequest from './pages/CreateBillRequest.jsx';
+import ManagementFinancialOverview from './pages/ManagementFinancialOverview.jsx';
+import AddOperationalCost from './pages/AddOperationalCost.jsx';
+
 
 function App() {
   const isAuthenticated = !!localStorage.getItem('token');
@@ -42,6 +47,10 @@ function App() {
             <Route path="/OpenRequestManagementPage" element={<OpenRequestManagementPage />} />
             <Route path="/new-management-landing" element={<OpenRequestManagementPage />} />
             
+            <Route path="/AddUnit" element={<AddUnit />} />
+            <Route path="/createbillrequest" element={<CreateBillRequest/>} />
+            <Route path="/ManagementFinancialOverview" element={<ManagementFinancialOverview/>} />
+            <Route path="/AddOperationalCost" element={<AddOperationalCost/>} />
           </>
         ) : null}
       </Routes>
