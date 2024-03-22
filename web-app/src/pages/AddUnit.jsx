@@ -1,3 +1,7 @@
+// Filename: AddUnit.jsx
+// Author: Sarah Abellard
+// Description: Component for adding new units to the system.
+// Dependencies: React, MUI (Material-UI)
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import { Box, Typography, TextField, Button } from '@mui/material';
