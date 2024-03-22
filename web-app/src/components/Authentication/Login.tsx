@@ -42,7 +42,7 @@ const LoginPage = () => {
           <Box sx={{ mt: 2 }}></Box>
           <div className="form-group">
             <label htmlFor="role">I am a: </label>
-            <select name="role" onChange={handleRoleChange}>
+            <select id="role" name="role" onChange={handleRoleChange}>
               <option value="user">Public User</option>
               <option value="company">Company</option>
             </select>
