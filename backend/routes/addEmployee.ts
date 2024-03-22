@@ -5,6 +5,7 @@ import prisma from "../prisma/client";
 import jwt from "jsonwebtoken";
 import verifyToken from "../middleware/verify-token";
 require("dotenv").config();
+import { Prisma } from "@prisma/client";
 
 import { Request, Response, NextFunction } from "express";
 

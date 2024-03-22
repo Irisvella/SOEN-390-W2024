@@ -64,7 +64,7 @@ model employee_users {
   profile_image_key String?
   employed_by       employed_by[]
   users             users         @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  requests          requests[]
+  requests          requests[]    @relation("requests_employee_idTopublic_users")
 }
 
 model management_companies {
@@ -116,7 +116,7 @@ model public_users {
   billing           billing[]
   users             users          @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   registration      registration[]
-  requests          requests[]
+  requests          requests[]     @relation("requests_condo_owner_idTopublic_users")
   reserved_by       reserved_by[]
 }
 
@@ -148,7 +148,7 @@ model requests {
   property_requests_property_idToid   property       @relation("requests_property_idToid", fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   @@id([condo_owner_id, title, issued_at])
 
-
+}
 model reserved_by {
   public_user_id Int
   amenities_id   Int
