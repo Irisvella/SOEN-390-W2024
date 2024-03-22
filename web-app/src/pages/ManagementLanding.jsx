@@ -54,7 +54,7 @@ const ManagementLanding = () => {
   const navigationItems = {
     'Property Dashboard': '/dashboard-company',
     'Manage Condo Listing': '/CreateListingPage',
-    'Financial System': '/financial-system',
+    'Financial System': '/ManagementFinancialOverView',
     'Reservation System': '/reservation-system',
     'Employee': '/Employeesinfo',
     'Requests': '/requests-management',
@@ -129,7 +129,7 @@ const ManagementLanding = () => {
                     </SectionBox>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <SectionBox title="Financial System" route = "">
+                    <SectionBox title="Financial System" route = "/ManagementFinancialOverView">
                       Overview of financial operations, such as billing, and payments
                       <ArrowForwardIosIcon /> 
                     </SectionBox>

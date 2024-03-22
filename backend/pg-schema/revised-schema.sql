@@ -88,7 +88,7 @@ CREATE TABLE registration ( -- omitted company_id since it could be found using 
     end_date TIMESTAMP, -- null means ongoing renter or owner
     public_user_id INT NOT NULL REFERENCES public_users(user_id) ON DELETE CASCADE,
     condo_id INT NOT NULL REFERENCES condo_unit(id) ON DELETE CASCADE,
-    UNIQUE (condo_id, start_date, end_date) -- only one person at a time can own/rent a specific property
+    UNIQUE (condo_id, end_date) -- only one person at a time can own/rent a specific property
 );
 
 CREATE TABLE employed_by (
@@ -123,8 +123,8 @@ CREATE TABLE requests (
     description TEXT NOT NULL,
     request_priority priority DEFAULT 'low',
     issued_at TIMESTAMP DEFAULT NOW(),
-    condo_owner_id INT REFERENCES public_users(user_id),
-    employee_id INT REFERENCES employee_users(user_id),
+    condo_owner_id INT NOT NULL REFERENCES public_users(user_id),
+    employee_id INT NOT NULL REFERENCES employee_users(user_id),
     PRIMARY KEY (condo_owner_id, employee_id, title, issued_at)
 );
 
@@ -133,9 +133,29 @@ CREATE TYPE file_type AS ENUM('declarations', 'annual budgets', 'board meeting m
 CREATE TABLE condo_management_files (
     file_key TEXT PRIMARY KEY,
     file_type file_type DEFAULT 'other',
-    company_id INT REFERENCES management_companies(user_id),
-    property_id INT REFERENCES property(id),
+    company_id INT NOT NULL REFERENCES management_companies(user_id),
+    property_id INT NOT NULL REFERENCES property(id),
     description TEXT
+);
+
+CREATE TABLE operating_fees (
+    id SERIAL PRIMARY KEY,
+    property_id INT NOT NULL REFERENCES property(id),
+    fee NUMERIC(10, 2) NOT NULL,
+    description TEXT NOT NULL,
+    payed_on TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TYPE billing_status AS ENUM('paid', 'unpaid');
+
+CREATE TABLE billing (
+    id SERIAL PRIMARY KEY,
+    condo_id INT NOT NULL REFERENCES condo_unit(id),
+    public_user_id INT NOT NULL REFERENCES public_users(user_id),
+    status billing_status DEFAULT 'unpaid',
+    pay_before DATE DEFAULT CURRENT_DATE + INTERVAL '30 days',
+    amount NUMERIC(10, 2) NOT NULL,
+    UNIQUE (condo_id, public_user_id, pay_before)
 );
 
 -- trigger for incrementing unit_count of management companies whenever

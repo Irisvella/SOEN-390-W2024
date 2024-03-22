@@ -30,6 +30,20 @@ model condo_management_files {
   property             property             @relation(fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
+model condo_unit {
+  id           Int            @id @default(autoincrement())
+  property_id  Int
+  unit_number  String
+  square_feet  Decimal        @db.Decimal(5, 2)
+  image_key    String?
+  image_url    String?
+  billing      billing[]
+  property     property       @relation(fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  registration registration[]
+
+  @@unique([property_id, unit_number])
+}
+
 model employed_by {
   employee_user_id     Int
   company_id           Int
@@ -39,6 +53,18 @@ model employed_by {
   employee_users       employee_users       @relation(fields: [employee_user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
 
   @@id([employee_user_id, end_date])
+}
+
+model employee_users {
+  user_id           Int           @id
+  first_name        String
+  last_name         String
+  role              employee_role
+  phone_number      String
+  profile_image_key String?
+  employed_by       employed_by[]
+  users             users         @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  requests          requests[]
 }
 
 model management_companies {
@@ -53,6 +79,15 @@ model management_companies {
   property               property[]
 }
 
+model operating_fees {
+  id          Int       @id @default(autoincrement())
+  property_id Int
+  fee         Decimal   @db.Decimal(10, 2)
+  description String
+  payed_on    DateTime? @default(now()) @db.Timestamp(6)
+  property    property  @relation(fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
 model property {
   id                     Int                      @id @default(autoincrement())
   company_id             Int
@@ -65,22 +100,38 @@ model property {
   amenities              amenities[]
   condo_management_files condo_management_files[]
   condo_unit             condo_unit[]
+  operating_fees         operating_fees[]
   management_companies   management_companies     @relation(fields: [company_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
   property_requests_property_idToid requests[]   @relation("requests_property_idToid") 
  
   }
 
 model public_users {
-  user_id                                        Int            @id
-  first_name                                     String
-  last_name                                      String
-  phone_number                                   String
-  role                                           user_role?     @default(none)
-  profile_image_key                              String?
-  users                                          users          @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  registration                                   registration[]
-  requests_requests_condo_owner_idTopublic_users requests[]     @relation("requests_condo_owner_idTopublic_users")
-  reserved_by                                    reserved_by[]
+  user_id           Int            @id
+  first_name        String
+  last_name         String
+  phone_number      String
+  role              user_role?     @default(none)
+  profile_image_key String?
+  billing           billing[]
+  users             users          @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  registration      registration[]
+  requests          requests[]
+  reserved_by       reserved_by[]
+}
+
+model registration {
+  registration_key String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  type             registration_type
+  issued_at        DateTime?         @default(now()) @db.Timestamp(6)
+  start_date       DateTime?         @default(now()) @db.Timestamp(6)
+  end_date         DateTime?         @db.Timestamp(6)
+  public_user_id   Int
+  condo_id         Int
+  condo_unit       condo_unit        @relation(fields: [condo_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  public_users     public_users      @relation(fields: [public_user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([condo_id, end_date], map: "registration_condo_id_end_date")
 }
 
 model requests {
@@ -96,7 +147,7 @@ model requests {
   public_users_requests_employee_idTopublic_users    employee_users? @relation("requests_employee_idTopublic_users", fields: [employee_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
   property_requests_property_idToid   property       @relation("requests_property_idToid", fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   @@id([condo_owner_id, title, issued_at])
-}
+
 
 model reserved_by {
   public_user_id Int
@@ -118,43 +169,24 @@ model users {
   public_users         public_users?
 }
 
-model employee_users {
-  user_id                                     Int           @id
-  first_name                                  String
-  last_name                                   String
-  role                                        employee_role
-  phone_number                                String
-  profile_image_key                           String?
-  employed_by                                 employed_by[]
-  users                                       users         @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  requests_requests_employee_idTopublic_users requests[]    @relation("requests_employee_idTopublic_users")
+model billing {
+  id             Int             @id @default(autoincrement())
+  condo_id       Int
+  public_user_id Int
+  pay_before     DateTime?       @default(dbgenerated("(CURRENT_DATE + '30 days'::interval)")) @db.Date
+  amount         Decimal         @db.Decimal(10, 2)
+  status         billing_status? @default(unpaid)
+  condo_unit     condo_unit      @relation(fields: [condo_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  public_users   public_users    @relation(fields: [public_user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([condo_id, public_user_id, pay_before])
 }
 
-model registration {
-  registration_key String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  type             registration_type
-  issued_at        DateTime?         @default(now()) @db.Timestamp(6)
-  start_date       DateTime?         @default(now()) @db.Timestamp(6)
-  end_date         DateTime?         @db.Timestamp(6)
-  public_user_id   Int
-  condo_id         Int
-  condo_unit       condo_unit        @relation(fields: [condo_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  public_users     public_users      @relation(fields: [public_user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
-
-  @@unique([condo_id, start_date, end_date], map: "registration_condo_id_start_date_end_date_unique")
-}
-
-model condo_unit {
-  id           Int            @id @default(autoincrement())
-  property_id  Int
-  unit_number  String
-  square_feet  Decimal        @db.Decimal(5, 2)
-  image_key    String?
-  image_url    String?
-  property     property       @relation(fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  registration registration[]
-
-  @@unique([property_id, unit_number])
+enum employee_role {
+  manager
+  daily_operations @map("daily operations")
+  finance
+  other
 }
 
 enum file_type {
@@ -175,15 +207,13 @@ enum registration_type {
   owner
 }
 
-enum employee_role {
-  manager
-  daily_operations @map("daily operations")
-  finance
-  other
-}
-
 enum user_role {
   renter
   owner
   none
+}
+
+enum billing_status {
+  paid
+  unpaid
 }
