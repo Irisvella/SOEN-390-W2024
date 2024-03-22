@@ -64,7 +64,7 @@ router.post(
               TODO: FIX so that when user is already employed it shouldnt create a new entry*/
   
               async function employExistingUser(userID:number) {
-                await prisma.$transaction(async (tx) => {
+                await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
                   const employeeUser = await prisma.employed_by.create({
                     data: {
                       employee_user_id: userID,

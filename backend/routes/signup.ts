@@ -174,7 +174,7 @@ router.post(
       }
 
       async function createEmployeeUser(hashed_password: string) {
-        await prisma.$transaction(async (tx) => {
+        await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
           const user = await prisma.users.create({
             data: {
               email: parsedUser.email,

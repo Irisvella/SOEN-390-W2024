@@ -6,7 +6,7 @@ import verifyToken from "../middleware/verify-token";
 require("dotenv").config();
 
 import { Request, Response, NextFunction } from "express";
-import { priority } from "@prisma/client";
+import  {priority}  from "@prisma/client";
 
 // Route to handle the submission of a new listing
 router.post(
@@ -64,7 +64,7 @@ router.post(
                 id,
                 body.requestType,
                 body.requestReason,
-                body.request_priority,
+                request_priority,
               ); //async funtion
 
               console.log("a");
