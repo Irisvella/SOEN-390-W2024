@@ -1,6 +1,6 @@
 // OpenRequestManagementForm.tsx
 import * as React from "react";
-import { ColorPaletteProp } from "@mui/joy/styles";
+//import { ColorPaletteProp } from "@mui/joy/styles";
 import Box from "@mui/joy/Box";
 import Chip from "@mui/joy/Chip";
 import FormControl from "@mui/joy/FormControl";
@@ -10,11 +10,11 @@ import Select from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
 import Table from "@mui/joy/Table";
 import Sheet from "@mui/joy/Sheet";
-import Typography from "@mui/joy/Typography";
+//import Typography from "@mui/joy/Typography";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
-import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
-import BlockIcon from "@mui/icons-material/Block";
+//import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
+//import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
+//import BlockIcon from "@mui/icons-material/Block";
 
 // Sample rows for demonstration
 const rows = [

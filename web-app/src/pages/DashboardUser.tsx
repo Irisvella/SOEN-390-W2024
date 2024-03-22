@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Container, CssBaseline } from "@mui/material";
+import { Container, CssBaseline } from "@mui/material";
 import Navbar from "../components/Navbar";
 import PropertySlider from "./PropertySlider"; // Assuming correct export
 import { Property } from "./PropertySlider"; // Assuming Property is correctly exported as a type
@@ -66,9 +66,9 @@ const DashboardUser = () => {
     fetchProperties();
   }, []);
 
-  const handleCreateRequest = () => {
-    navigate("/CreateRequest");
-  };
+  // const handleCreateRequest = () => {
+  //   navigate("/CreateRequest");
+  // };
 
   return (
     <>
