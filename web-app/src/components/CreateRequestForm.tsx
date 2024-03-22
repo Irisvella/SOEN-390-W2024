@@ -1,4 +1,5 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import {
   Container,
   TextField,
@@ -13,24 +14,21 @@ import {
 } from "@mui/material";
 import { Card } from "@mui/joy";
 import Grid from "@mui/joy/Grid";
-import Navbar from "../components/Navbar";
+import Navbar from "./Navbar";
 import { useNavigate } from "react-router-dom"; // Make sure to import useNavigate
 
-function CreateRequestPage() {
-
+function CreateRequestForm() {
   const navigate = useNavigate(); // Initialize useNavigate
-
- 
+  const { propertyId } = useParams();
   const [formData, setFormData] = useState({
     requestType: "",
     date: "",
-    time: "",
+
     requestReason: "",
-    createdBy:"",
-    
+    priority: "",
   });
 
-  const handleChange = (e: { target: { name: any; value: any; }; }) => {
+  const handleChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target; // Use name instead of id
     setFormData((prevData) => ({
       ...prevData,
@@ -38,16 +36,17 @@ function CreateRequestPage() {
     }));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch("http://localhost:3000/createRequestPage", {
+      const response = await fetch(`http://localhost:3000/CreateRequest`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`, //checking if you are logged in or not
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, property_id: propertyId }),
       });
 
       if (response.ok) {
@@ -55,15 +54,14 @@ function CreateRequestPage() {
         setFormData({
           requestType: "",
           date: "",
-          time: "",
+
           requestReason: "",
-          createdBy: "",
+          priority: "",
         });
       } else {
         const errorResponse = await response.text(); // Or response.json() if the server responds with JSON
         console.error("Failed to submit data", errorResponse);
       }
-      
     } catch (error) {
       console.error("Error submitting listing data:", error);
     }
@@ -75,8 +73,8 @@ function CreateRequestPage() {
       navigate("/login");
     }
     const role = localStorage.getItem("role");
-    if (role !== 'publicUser'){
-      navigate("/dashboard-company")
+    if (role !== "publicUser") {
+      navigate("/dashboard-company");
     }
   }, []);
   return (
@@ -108,20 +106,42 @@ function CreateRequestPage() {
             <Grid container spacing={2} alignItems="flex-end">
               <Grid xs={6} sm={3}>
                 <FormControl fullWidth>
-                  <InputLabel id="request-type-label">Request type</InputLabel>
+                  <InputLabel id="requestType">Request type</InputLabel>
                   <Select
-                    labelId="request-type-label"
+                    labelId="requestType"
                     name="requestType"
-                    label="Request type"
+                    label="requestType"
                     value={formData.requestType}
                     onChange={handleChange}
                   >
-                    <MenuItem value="maintenance">Moving out (Elevator) </MenuItem>
-                    <MenuItem value="inquiry">Intercom Changes</MenuItem>
-                    <MenuItem value="inquiry">Reporting a violation</MenuItem>
-                    <MenuItem value="inquiry">Deficiency in common areas</MenuItem>
-                    <MenuItem value="inquiry">Make Reservation</MenuItem>
-                    <MenuItem value="inquiry">Other</MenuItem>
+                    <MenuItem value="MovingOut">Moving out </MenuItem>
+                    <MenuItem value="MovingIn">Moving In </MenuItem>
+                    <MenuItem value="Request">
+                      Request Access (Fobs, keys){" "}
+                    </MenuItem>
+                    <MenuItem value="Intercom">Intercom Changes</MenuItem>
+                    <MenuItem value="Reporting">Reporting a violation</MenuItem>
+                    <MenuItem value="Deficiency">
+                      Deficiency in common areas
+                    </MenuItem>
+
+                    <MenuItem value="Other">Other</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid xs={6} sm={3}>
+                <FormControl fullWidth>
+                  <InputLabel id="priority">Priority</InputLabel>
+                  <Select
+                    labelId="priority"
+                    name="priority"
+                    label="priority"
+                    value={formData.priority}
+                    onChange={handleChange}
+                  >
+                    <MenuItem value="high">High</MenuItem>
+                    <MenuItem value="medium">Medium</MenuItem>
+                    <MenuItem value="low">Low</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
@@ -139,32 +159,6 @@ function CreateRequestPage() {
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid xs={6} sm={3}>
-                <TextField
-                  name="time"
-                  label="Time"
-                  type="time"
-                  variant="filled"
-                  fullWidth
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  value={formData.time}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid xs={6} sm={3}>
-                <TextField
-                  name="createdBy"
-                  label="createdBy"
-                  fullWidth
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  value={formData.createdBy}
-                  onChange={handleChange}
-                />
-              </Grid>
             </Grid>
             <TextField
               name="requestReason"
@@ -178,9 +172,10 @@ function CreateRequestPage() {
             />
             <Box textAlign="center" mt={2}>
               <Button
+                type="submit"
                 variant="contained"
                 color="primary"
-                onClick={handleSubmit}
+                onClick={(e) => handleSubmit(e)}
               >
                 Submit
               </Button>
@@ -192,4 +187,4 @@ function CreateRequestPage() {
   );
 }
 
-export default CreateRequestPage;
+export default CreateRequestForm;

@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import  { useEffect, useState } from "react";
 import {
   CardContent,
   Typography,
@@ -12,8 +12,11 @@ import {
 } from "@mui/material";
 import Card from "@mui/joy/Card";
 import Navbar from "../components/Navbar";
+import { useParams } from "react-router-dom";
+
 
 function RequestManagement() {
+  const { propertyId } = useParams(); // You need to determine how you're getting this ID
   const [requestData, setRequestData] = useState({
     type: "Deficiency in common areas",
     status: "In Progress",
@@ -32,6 +35,39 @@ function RequestManagement() {
       [name]: value,
     }));
   };
+
+  useEffect(() => {
+    const fetchRequestDetails = async () => {
+      const token = localStorage.getItem("token");
+
+      try {
+        if (!propertyId) return;
+        const response = await fetch(
+          `http://localhost:3000/createEditListing/${propertyId}`,
+          {
+            //http://localhost:3000/property/${propertyId}
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = await response.json();
+        console.log(data);
+        if (response.ok) {
+          setRequestData(data.requestData); // Assuming you're only fetching the address for editing
+        } else {
+          console.error("Failed to fetch request details:", data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching request details:", error);
+      }
+    };
+
+    fetchRequestDetails();
+  }, [propertyId]); // Adding propertyId as a dependency);
+
 
   // Add getStatusChipColor here
   const getStatusChipColor = (status: string) => {
