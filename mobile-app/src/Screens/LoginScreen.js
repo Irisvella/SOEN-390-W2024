@@ -12,7 +12,7 @@ export default function LoginScreen() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [failMessage, setFailMessage] = useState("");
-    const [userType, setUserType] = useState('publicUser'); 
+    const [userType, setUserType] = useState(''); 
 
 
 
@@ -20,16 +20,17 @@ export default function LoginScreen() {
         setFailMessage("");
 
         // URL should be replaced with your actual backend endpoint
-        const url = 'http://192.168.2.13:3000/login';
-      //  const url = ' http://localhost:3000/login'; 
+         const url = 'http://192.168.2.13:3000/login';
+       // const url = ' http://localhost:3000/login'; 
   
+       
         try {
           const response = await fetch(url,  {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ email, password, role: userType === 'publicUser' ? 'publicUser' : 'company' }), 
+            body: JSON.stringify({ email, password, role: userType}), 
           });
       
           const data = await response.json();
@@ -98,6 +99,12 @@ export default function LoginScreen() {
                             onPress={() => setUserType('company')}
                         >
                             <Text style={styles.userTypeText}>Company</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[styles.userTypeButton, userType === 'employeeUser' && styles.selected]}
+                            onPress={() => setUserType('employeeUser')}
+                        >
+                            <Text style={styles.userTypeText}>Employee</Text>
                         </TouchableOpacity>
                         </View>
 
@@ -199,3 +206,7 @@ const styles = StyleSheet.create({
         color: 'white',
       },
 }); 
+
+
+
+// appTest@example.com
