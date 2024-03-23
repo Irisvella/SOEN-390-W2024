@@ -80,10 +80,9 @@ router.post(
         10,
         function (err: Error | null, hash: string) {
           createPublicUser(hash);
+          return res.status(201).json({ message: "User created successfully" });
         },
       );
-
-      return res.status(201).json({ message: "User created successfully" });
     } catch (err) {
       console.log("err from /signup/public-user ---- ", err);
       return res.status(500).json({ message: "Unexpected error" });
