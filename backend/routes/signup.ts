@@ -56,30 +56,23 @@ router.post(
         return res.status(409).json({ message: "User already exists" });
       }
 
-      async function createPublicUser(hashed_password: string) {
-        await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-          const user = await prisma.users.create({
-            data: {
-              email: body.email,
-              hashed_password,
-            },
-          });
-          const publicUser = await prisma.public_users.create({
-            data: {
-              user_id: user.id,
-              first_name: parsedUser.firstName,
-              last_name: parsedUser.lastName,
-              phone_number: parsedUser.phoneNumber,
-            },
-          });
-        });
-      }
-
       bcrypt.hash(
         body.password,
         10,
-        function (err: Error | null, hash: string) {
-          createPublicUser(hash);
+        async function (err: Error | null, hash: string) {
+          const publicUser = await prisma.users.create({
+            data: {
+              email: parsedUser.email,
+              hashed_password: hash,
+              public_users: {
+                create: {
+                  first_name: parsedUser.firstName,
+                  last_name: parsedUser.lastName,
+                  phone_number: parsedUser.phoneNumber,
+                },
+              },
+            },
+          });
           return res.status(201).json({ message: "User created successfully" });
         },
       );
@@ -114,34 +107,26 @@ router.post(
         return res.status(409).json({ message: "Email already exists" });
       }
 
-      async function createCompanyUser(hashed_password: string) {
-        await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-          const user = await prisma.users.create({
-            data: {
-              email: body.email,
-              hashed_password,
-            },
-          });
-          const company = await prisma.management_companies.create({
-            data: {
-              user_id: user.id,
-              company_name: parsedCompany.companyName,
-              address: parsedCompany.address,
-              phone_number: parsedCompany.phoneNumber,
-            },
-          });
-        });
-      }
-
       bcrypt.hash(
         body.password,
         10,
-        function (err: Error | null, hash: string) {
-          createCompanyUser(hash);
+        async function (err: Error | null, hash: string) {
+          const companyUser = await prisma.users.create({
+            data: {
+              email: body.email,
+              hashed_password: hash,
+              management_companies: {
+                create: {
+                  company_name: parsedCompany.companyName,
+                  address: parsedCompany.address,
+                  phone_number: parsedCompany.phoneNumber,
+                },
+              },
+            },
+          });
+          return res.status(201).json({ message: "User created successfully" });
         },
       );
-
-      return res.status(201).json({ message: "User created successfully" });
     } catch (err) {
       console.log("err from /signup/management-company ---- ", err);
       return res.status(500).json({ message: "Unexpected error" });
@@ -172,36 +157,27 @@ router.post(
         return res.status(409).json({ message: "User exists already" });
       }
 
-      async function createEmployeeUser(hashed_password: string) {
-        await prisma.$transaction(async (tx) => {
-          const user = await prisma.users.create({
-            data: {
-              email: parsedUser.email,
-              hashed_password,
-            },
-          });
-
-          const employeeUser = await prisma.employee_users.create({
-            data: {
-              user_id: user.id,
-              first_name: parsedUser.firstName,
-              last_name: parsedUser.lastName,
-              phone_number: parsedUser.phoneNumber,
-              role: parsedUser.role,
-            },
-          });
-        });
-      }
-
       bcrypt.hash(
         parsedUser.password,
         10,
-        function (err: Error | null, hash: string) {
-          createEmployeeUser(hash);
+        async function (err: Error | null, hash: string) {
+          const employeeUser = await prisma.users.create({
+            data: {
+              email: parsedUser.email,
+              hashed_password: hash,
+              employee_users: {
+                create: {
+                  first_name: parsedUser.firstName,
+                  last_name: parsedUser.lastName,
+                  phone_number: parsedUser.phoneNumber,
+                  role: parsedUser.role,
+                },
+              },
+            },
+          });
+          return res.status(201).json({ message: "User created successfully" });
         },
       );
-
-      return res.status(201).json({ message: "User created successfully" });
     } catch (err) {
       console.log("err from /signup/employee-user ---- ", err);
       return res.status(500).json({ message: "Unexpected error" });
