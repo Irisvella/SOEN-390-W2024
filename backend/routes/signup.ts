@@ -37,19 +37,17 @@ router.post(
   "/public-user",
   async function (req: Request, res: Response, next: NextFunction) {
     try {
-      const body = req.body;
-
-      const result = User.safeParse(body);
-      if (!result.success) {
-        console.log("error ---- ", result.error);
-        console.log("formatted ---- ", result.error.format());
-        return res.status(400).json(result.error.issues);
+      const parse = User.safeParse(req.body);
+      if (!parse.success) {
+        console.log("error ---- ", parse.error);
+        console.log("formatted ---- ", parse.error.format());
+        return res.status(400).json(parse.error.issues);
       }
 
-      const parsedUser = result.data;
+      const parsedBody = parse.data;
       const userExists = await prisma.users.findFirst({
         where: {
-          email: parsedUser.email,
+          email: parsedBody.email,
         },
       });
       if (userExists) {
@@ -57,18 +55,18 @@ router.post(
       }
 
       bcrypt.hash(
-        body.password,
+        parsedBody.password,
         10,
         async function (err: Error | null, hash: string) {
           const publicUser = await prisma.users.create({
             data: {
-              email: parsedUser.email,
+              email: parsedBody.email,
               hashed_password: hash,
               public_users: {
                 create: {
-                  first_name: parsedUser.firstName,
-                  last_name: parsedUser.lastName,
-                  phone_number: parsedUser.phoneNumber,
+                  first_name: parsedBody.firstName,
+                  last_name: parsedBody.lastName,
+                  phone_number: parsedBody.phoneNumber,
                 },
               },
             },
@@ -88,19 +86,17 @@ router.post(
   "/management-company",
   async function (req: Request, res: Response, next: NextFunction) {
     try {
-      const body = req.body;
-
-      const result = Company.safeParse(body);
-      if (!result.success) {
-        console.log("error ---- ", result.error);
-        console.log("formatted ---- ", result.error.format());
-        return res.status(400).json(result.error.issues); // change this later
+      const parse = Company.safeParse(req.body);
+      if (!parse.success) {
+        console.log("error ---- ", parse.error);
+        console.log("formatted ---- ", parse.error.format());
+        return res.status(400).json(parse.error.issues); // change this later
       }
 
-      const parsedCompany = result.data;
+      const parsedBody = parse.data;
       const userExists = await prisma.users.findFirst({
         where: {
-          email: parsedCompany.email,
+          email: parsedBody.email,
         },
       });
       if (userExists) {
@@ -108,18 +104,18 @@ router.post(
       }
 
       bcrypt.hash(
-        body.password,
+        parsedBody.password,
         10,
         async function (err: Error | null, hash: string) {
           const companyUser = await prisma.users.create({
             data: {
-              email: body.email,
+              email: parsedBody.email,
               hashed_password: hash,
               management_companies: {
                 create: {
-                  company_name: parsedCompany.companyName,
-                  address: parsedCompany.address,
-                  phone_number: parsedCompany.phoneNumber,
+                  company_name: parsedBody.companyName,
+                  address: parsedBody.address,
+                  phone_number: parsedBody.phoneNumber,
                 },
               },
             },
@@ -138,19 +134,17 @@ router.post(
   "/employee-user",
   async function (req: Request, res: Response, next: NextFunction) {
     try {
-      const body = req.body;
-
-      const result = EmployeeUser.safeParse(body);
-      if (!result.success) {
-        console.log("error ---- ", result.error);
-        console.log("formatted ---- ", result.error.format());
+      const parse = EmployeeUser.safeParse(req.body);
+      if (!parse.success) {
+        console.log("error ---- ", parse.error);
+        console.log("formatted ---- ", parse.error.format());
         return res.status(400);
       }
 
-      const parsedUser = result.data;
+      const parsedBody = parse.data;
       const userExists = await prisma.users.findFirst({
         where: {
-          email: parsedUser.email,
+          email: parsedBody.email,
         },
       });
       if (userExists) {
@@ -158,19 +152,19 @@ router.post(
       }
 
       bcrypt.hash(
-        parsedUser.password,
+        parsedBody.password,
         10,
         async function (err: Error | null, hash: string) {
           const employeeUser = await prisma.users.create({
             data: {
-              email: parsedUser.email,
+              email: parsedBody.email,
               hashed_password: hash,
               employee_users: {
                 create: {
-                  first_name: parsedUser.firstName,
-                  last_name: parsedUser.lastName,
-                  phone_number: parsedUser.phoneNumber,
-                  role: parsedUser.role,
+                  first_name: parsedBody.firstName,
+                  last_name: parsedBody.lastName,
+                  phone_number: parsedBody.phoneNumber,
+                  role: parsedBody.role,
                 },
               },
             },
