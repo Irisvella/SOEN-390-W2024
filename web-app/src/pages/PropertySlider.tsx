@@ -8,9 +8,7 @@ import { Button } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import "../App.css";
-import { useNavigate } from 'react-router-dom';
-
-
+import { useNavigate } from "react-router-dom";
 
 // Define the type for each property item
 interface Property {
@@ -61,24 +59,20 @@ const PrevArrow: React.FC<ArrowProps> = ({ className, style, onClick }) => {
 const PropertySlider: React.FC<PropertySliderProps> = ({ properties }) => {
   console.log(properties);
   const navigate = useNavigate();
-  
- 
- 
+
   const settings = {
-    dots: true,
-    infinite: true,
+    dots: properties.length > 1, // Only show dots if there are more than one slide
+    infinite: properties.length > 1, // Only enable infinite mode if there are more than one slide
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    centerMode: true,
-    centerPadding: "15%",
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
-    // ...other settings
+    centerMode: properties.length > 1, // Only enable center mode if there are more than one slide
+    centerPadding: properties.length > 1 ? "15%" : "0%", // Adjust center padding based on the number of slides
+    nextArrow: properties.length > 1 ? <NextArrow /> : <></>, // Hide navigation arrows if only one slide
+    prevArrow: properties.length > 1 ? <PrevArrow /> : <></>, // Hide navigation arrows if only one slide
+    // ...other settings you might need
   };
   const renderSlideContent = (property: Property) => {
-  
-   
     // Special slide for adding a new property or other company-specific slides
     if (property.isSpecial && property.propertyType === "company") {
       // Render a special company slide
@@ -92,8 +86,12 @@ const PropertySlider: React.FC<PropertySliderProps> = ({ properties }) => {
             <div className="property-actions">
               <Button variant="outlined">Visit Employee List</Button>
               <Button variant="outlined">Requests</Button>
-              <Button variant="outlined"
-               onClick={() => navigate(`/EditListing/${property.id}`)}>Edit</Button>
+              <Button
+                variant="outlined"
+                onClick={() => navigate(`/EditListing/${property.id}`)}
+              >
+                Edit
+              </Button>
             </div>
           </div>
         </div>
@@ -107,8 +105,15 @@ const PropertySlider: React.FC<PropertySliderProps> = ({ properties }) => {
             <h3>{property.address}</h3>
             <div className="property-actions">
               <Button variant="outlined">View Requests</Button>
+
               <Button variant="outlined">Make Request</Button>
               <Button variant="outlined">Financial Information</Button>
+              <Button
+                variant="outlined"
+                onClick={() => navigate(`/CreateRequest/${property.id}`)}
+              >
+                Create Request
+              </Button>
             </div>
           </div>
         </div>
