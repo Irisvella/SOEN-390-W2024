@@ -4,7 +4,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 
-// Get the full width of the screen
 const { width } = Dimensions.get("screen");
 
 const AmenitiesScreen = () => {
@@ -12,7 +11,6 @@ const AmenitiesScreen = () => {
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        {/* Each TouchableOpacity can be used to navigate to a specific booking screen for the amenity */}
         <View style={styles.mediaImageContainer}>
             <Image source={require("../../assets/pool.png")} style={styles.image} resizeMode="cover"></Image>
             <Text style={styles.text}>Pool</Text>
@@ -63,16 +61,17 @@ const AmenitiesScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 32,
-    paddingHorizontal: 10, // Add some horizontal padding to the whole container
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    backgroundColor: "#FFF"
   },
   mediaImageContainer: {
-    width: width - 20, // Adjusted width for screen padding
-    height: 200,
+    width: width - 20, 
+    height: width - 150,
     borderRadius: 12,
     overflow: "hidden",
     marginBottom: 20,
-    position: 'relative', // This enables absolute positioning for children
+    position: 'relative', 
   },
   image: {
     width: '100%',
@@ -80,12 +79,11 @@ const styles = StyleSheet.create({
   },
   bookButton: {
     position: 'absolute',
-    right: 10, // Position from the right edge of the container
-    bottom: 10, // Position from the bottom edge of the container
-    backgroundColor: 'rgba(0,0,0,0.6)', // Semi-transparent black background
+    right: 10, 
+    bottom: 10, 
+    backgroundColor: 'rgba(0,0,0,0.6)', 
     borderRadius: 25,
     padding: 8,
-    // Ensure the zIndex is high enough if it's still appearing beneath other elements
     zIndex: 1, 
   },
   text: {
@@ -95,7 +93,7 @@ const styles = StyleSheet.create({
     bottom: 10,
     left: 10,
     color: '#FFFFFF',
-    zIndex: 2, // Ensure text also appears above the image
+    zIndex: 2, 
   },
 });
 
