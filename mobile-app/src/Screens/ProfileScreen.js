@@ -141,7 +141,7 @@ export default function App() {
             <ScrollView showsVerticalScrollIndicator={true}>
                 <View style={styles.titleBar}>
                 <StatusBar style="dark" />
-                <TouchableOpacity  onPress={() => setShowDropdown(!showDropdown)}>
+                <TouchableOpacity  onPress={() => setShowDropdown(!showDropdown)} style={styles.dropdownIcon}>
                     <MaterialIcons name="more-horiz" size={26} color="#52575D"></MaterialIcons>
                 </TouchableOpacity>
                 </View>
@@ -376,5 +376,9 @@ const styles = StyleSheet.create({
     },
     dropdownItemText: {
         textAlign: 'center',
+    },
+    dropdownIcon: {
+        marginLeft: 310, 
+
     },
 });
