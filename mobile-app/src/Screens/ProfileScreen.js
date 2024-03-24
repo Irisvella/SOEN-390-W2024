@@ -25,7 +25,10 @@ export default function App() {
         setUsername('');
         setPhone('');
         setShowDropdown(false);
-        navigation.navigate('Login');
+        navigation.reset({
+            index: 0,
+            routes: [{ name: 'Auth', state: { routes: [{ name: 'Login' }] } }],
+        });
     };
 
 
@@ -138,9 +141,6 @@ export default function App() {
             <ScrollView showsVerticalScrollIndicator={true}>
                 <View style={styles.titleBar}>
                 <StatusBar style="dark" />
-                <TouchableOpacity onPress={() => navigation.push('Login')}>
-                <MaterialIcons name="arrow-back-ios" size={26} color="#52575D" />
-                </TouchableOpacity>
                 <TouchableOpacity  onPress={() => setShowDropdown(!showDropdown)}>
                     <MaterialIcons name="more-horiz" size={26} color="#52575D"></MaterialIcons>
                 </TouchableOpacity>

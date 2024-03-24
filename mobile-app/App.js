@@ -1,36 +1,3 @@
-// import * as React from 'react';
-// import { View, Text } from 'react-native';
-// import { NavigationContainer } from '@react-navigation/native';
-// import { createNativeStackNavigator } from '@react-navigation/native-stack';
-// import LoginScreen from './src/Screens/LoginScreen';
-// import SignupScreen from './src/Screens/SignupScreen';
-// import ProfileScreen from './src/Screens/ProfileScreen';
-
-
-
-// const Stack = createNativeStackNavigator();
-
-// function App() {
-//   return (
-//     <NavigationContainer>
-//       {/* <Stack.Navigator initialRouteName="Login" screenOptions={{headerShown: false}}> */}
-//       <Stack.Navigator initialRouteName="Profile" screenOptions={{headerShown: false}}>
-//         <Stack.Screen name="Login" component={LoginScreen}/>
-//         <Stack.Screen name="Signup" component={SignupScreen}/>
-//         <Stack.Screen name="Profile" component={ProfileScreen}/>
-
-
-//         {/* <Stack.Screen name="Home" component={HomePage} options={{ title: 'Home' }} /> */}
-//         {/* Add more screens as needed */}
-//       </Stack.Navigator>
-//     </NavigationContainer>
-//   );
-// }
-
-// export default App; 
-
-
-
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -43,6 +10,8 @@ import SignupScreen from './src/Screens/SignupScreen';
 import ProfileScreen from './src/Screens/ProfileScreen';
 import AmenitiesScreen from './src/Screens/AmenitiesScreen';
 import HomeScreen from './src/Screens/HomeScreen';
+import BookPool from './src/Screens/Bookings/BookPool';
+import BookGym from './src/Screens/Bookings/BookGym';
 
 // Import other screens and icons as needed
 
@@ -125,6 +94,9 @@ function App() {
 
         <MainStack.Screen name="Auth" component={AuthScreens} />
         {/* You can add more screens to MainStack that are not part of the bottom tabs but still within the authenticated flow */}
+        <MainStack.Screen name="BookPool" component={BookPool} />
+        <MainStack.Screen name="BookGym" component={BookGym} />
+
       </MainStack.Navigator>
     </NavigationContainer>
   );
