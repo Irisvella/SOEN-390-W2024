@@ -37,7 +37,7 @@ const AmenitiesScreen = () => {
         <View style={styles.mediaImageContainer}>
             <Image source={require("../../assets/condo.png")} style={styles.image} resizeMode="cover"></Image>
             <Text style={styles.text}>Massage Room</Text>
-              <TouchableOpacity style={styles.bookButton}>
+              <TouchableOpacity style={styles.bookButton} onPress={() => navigation.navigate('BookMassage')}>
                 <Ionicons name="add-circle" size={24} color="#FFF" />
             </TouchableOpacity>
         </View>

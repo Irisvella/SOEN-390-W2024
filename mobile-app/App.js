@@ -13,6 +13,7 @@ import HomeScreen from './src/Screens/HomeScreen';
 import BookPool from './src/Screens/Bookings/BookPool';
 import BookGym from './src/Screens/Bookings/BookGym';
 import BookSauna from './src/Screens/Bookings/BookSauna';
+import BookMassage from './src/Screens/Bookings/BookMassage';
 
 // Import other screens and icons as needed
 
@@ -98,6 +99,8 @@ function App() {
         <MainStack.Screen name="BookPool" component={BookPool} />
         <MainStack.Screen name="BookGym" component={BookGym} />
         <MainStack.Screen name="BookSauna" component={BookSauna} />
+        <MainStack.Screen name="BookMassage" component={BookMassage} />
+
 
 
       </MainStack.Navigator>
