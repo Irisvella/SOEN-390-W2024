@@ -14,6 +14,8 @@ import BookPool from './src/Screens/Bookings/BookPool';
 import BookGym from './src/Screens/Bookings/BookGym';
 import BookSauna from './src/Screens/Bookings/BookSauna';
 import BookMassage from './src/Screens/Bookings/BookMassage';
+import BookConference from './src/Screens/Bookings/BookConference';
+import BookParty from './src/Screens/Bookings/BookParty';
 
 // Import other screens and icons as needed
 
@@ -100,6 +102,9 @@ function App() {
         <MainStack.Screen name="BookGym" component={BookGym} />
         <MainStack.Screen name="BookSauna" component={BookSauna} />
         <MainStack.Screen name="BookMassage" component={BookMassage} />
+        <MainStack.Screen name="BookConference" component={BookConference} />
+        <MainStack.Screen name="BookParty" component={BookParty} />
+
 
 
 

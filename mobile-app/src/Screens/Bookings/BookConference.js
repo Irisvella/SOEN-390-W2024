@@ -5,7 +5,7 @@ import { Picker } from '@react-native-picker/picker';
 import { MaterialIcons } from '@expo/vector-icons';
 
 
-const BookPool = ({ navigation }) => {
+const BookConference = ({ navigation }) => {
   const [selectedTime, setSelectedTime] = useState("10:00 AM");
   const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -20,14 +20,14 @@ const BookPool = ({ navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <Image source={require("../../../assets/pool.png")} style={styles.headerImage} />
+      <Image source={require("../../../assets/conference.png")} style={styles.headerImage} />
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                 <MaterialIcons name="arrow-back-ios" size={26} color="#52575D" />
         </TouchableOpacity>
-      <Text style={styles.headerText}>Pool Booking</Text>
+      <Text style={styles.headerText}>Conference Room Booking</Text>
       <View style={styles.descriptionContainer}>
         <Text style={styles.descriptionText}>
-          Dive into the refreshing waters of our serene pool. Book your slot now to enjoy a rejuvenating swim or relax by the poolside.
+            Get your workout in at our state-of-the-art gym. Book your slot now to enjoy a variety of equipment and a spacious workout area.
         </Text>
       </View>
       <Calendar
@@ -110,4 +110,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BookPool;
+export default BookConference;

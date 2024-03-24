@@ -14,40 +14,47 @@ const AmenitiesScreen = () => {
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         {/* Each TouchableOpacity can be used to navigate to a specific booking screen for the amenity */}
         <View style={styles.mediaImageContainer}>
-            <Image source={require("../../assets/condo.png")} style={styles.image} resizeMode="cover"></Image>
+            <Image source={require("../../assets/pool.png")} style={styles.image} resizeMode="cover"></Image>
             <Text style={styles.text}>Pool</Text>
             <TouchableOpacity style={styles.bookButton} onPress={() => navigation.navigate('BookPool')}>
                 <Ionicons name="add-circle" size={24} color="#FFF" />
             </TouchableOpacity>
         </View>
         <View style={styles.mediaImageContainer}>
-            <Image source={require("../../assets/condo.png")} style={styles.image} resizeMode="cover"></Image>
+            <Image source={require("../../assets/gym.png")} style={styles.image} resizeMode="cover"></Image>
             <Text style={styles.text}>Gym</Text>
               <TouchableOpacity style={styles.bookButton} onPress={() => navigation.navigate('BookGym')}>
                 <Ionicons name="add-circle" size={24} color="#FFF" />
             </TouchableOpacity>
         </View>
         <View style={styles.mediaImageContainer}>
-            <Image source={require("../../assets/condo.png")} style={styles.image} resizeMode="cover"></Image>
+            <Image source={require("../../assets/sauna.png")} style={styles.image} resizeMode="cover"></Image>
             <Text style={styles.text}>Sauna</Text>
               <TouchableOpacity style={styles.bookButton} onPress={() => navigation.navigate('BookSauna')}>
                 <Ionicons name="add-circle" size={24} color="#FFF" />
             </TouchableOpacity>
         </View>
         <View style={styles.mediaImageContainer}>
-            <Image source={require("../../assets/condo.png")} style={styles.image} resizeMode="cover"></Image>
+            <Image source={require("../../assets/massage.png")} style={styles.image} resizeMode="cover"></Image>
             <Text style={styles.text}>Massage Room</Text>
               <TouchableOpacity style={styles.bookButton} onPress={() => navigation.navigate('BookMassage')}>
                 <Ionicons name="add-circle" size={24} color="#FFF" />
             </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.mediaImageContainer}>
-            <Image source={require("../../assets/condo.png")} style={styles.image} resizeMode="cover"></Image>
+        <View style={styles.mediaImageContainer}>
+            <Image source={require("../../assets/conference.png")} style={styles.image} resizeMode="cover"></Image>
             <Text style={styles.text}>Conference Room</Text>
-              <TouchableOpacity style={styles.bookButton}>
+              <TouchableOpacity style={styles.bookButton}  onPress={() => navigation.navigate('BookConference')}>
                 <Ionicons name="add-circle" size={24} color="#FFF" />
             </TouchableOpacity>
-        </TouchableOpacity>
+        </View>
+        <View style={styles.mediaImageContainer}>
+            <Image source={require("../../assets/party.png")} style={styles.image} resizeMode="cover"></Image>
+            <Text style={styles.text}>Party Room</Text>
+              <TouchableOpacity style={styles.bookButton}  onPress={() => navigation.navigate('BookParty')}>
+                <Ionicons name="add-circle" size={24} color="#FFF" />
+            </TouchableOpacity>
+        </View>
         {/* Add more amenities as needed */}
     </ScrollView>
   );

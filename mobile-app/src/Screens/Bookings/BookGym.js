@@ -20,7 +20,7 @@ const BookGym = ({ navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <Image source={require("../../../assets/condo.png")} style={styles.headerImage} />
+      <Image source={require("../../../assets/gym.png")} style={styles.headerImage} />
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                 <MaterialIcons name="arrow-back-ios" size={26} color="#52575D" />
         </TouchableOpacity>
