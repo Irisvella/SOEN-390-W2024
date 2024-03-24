@@ -36,6 +36,13 @@ describe("POST /signup/public-user", () => {
       data: {
         email: userData.email,
         hashed_password: "hashed_password",
+        public_users: {
+          create: {
+            first_name: userData.firstName,
+            last_name: userData.lastName,
+            phone_number: userData.phoneNumber,
+          },
+        },
       },
     });
   });
