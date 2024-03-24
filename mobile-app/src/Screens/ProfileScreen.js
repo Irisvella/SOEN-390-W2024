@@ -156,6 +156,12 @@ export default function App() {
                         <Text style={styles.dropdownItemText}>Edit picture</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
+                        onPress={() => navigation.navigate('AddActivationCode')}
+                        style={styles.dropdownItem}
+                    >
+                        <Text style={styles.dropdownItemText}>Add Condo</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
                         onPress={handleLogout}
                         style={styles.dropdownItem}
                     >
@@ -364,12 +370,13 @@ const styles = StyleSheet.create({
         marginRight: 20
     },
     dropdown: {
-        marginTop: 10,
+        marginTop: 60,
         backgroundColor: '#f9f9f9',
         borderColor: '#ccc',
         borderWidth: 1,
         width: 100,
         alignSelf: 'flex-end',
+        position: 'absolute',
     },
     dropdownItem: {
         padding: 10,

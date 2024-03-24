@@ -39,11 +39,9 @@ const CreateServiceRequests = ({ navigation }) => {
         numberOfLines={4}
       />
 
-      <Button
-        title="Submit Request"
-        onPress={handleSubmit}
-        color="#2196F3" 
-      />
+      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+        <Text style={styles.submitButtonText}>Submit</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -80,6 +78,20 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 56, 
     left: 16,
+  },
+  submitButton: {
+    marginHorizontal: 100,
+    backgroundColor: '#00adf5',
+    padding: 15,
+    borderRadius: 20,
+    alignItems: 'center',
+    marginTop: 20,
+    marginBottom: 40,
+  },
+  submitButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 

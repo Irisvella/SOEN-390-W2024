@@ -19,6 +19,7 @@ import BookParty from './src/Screens/Bookings/BookParty';
 import ViewBookings from './src/Screens/Bookings/ViewBookings';
 import CreateServiceRequests from './src/Screens/CreateServiceRequests';
 import ContactManagement from './src/Screens/ContactManagement';
+import ActivationScreen from './src/Screens/AddActivationCode';
 
 // Import other screens and icons as needed
 
@@ -110,6 +111,8 @@ function App() {
         <MainStack.Screen name="ViewBookings" component={ViewBookings} />
         <MainStack.Screen name="ServiceRequest" component={CreateServiceRequests} />
         <MainStack.Screen name="ContactManagement" component={ContactManagement} />
+        <MainStack.Screen name="AddActivationCode" component={ActivationScreen} />
+
 
 
 

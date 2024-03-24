@@ -13,42 +13,54 @@ const AmenitiesScreen = () => {
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <View style={styles.mediaImageContainer}>
             <Image source={require("../../assets/pool.png")} style={styles.image} resizeMode="cover"></Image>
-            <Text style={styles.text}>Pool</Text>
+               <View style={styles.textBackground}>
+               <Text style={styles.text}>Pool</Text>
+               </View>
             <TouchableOpacity style={styles.bookButton} onPress={() => navigation.navigate('BookPool')}>
                 <Ionicons name="add-circle" size={24} color="#FFF" />
             </TouchableOpacity>
         </View>
         <View style={styles.mediaImageContainer}>
             <Image source={require("../../assets/gym.png")} style={styles.image} resizeMode="cover"></Image>
+            <View style={styles.textBackground}>
             <Text style={styles.text}>Gym</Text>
+            </View> 
               <TouchableOpacity style={styles.bookButton} onPress={() => navigation.navigate('BookGym')}>
                 <Ionicons name="add-circle" size={24} color="#FFF" />
             </TouchableOpacity>
         </View>
         <View style={styles.mediaImageContainer}>
             <Image source={require("../../assets/sauna.png")} style={styles.image} resizeMode="cover"></Image>
+            <View style={styles.textBackgroundSauna}>  
             <Text style={styles.text}>Sauna</Text>
+            </View>
               <TouchableOpacity style={styles.bookButton} onPress={() => navigation.navigate('BookSauna')}>
                 <Ionicons name="add-circle" size={24} color="#FFF" />
             </TouchableOpacity>
         </View>
         <View style={styles.mediaImageContainer}>
             <Image source={require("../../assets/massage.png")} style={styles.image} resizeMode="cover"></Image>
+            <View style={styles.textBackgroundLong3}>
             <Text style={styles.text}>Massage Room</Text>
+            </View>
               <TouchableOpacity style={styles.bookButton} onPress={() => navigation.navigate('BookMassage')}>
                 <Ionicons name="add-circle" size={24} color="#FFF" />
             </TouchableOpacity>
         </View>
         <View style={styles.mediaImageContainer}>
             <Image source={require("../../assets/conference.png")} style={styles.image} resizeMode="cover"></Image>
+            <View style={styles.textBackgroundLong2}>
             <Text style={styles.text}>Conference Room</Text>
+            </View>
               <TouchableOpacity style={styles.bookButton}  onPress={() => navigation.navigate('BookConference')}>
                 <Ionicons name="add-circle" size={24} color="#FFF" />
             </TouchableOpacity>
         </View>
         <View style={styles.mediaImageContainer}>
             <Image source={require("../../assets/party.png")} style={styles.image} resizeMode="cover"></Image>
+            <View style={styles.textBackgroundLong}>
             <Text style={styles.text}>Party Room</Text>
+            </View>
               <TouchableOpacity style={styles.bookButton}  onPress={() => navigation.navigate('BookParty')}>
                 <Ionicons name="add-circle" size={24} color="#FFF" />
             </TouchableOpacity>
@@ -92,7 +104,57 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 10,
     left: 10,
-    color: '#FFFFFF',
+    color: 'white',
+    zIndex: 2, 
+  },
+  textBackground: {
+    position: 'absolute',
+    bottom: 10,
+    left: 10,
+    backgroundColor: 'rgba(0,0,0,0.5)', 
+    borderRadius: 5, 
+    paddingVertical: 20, 
+    paddingHorizontal: 30,
+    zIndex: 2, 
+  },
+  textBackgroundLong: {
+    position: 'absolute',
+    bottom: 10,
+    left: 10,
+    backgroundColor: 'rgba(0,0,0,0.5)', 
+    borderRadius: 5, 
+    paddingVertical: 20, 
+    paddingHorizontal: 62,
+    zIndex: 2, 
+  },
+  textBackgroundLong2: {
+    position: 'absolute',
+    bottom: 10,
+    left: 10,
+    backgroundColor: 'rgba(0,0,0,0.5)', 
+    borderRadius: 5, 
+    paddingVertical: 20, 
+    paddingHorizontal: 90,
+    zIndex: 2, 
+  },
+  textBackgroundLong3: {
+    position: 'absolute',
+    bottom: 10,
+    left: 10,
+    backgroundColor: 'rgba(0,0,0,0.5)', 
+    borderRadius: 5, 
+    paddingVertical: 20, 
+    paddingHorizontal: 78,
+    zIndex: 2, 
+  },
+  textBackgroundSauna: {
+    position: 'absolute',
+    bottom: 10,
+    left: 10,
+    backgroundColor: 'rgba(0,0,0,0.5)', 
+    borderRadius: 5, 
+    paddingVertical: 20, 
+    paddingHorizontal: 38,
     zIndex: 2, 
   },
 });
