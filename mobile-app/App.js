@@ -12,6 +12,7 @@ import AmenitiesScreen from './src/Screens/AmenitiesScreen';
 import HomeScreen from './src/Screens/HomeScreen';
 import BookPool from './src/Screens/Bookings/BookPool';
 import BookGym from './src/Screens/Bookings/BookGym';
+import BookSauna from './src/Screens/Bookings/BookSauna';
 
 // Import other screens and icons as needed
 
@@ -96,6 +97,8 @@ function App() {
         {/* You can add more screens to MainStack that are not part of the bottom tabs but still within the authenticated flow */}
         <MainStack.Screen name="BookPool" component={BookPool} />
         <MainStack.Screen name="BookGym" component={BookGym} />
+        <MainStack.Screen name="BookSauna" component={BookSauna} />
+
 
       </MainStack.Navigator>
     </NavigationContainer>

@@ -30,17 +30,17 @@ const AmenitiesScreen = () => {
         <View style={styles.mediaImageContainer}>
             <Image source={require("../../assets/condo.png")} style={styles.image} resizeMode="cover"></Image>
             <Text style={styles.text}>Sauna</Text>
-              <TouchableOpacity style={styles.bookButton}>
+              <TouchableOpacity style={styles.bookButton} onPress={() => navigation.navigate('BookSauna')}>
                 <Ionicons name="add-circle" size={24} color="#FFF" />
             </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.mediaImageContainer}>
+        <View style={styles.mediaImageContainer}>
             <Image source={require("../../assets/condo.png")} style={styles.image} resizeMode="cover"></Image>
             <Text style={styles.text}>Massage Room</Text>
               <TouchableOpacity style={styles.bookButton}>
                 <Ionicons name="add-circle" size={24} color="#FFF" />
             </TouchableOpacity>
-        </TouchableOpacity>
+        </View>
         <TouchableOpacity style={styles.mediaImageContainer}>
             <Image source={require("../../assets/condo.png")} style={styles.image} resizeMode="cover"></Image>
             <Text style={styles.text}>Conference Room</Text>
