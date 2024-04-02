@@ -37,7 +37,19 @@ router.post(
                     company_id: company_id,
                   },
                 });
+                
+                for (let i = body.totalUnit; i>0; i-- ){
+                  const unit = await prisma.condo_unit.create({
+                    data: {
+                      property_id: property.id,
+                      unit_number: i.toString(),
+                      square_feet: 250.00,
+
+                    }
+                  });
               }
+              }
+
 
               createProperty(body.address, id);
 
