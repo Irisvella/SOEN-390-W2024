@@ -1,82 +1,77 @@
 import express from "express";
 const router = express.Router();
+import * as z from "zod";
 import prisma from "../prisma/client";
 import jwt from "jsonwebtoken";
 import verifyToken from "../middleware/verify-token";
 require("dotenv").config();
 
 import { Request, Response, NextFunction } from "express";
-import  {priority}  from "@prisma/client";
 
-// Route to handle the submission of a new listing
+const UserRequest = z.object({
+  propertyId: z.coerce.number(),
+  requestType: z.string(),
+  requestReason: z.string(),
+  priority: z.enum(["low", "medium", "high"]),
+  date: z.coerce.date().optional(), // optional field
+});
+
+/** route to handle the submission of a new request. only those with 'publicUser'
+ * role should be able to access this route. should also test for subRole
+ * possibly ('none', 'owner', 'renter').
+ */
 router.post(
   "/",
   verifyToken,
   async function (req: Request, res: Response, next: NextFunction) {
     try {
       jwt.verify(
+        // verify jwt token, and if successful, decrypt it to get payload (id, role, email)
         req.token as string,
         process.env.SECRET as jwt.Secret,
         async (err, decoded) => {
           if (err) {
+            // either a malformed jwt or an expired jwt
             return res.status(401).json("Unauthorized");
           } else {
             console.log("decoded ---- ", decoded);
             const { id, role, email } = (<any>decoded).data;
 
-            if (role === "publicUser") {
-              const body = req.body; //constant
-              console.log("body is ---- ", body);
-
-              async function createRequest(
-                property_id: number,
-                // employee_id:number , //has to be null
-                company_id: number,
-                requestType: string,
-                //date: Date,
-                requestReason: string,
-                priority: priority,
-              ) {
-                const property = await prisma.requests.create({
-                  data: {
-                    property_id: property_id,
-                    title: requestType, //title = reason of request change to what the front end sends us in body
-                    //issued_at: new Date(),
-                    //date_needed: "2002/05/24",
-                    condo_owner_id: company_id,
-                    // employee_id: 2,
-                    description: requestReason, //change to what the front end sends us in body
-                    request_priority: priority, //change to what the front end sends us in body
-                  },
-                });
-              }
-              let request_priority: priority = priority.low;
-              if (body.request_priority === "low") {
-                request_priority = priority.low;
-              } else if (body.request_priority === "high") {
-                request_priority = priority.high;
-              } else if (body.request_priority === "medium") {
-                request_priority = priority.medium;
-              }
-
-              await createRequest(
-                parseInt(body.property_id),
-                id,
-                body.requestType,
-                body.requestReason,
-                request_priority,
-              ); //async funtion
-
-              console.log("a");
-              return res.status(200).json({});
+            if (role !== "publicUser") {
+              console.log(
+                `user with role ${role} and email ${email} tried to access /requests POST`,
+              );
+              return res.status(401).json("Unauthorized");
             }
-            return res.status(500).json({
-              message: "unexpected error",
+
+            const parse = UserRequest.safeParse(req.body);
+            // console.log("body ---- ", req.body);
+            if (!parse.success) {
+              // the incoming request's body does not conform to UserRequest schema
+              console.log(parse.error.issues);
+              return res.status(400);
+            }
+
+            const parsedBody = parse.data; // like req.body but with types
+            // console.log("parsed body --- ", { parsedBody });
+
+            const newRequest = await prisma.requests.create({
+              data: {
+                property_id: parsedBody.propertyId,
+                title: parsedBody.requestType,
+                description: parsedBody.requestReason,
+                condo_owner_id: id,
+                date_needed: parsedBody.date,
+                request_priority: parsedBody.priority,
+              },
             });
+
+            return res.status(201).json({ message: "success" });
           }
         },
       );
     } catch (err) {
+      console.log("err from /request POST ---- ", err);
       return res.status(500).json({
         message: "unexpected error",
       });
