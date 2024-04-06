@@ -50,8 +50,8 @@ export default function App() {
             if (response.ok) {
                 if (data.role === 'publicUser') {
                     setUserRole('publicUser');
-                    setUsername('Hi ' + data.username);
-                    setPhone(data.phone);
+                    setUsername('Hi, ' + data.firstName);
+                    setPhone(data.phoneNumber);
                     setProfileImage(data.avatar);
                 } else if (data.role === 'company') {
                     setUserRole('company');

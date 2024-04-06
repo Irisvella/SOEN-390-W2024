@@ -112,6 +112,7 @@ function App() {
         <MainStack.Screen name="ServiceRequest" component={CreateServiceRequests} />
         <MainStack.Screen name="ContactManagement" component={ContactManagement} />
         <MainStack.Screen name="AddActivationCode" component={ActivationScreen} />
+        <MainStack.Screen name="Profile" component={ProfileScreen} />
 
 
 

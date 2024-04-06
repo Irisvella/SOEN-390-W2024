@@ -39,7 +39,7 @@ export default function LoginScreen() {
             await AsyncStorage.setItem('token', data.token);
             console.log('Login successful', data);
             setTimeout(() => {
-                navigation.navigate('Profile', { shouldFetchProfile: true }); 
+                navigation.navigate('Main', { shouldFetchProfile: true }); 
               }, 500)
         } else {
             console.error('Login failed:', data.message);
@@ -210,3 +210,4 @@ const styles = StyleSheet.create({
 
 
 // appTest@example.com
+// test123456
