@@ -16,7 +16,7 @@ const User = z.object({
 });
 
 const Company = z.object({
-  email: z.string().email().trim().toLowerCase(),
+  email: z.string().trim().toLowerCase().email(),
   password: z.string().min(6).max(64),
   companyName: z.string().trim().toLowerCase().min(1),
   phoneNumber: z.string().trim().min(10),
