@@ -87,12 +87,7 @@ const PropertySlider: React.FC<PropertySliderProps> = ({ properties }) => {
               <Button variant="outlined" onClick = {() => navigate(`/Employeesinfo/${property.id}`)} >Visit Employee List</Button>
               <Button variant="outlined" onClick = {() => navigate(`/OpenRequestManagementPage`)}
               >Requests</Button>
-              <Button
-                variant="outlined"
-                onClick={() => navigate(`/EditListing/${property.id}`)}
-              >
-                Edit
-              </Button>
+              +9
             </div>
           </div>
         </div>

@@ -13,11 +13,12 @@ import CreateListingForm from './components/CreateListingForm.tsx';
 import EditListingForm from './components/EditListingForm.tsx';
 import RequestManagement from './pages/RequestManagement.tsx';
 import OpenRequestManagementPage from './pages/OpenRequestManagementPage.tsx';
-import AddUnit from './pages/AddUnit.jsx';
+import AddUnit from './components/AddUnit.jsx';
 import CreateBillRequest from './pages/CreateBillRequest.jsx';
 import ManagementFinancialOverview from './pages/ManagementFinancialOverview.jsx';
 import AddOperationalCost from './pages/AddOperationalCost.jsx';
 import CreateRequestForm from "./components/CreateRequestForm.tsx";
+import UnitsDashboard from './pages/UnitsDashboard.tsx';
 
 
 function App() {
@@ -54,6 +55,9 @@ function App() {
             <Route path="/createbillrequest" element={<CreateBillRequest/>} />
             <Route path="/ManagementFinancialOverview" element={<ManagementFinancialOverview/>} />
             <Route path="/AddOperationalCost" element={<AddOperationalCost/>} />
+            <Route path="/UnitsDashboard" element={<UnitsDashboard/>} />
+           
+           
 
           </>
         ) : null}
