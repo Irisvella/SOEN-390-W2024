@@ -98,10 +98,10 @@ function App() {
   return (
     <NavigationContainer>
       <MainStack.Navigator screenOptions={{ headerShown: false }}>
-      <MainStack.Screen name="Main" component={MainScreens} />
 
         <MainStack.Screen name="Auth" component={AuthScreens} />
         {/* You can add more screens to MainStack that are not part of the bottom tabs but still within the authenticated flow */}
+        <MainStack.Screen name="Main" component={MainScreens} />
         <MainStack.Screen name="BookPool" component={BookPool} />
         <MainStack.Screen name="BookGym" component={BookGym} />
         <MainStack.Screen name="BookSauna" component={BookSauna} />
@@ -115,7 +115,7 @@ function App() {
         <MainStack.Screen name="Profile" component={ProfileScreen} />
 
 
-
+ 
 
 
       </MainStack.Navigator>
