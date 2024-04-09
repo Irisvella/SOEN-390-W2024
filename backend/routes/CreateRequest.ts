@@ -8,6 +8,18 @@ require("dotenv").config();
 import { Request, Response, NextFunction } from "express";
 import  {priority}  from "@prisma/client";
 
+interface requests {
+  title: string;
+  description: string;
+  request_priority: string;
+  issued_at: Date;
+  condo_owner_id: number;
+  employee_id: number;
+  date_needed: Date;
+  property_id: number;
+  
+}
+
 // Route to handle the submission of a new listing
 router.post(
   "/",
@@ -83,5 +95,51 @@ router.post(
     }
   },
 );
+
+
+router.get("/viewRequests", verifyToken, async (req: Request, res: Response) => {
+  try {
+
+    jwt.verify(
+      req.token as string,
+      process.env.SECRET as jwt.Secret,
+      async (err, decoded) => {
+        if (err) {
+          return res.status(401).json("Unauthorized");
+        } else {
+          console.log("decoded ---- ", decoded);
+          const { id, role, email } = (<any>decoded).data;
+
+          if (role === "company"){
+            const requestList = await prisma.$queryRaw<
+            requests[]
+            >`select * 
+            from requests
+            where property_id in (
+              select id
+              from property
+              where company_id = ${id}
+            )
+            `;
+            res.json(requestList);
+            console.log(requestList);
+          } else if (role === "publicUser"){
+            const requestList = await prisma.$queryRaw<
+            requests[]
+            >`select * 
+            from requests
+            where condo_owner_id = ${id}
+            `;
+            res.json(requestList);
+            console.log(requestList);
+          }
+          
+  }});
+  } catch (error) {
+    console.error('Failed to get requests:', error);
+    res.status(500).send('Error fetching requests');
+  }
+});
+
 
 export default router;
