@@ -133,6 +133,7 @@ router.get("/:propertyId/units", verifyToken, async (req: Request, res: Response
       
     });
     res.json(units);
+    console.log(units);
   } catch (error) {
     console.error('Failed to get units:', error);
     res.status(500).send('Error fetching units');

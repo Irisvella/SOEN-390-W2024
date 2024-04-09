@@ -13,7 +13,7 @@ function UnitsDashboard() {
     const fetchTotalUnits = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await fetch(`http://localhost:3000/properties/${propertyId}/units`, {
+        const response = await fetch(`http://localhost:3000/createEditListing/${propertyId}/units`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`,
