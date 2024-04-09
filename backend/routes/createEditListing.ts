@@ -124,5 +124,30 @@ router.put("/:propertyId", verifyToken, async (req, res) => {
   }
 });
 
+// Route to get units by propertyId
+router.get("/:propertyId/units", verifyToken, async (req: Request, res: Response) => {
+  try {
+    const { propertyId } = req.params;
+    const units = await prisma.condo_unit.findMany({
+      where: { property_id: parseInt(propertyId) },
+      
+    });
+    res.json(units);
+  } catch (error) {
+    console.error('Failed to get units:', error);
+    res.status(500).send('Error fetching units');
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
 
 export default router;
