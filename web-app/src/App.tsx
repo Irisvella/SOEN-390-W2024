@@ -50,6 +50,7 @@ function App() {
               element={<CreateRequestForm />}
             />
              <Route path="/UnitsDashboard/:propertyId" element={<UnitsDashboard />} />
+             <Route path="/CreateRequest" element={<CreateRequestForm />} />
             <Route path="/RequestManagement" element={<RequestManagement />} />
             <Route path="/OpenRequestManagementPage" element={<OpenRequestManagementPage />} />
             <Route path="/AddUnit" element={<AddUnit />} />
