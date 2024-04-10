@@ -9,6 +9,7 @@ import { Request, Response, NextFunction } from "express";
 import  {priority}  from "@prisma/client";
 
 interface requests {
+  id: number;
   title: string;
   description: string;
   request_priority: string;
