@@ -119,13 +119,14 @@ CREATE TABLE reserved_by (
 CREATE TYPE priority AS ENUM('low', 'medium', 'high');
 
 CREATE TABLE requests (
+    id SERIAL PRIMARY KEY,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     request_priority priority DEFAULT 'low',
     issued_at TIMESTAMP DEFAULT NOW(),
     condo_owner_id INT NOT NULL REFERENCES public_users(user_id),
     employee_id INT NOT NULL REFERENCES employee_users(user_id),
-    PRIMARY KEY (condo_owner_id, employee_id, title, issued_at)
+    UNIQUE (condo_owner_id, employee_id, title, issued_at)
 );
 
 CREATE TYPE file_type AS ENUM('declarations', 'annual budgets', 'board meeting minutes', 'other');
