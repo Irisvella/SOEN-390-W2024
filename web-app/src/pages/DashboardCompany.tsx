@@ -68,6 +68,7 @@ const DashboardCompany = () => {
           {/* Additional company-specific content here */}
         </Grid>
       </Container>
+      
     </>
   );
 };
