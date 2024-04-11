@@ -19,6 +19,7 @@ import ManagementFinancialOverview from './pages/ManagementFinancialOverview.jsx
 import AddOperationalCost from './pages/AddOperationalCost.jsx';
 import CreateRequestForm from "./components/CreateRequestForm.tsx";
 import UnitsDashboard from './pages/UnitsDashboard.tsx';
+import EmployeeTable from './pages/EmployeeTable.jsx';
 
 
 function App() {
@@ -44,6 +45,7 @@ function App() {
             <Route path="/dashboard-user" element={<DashboardUser />} />
             <Route path="/dashboard-company" element={<DashboardCompany />} />
             <Route path="/Employeesinfo/:propertyId" element={<Employeesinfo />} />
+            <Route path="/EmployeesTable" element={<EmployeeTable />} />
             <Route path="/Addemployee" element={<Addemployee />} />
             <Route
               path="/CreateRequest/:propertyId"
