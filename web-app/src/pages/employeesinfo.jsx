@@ -1,3 +1,7 @@
+// Filename: employeesinfo.jsx
+// Author: Sarah Abellard, Samuel Collette
+// Description: Component for showing employee info
+// Dependencies: React, MUI (Material-UI)
 import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Box, Typography } from '@mui/material';
