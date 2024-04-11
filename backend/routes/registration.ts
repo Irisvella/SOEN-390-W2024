@@ -60,6 +60,33 @@ router.post(
 
           const parsedBody = parse.data;
 
+          const isOwner: any = await prisma.$queryRaw`SELECT * FROM 
+          management_companies mc, property p, condo_unit cu 
+          WHERE mc.user_id = ${id} 
+                AND p.company_id = mc.user_id
+                AND p.id = cu.property_id
+                AND cu.id = ${parsedBody.condoId}`;
+
+          if (isOwner.length === 0 || isOwner[0]["user_id"] !== id) {
+            console.log(
+              `company doesn't own this condo or no condo exists ---- ${isOwner}`,
+            );
+            return res.status(400).json();
+          }
+
+          const registrationExists = await prisma.registration.findFirst({
+            where: {
+              condo_id: parsedBody.condoId,
+              end_date: null,
+            },
+          });
+          if (registrationExists) {
+            console.log(
+              `registration key already exists for condo with condo id ${parsedBody.condoId}`,
+            );
+            return res.status(400).json();
+          }
+
           const registration = await prisma.registration.create({
             data: {
               type: parsedBody.type,
