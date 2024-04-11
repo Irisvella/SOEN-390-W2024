@@ -1,3 +1,9 @@
+
+// Filename: dashboard.ts
+// Author: Samuel Collette
+// Description: Backend file to retrieve all porperties under the logged in user, for the dashboard
+// Dependencies: jwt, prisma, express
+
 import express from "express";
 const router = express.Router();
 import prisma from "../prisma/client";

@@ -1,3 +1,8 @@
+// Filename: CreateRequest.ts
+// Author: Samuel Collette, Barthan
+// Description: Backend query to createRequests and to view all available requests
+// Dependencies: jwt, prisma, express
+
 import express from "express";
 const router = express.Router();
 import prisma from "../prisma/client";
