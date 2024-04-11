@@ -1,3 +1,8 @@
+// Filename: registration.ts
+// Author: bt919
+// Description: post and patch routes for registration keys
+// Dependencies: express, prisam, and jwt
+
 import express from "express";
 const router = express.Router();
 import * as z from "zod";
@@ -16,6 +21,10 @@ const Registration = z.object({
   startDate: z.coerce.date().optional(),
   endDate: z.coerce.date().optional(),
   condoId: z.number(),
+});
+
+const UserRegistration = z.object({
+  registrationKey: z.string().length(36),
 });
 
 /* allow company users to create registration keys that can be sent to 
@@ -71,6 +80,71 @@ router.post(
       );
     } catch (err) {
       console.log("err from /registration POST ---- ", err);
+      return res.status(500).json({ message: "Unexpected error" });
+    }
+  },
+);
+
+/* allow public users to use a registration key which makes them an owner or 
+    renter of a condo unit. */
+router.patch(
+  "/",
+  verifyToken,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      jwt.verify(
+        req.token as string,
+        process.env.SECRET as jwt.Secret,
+        async (err, decoded) => {
+          if (err) {
+            console.log("err from /registration PATCH ---- ", err);
+            return res.status(401).json("Unauthorized");
+          }
+
+          const { id, role, email } = (<any>decoded).data;
+          if (role !== "publicUser") {
+            console.log(
+              `user with email ${email} and role ${role} tried to access /billing POST`,
+            );
+            return res.status(401).json("Unauthorized");
+          }
+
+          const parse = UserRegistration.safeParse(req.body);
+          if (!parse.success) {
+            console.log(parse.error.issues);
+            return res.status(400);
+          }
+
+          const parsedBody = parse.data;
+
+          const registration = await prisma.registration.update({
+            where: {
+              registration_key: parsedBody.registrationKey,
+            },
+            data: {
+              public_user_id: id,
+            },
+          });
+
+          const updateRole = await prisma.public_users.update({
+            where: {
+              user_id: id,
+            },
+            data: {
+              role: registration.type,
+            },
+          });
+
+          return res.status(200).json({
+            message: "success",
+            data: {
+              condoId: registration.condo_id,
+            },
+          });
+        },
+      );
+    } catch (err) {
+      console.log("err from /registration PATCH ---- ", err);
       return res.status(500).json({ message: "Unexpected error" });
     }
   },
