@@ -37,7 +37,7 @@ const CreateListingForm = () => {
  
 
   const handleSubmit = async () => {
-   
+    navigate("/dashboard-company");
     const token = localStorage.getItem('token');
     try {
 
@@ -53,7 +53,6 @@ const CreateListingForm = () => {
       if (response.ok) {
         // Navigate to dashboard-company
         console.log('About to navigate');
-        navigate("/dashboard-company");
         console.log('Listing data submitted successfully');
         setFormData({
           address: '',

@@ -13,11 +13,12 @@ import CreateListingForm from './components/CreateListingForm.tsx';
 import EditListingForm from './components/EditListingForm.tsx';
 import RequestManagement from './pages/RequestManagement.tsx';
 import OpenRequestManagementPage from './pages/OpenRequestManagementPage.tsx';
-import AddUnit from './pages/AddUnit.jsx';
+import AddUnit from './components/AddUnit.jsx';
 import CreateBillRequest from './pages/CreateBillRequest.jsx';
 import ManagementFinancialOverview from './pages/ManagementFinancialOverview.jsx';
 import AddOperationalCost from './pages/AddOperationalCost.jsx';
 import CreateRequestForm from "./components/CreateRequestForm.tsx";
+import UnitsDashboard from './pages/UnitsDashboard.tsx';
 
 
 function App() {
@@ -42,18 +43,23 @@ function App() {
             <Route path="/ProfileDash" element={<MinApp />} />
             <Route path="/dashboard-user" element={<DashboardUser />} />
             <Route path="/dashboard-company" element={<DashboardCompany />} />
-            <Route path="/Employeesinfo" element={<Employeesinfo />} />
+            <Route path="/Employeesinfo/:propertyId" element={<Employeesinfo />} />
             <Route path="/Addemployee" element={<Addemployee />} />
             <Route
               path="/CreateRequest/:propertyId"
               element={<CreateRequestForm />}
             />
+             <Route path="/UnitsDashboard/:propertyId" element={<UnitsDashboard />} />
+             <Route path="/CreateRequest" element={<CreateRequestForm />} />
             <Route path="/RequestManagement" element={<RequestManagement />} />
             <Route path="/OpenRequestManagementPage" element={<OpenRequestManagementPage />} />
             <Route path="/AddUnit" element={<AddUnit />} />
             <Route path="/createbillrequest" element={<CreateBillRequest/>} />
             <Route path="/ManagementFinancialOverview" element={<ManagementFinancialOverview/>} />
             <Route path="/AddOperationalCost" element={<AddOperationalCost/>} />
+            <Route path="/UnitsDashboard" element={<UnitsDashboard/>} />
+           
+           
 
           </>
         ) : null}

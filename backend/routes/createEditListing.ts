@@ -37,7 +37,19 @@ router.post(
                     company_id: company_id,
                   },
                 });
+                
+                for (let i = body.totalUnit; i>0; i-- ){
+                  const unit = await prisma.condo_unit.create({
+                    data: {
+                      property_id: property.id,
+                      unit_number: i.toString(),
+                      square_feet: 250.00,
+
+                    }
+                  });
               }
+              }
+
 
               createProperty(body.address, id);
 
@@ -111,6 +123,32 @@ router.put("/:propertyId", verifyToken, async (req, res) => {
     res.status(500).send("Error updating property");
   }
 });
+
+// Route to get units by propertyId
+router.get("/:propertyId/units", verifyToken, async (req: Request, res: Response) => {
+  try {
+    const { propertyId } = req.params;
+    const units = await prisma.condo_unit.findMany({
+      where: { property_id: parseInt(propertyId) },
+      
+    });
+    res.json(units);
+    console.log(units);
+  } catch (error) {
+    console.error('Failed to get units:', error);
+    res.status(500).send('Error fetching units');
+  }
+});
+
+
+
+
+
+
+
+
+
+
 
 
 export default router;
