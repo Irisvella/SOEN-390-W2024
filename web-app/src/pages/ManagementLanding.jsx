@@ -1,3 +1,8 @@
+// Filename: ManagementLanding.jsx
+// Author: Ziyi Wang
+// Description: Landing page for the company
+// Dependencies: React, MUI (Material-UI)
+
 import React from 'react';
 import Navbar from '../components/Navbar';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
