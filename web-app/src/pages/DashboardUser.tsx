@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Container, CssBaseline } from "@mui/material";
+import { Container, CssBaseline } from "@mui/material";
 import Navbar from "../components/Navbar";
 import PropertySlider from "./PropertySlider"; // Assuming correct export
 import { Property } from "./PropertySlider"; // Assuming Property is correctly exported as a type
@@ -48,8 +48,8 @@ const DashboardUser = () => {
       navigate("/login");
     }
     const role = localStorage.getItem("role");
-    if (role !== 'publicUser'){
-      navigate("/dashboard-company")
+    if (role !== "publicUser") {
+      navigate("/dashboard-company");
     }
 
     const fetchProperties = async () => {
@@ -65,10 +65,10 @@ const DashboardUser = () => {
     };
     fetchProperties();
   }, []);
-    
-  const handleCreateRequest = () => {
-    navigate("/CreateRequestPage");
-  };
+
+  // const handleCreateRequest = () => {
+  //   navigate("/CreateRequest");
+  // };
 
   return (
     <>
@@ -77,14 +77,13 @@ const DashboardUser = () => {
       <Container component="main" maxWidth="lg" sx={{ mt: 10, mb: 10 }}>
         <PropertySlider properties={properties} />
         {/* Rest of your component */}
-        <Button
+        {/* <Button
           variant="contained"
           color="primary"
           onClick={handleCreateRequest}
         >
           Create A Request
-        </Button>
-
+        </Button> */}
       </Container>
     </>
   );
