@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableRow, Paper, TableHead } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
+import { Box, Typography } from '@mui/material';
+import Navbar from '../components/Navbar';
 
 const EmployeeTable = () => {
   const [employees, setEmployees] = useState([]);
@@ -21,7 +23,7 @@ const EmployeeTable = () => {
         }
 
         const data = await response.json();
-        setEmployees(data.employee_data); // Adjusted for correct data structure
+        setEmployees(data.employee_data.map(emp => ({ ...emp, id: emp.user_id }))); 
       } catch (error) {
         console.error("Failed to fetch employees:", error);
       }
@@ -30,29 +32,32 @@ const EmployeeTable = () => {
     fetchEmployees();
   }, []);
 
+  const columns = [
+    { field: 'user_id', headerName: 'Employee ID', width: 150 },
+    { field: 'first_name', headerName: 'First Name', width: 150 },
+    { field: 'last_name', headerName: 'Last Name', width: 150 },
+    { field: 'role', headerName: 'Role', width: 150 },
+    { field: 'phone_number', headerName: 'Phone Number', width: 150 },
+  ];
+
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="employee table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Employee ID</TableCell>
-            <TableCell>First Name</TableCell>
-            <TableCell>Last Name</TableCell>
-            <TableCell>Role</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {employees.map((employee) => (
-            <TableRow key={employee.user_id}>
-              <TableCell component="th" scope="row">{employee.user_id}</TableCell>
-              <TableCell>{employee.first_name}</TableCell>
-              <TableCell>{employee.last_name}</TableCell>
-              <TableCell>{employee.role}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <div>
+      <Navbar />
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 12, mb: 10 }}>
+        <Typography variant="h4" sx={{ mb: 2 }}>
+          Employees Information
+        </Typography>
+        <Box sx={{ height: 400, width: '60%' }}>
+          <DataGrid
+            rows={employees}
+            columns={columns}
+            pageSize={5}
+            rowsPerPageOptions={[5]}
+            checkboxSelection
+          />
+        </Box>
+      </Box>
+    </div>
   );
 };
 
