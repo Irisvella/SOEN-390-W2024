@@ -7,11 +7,12 @@ import express from "express";
 const router = express.Router();
 import prisma from "../prisma/client";
 import jwt from "jsonwebtoken";
+import { Prisma } from "@prisma/client";
 import verifyToken from "../middleware/verify-token";
 import dotenv from "dotenv";
 dotenv.config();
-
-
+import multer from "multer";
+const upload = multer();
 
 import { Request, Response, NextFunction } from "express";
 
