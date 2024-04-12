@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import FitbitIcon from "@mui/icons-material/Fitbit";
 import UserLoginForm from "../Authentication/UserLoginForm";
 import CompanyLoginForm from "../Authentication/CompanyLoginForm";
+import EmployeeLoginForm from "../Authentication/EmployeeLoginForm";
 import Navbar from "../Navbar";
 
 const LoginPage = () => {
@@ -45,10 +46,11 @@ const LoginPage = () => {
             <select id="role" name="role" onChange={handleRoleChange}>
               <option value="user">Public User</option>
               <option value="company">Company</option>
+              <option value="employee">Employee</option>
             </select>
           </div>
 
-          {role === "company" ? <CompanyLoginForm /> : <UserLoginForm />}
+          {role === "company" ? <CompanyLoginForm /> : role === "employee" ? <EmployeeLoginForm /> : <UserLoginForm />}
 
           <Grid container justifyContent={"center"}>
             <Grid item>

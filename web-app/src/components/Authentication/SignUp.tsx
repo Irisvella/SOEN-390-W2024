@@ -4,6 +4,7 @@ import { Container, CssBaseline, Box, Avatar, Typography } from "@mui/material";
 import FitbitIcon from '@mui/icons-material/Fitbit';
 import UserSignupForm from '../Authentication/UserSignupForm';
 import CompanySignupForm from '../Authentication/CompanySignupForm';
+import EmployeeSignupForm from '../Authentication/EmployeeSignupForm';
 import Navbar from '../Navbar';
 
 const SignUp = () => {
@@ -37,10 +38,11 @@ const SignUp = () => {
             <select id ="role" name="role" onChange={handleChangeRole}>
               <option value="user">Public User</option>
               <option value="company">Company</option>
+              <option value="employee">Employee</option>
             </select>
           </div>
           <Box sx={{ mt: 3 }}></Box>
-          {role === "company" ? <CompanySignupForm /> : <UserSignupForm />}
+          {role === "company" ? <CompanySignupForm /> : role === "employee" ? <EmployeeSignupForm /> : <UserSignupForm />}
         </Box>
       </Container>
     </>
