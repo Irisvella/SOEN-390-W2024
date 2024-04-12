@@ -7,10 +7,6 @@ import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
 
-
-
-
-
 const AddOperationalCost = () => {
   const [operationalCostData, setOperationalCostData] = useState({
     propertyAddress: '',

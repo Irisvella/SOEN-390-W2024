@@ -13,6 +13,7 @@ import dashboard from "./routes/dashboard";
 import createEditListing from "./routes/createEditListing";
 import addEmployeeRouter from "./routes/addEmployee";
 import employeeList from "./routes/employeeList";
+import CreateRequest from "./routes/CreateRequest";
 import billingRouter from "./routes/billing";
 
 declare global {
@@ -39,6 +40,7 @@ app.use("/dashboard", dashboard);
 app.use("/createEditListing", createEditListing);
 app.use("/add-employee", addEmployeeRouter);
 app.use("/employeeList", employeeList);
+app.use("/CreateRequest", CreateRequest);
 app.use("/billing", billingRouter);
 
 const port = process.env.PORT || 3000;

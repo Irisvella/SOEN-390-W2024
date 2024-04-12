@@ -1,17 +1,19 @@
+// Filename: addEmployee.jsx
+// Author: Sarah Abellard, Samuel Collette, Abisan 
+// Description: Component for adding new employees to the system.
+// Dependencies: React, MUI (Material-UI)
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import { Box, Typography, TextField, Button, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 
 const AddEmployee = () => {
-  
-  // TODO: not hardcodded 
-  const companyName = 'CoolCompany';
-
+    // State for employee data
   const [employeeData, setEmployeeData] = useState({
     email: '',
     role: '',
   });
 
+  // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEmployeeData((prevData) => ({
@@ -20,7 +22,7 @@ const AddEmployee = () => {
     }));
   };
 
-  
+  // Submit form data
   const handleSubmit = async () => {
     const token = localStorage.getItem('token');
     try {
@@ -52,11 +54,12 @@ const AddEmployee = () => {
 
   return (
     <div>
-      <Navbar userName={companyName} />
+      <Navbar/>
       <Box mt={10} display="flex" flexDirection="column" alignItems="center">
         <Typography variant="h5" mb={4}>
           Add Employee
         </Typography>
+        {/* Form for adding employee */}
         <form>
           <TextField
             fullWidth
@@ -82,6 +85,7 @@ const AddEmployee = () => {
               <MenuItem value="other">Other</MenuItem>
             </Select>
           </FormControl>
+          {/* Button to submit employee data */}
           <Button variant="contained" color="primary" onClick={handleSubmit} mt={2}>
             Submit
           </Button>

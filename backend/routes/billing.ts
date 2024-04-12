@@ -13,7 +13,7 @@ const Billing = z.object({
   address: z.string().min(4),
   unitNumber: z.string(),
   amount: z.number(),
-  payBefore: z.date(),
+  payBefore: z.coerce.date(),
 });
 
 const StatusChange = z.object({
@@ -57,6 +57,7 @@ router.post(
             },
           });
           if (!propertyExists) {
+            console.log("property doesn't exist");
             return res.status(400).json({
               message: "Property with provided address does not exist",
             });
@@ -69,6 +70,7 @@ router.post(
             },
           });
           if (!condoExists) {
+            console.log("condo doesn't exist");
             return res.status(400).json({
               message: "Condo with provided unit number does not exist",
             });
@@ -81,6 +83,7 @@ router.post(
             },
           });
           if (!condoUser) {
+            console.log("no owner/renter for this condo");
             return res
               .status(400)
               .json({ message: "No current owner/renter for this condo" });

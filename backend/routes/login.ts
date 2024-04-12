@@ -46,7 +46,7 @@ router.post(
 
       const token = jwt.sign(
         {
-          exp: Math.floor(Date.now() / 1000) + 60 * 60,
+          exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
           data: {
             id: userExists.id,
             role: parsedUser.role,
