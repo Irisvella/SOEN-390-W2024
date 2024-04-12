@@ -57,8 +57,9 @@ const UserLanding = () => {
   // Define navigation items with associated routes
   const navigationItems = {
     'Owned Condos': '/dashboard-user',
-    'Make Payment': '',
-    'Add Condos': '',
+    'View Bills': '',
+    'My Request': '',
+    'My Reservation': '',
   };
 
   return (
@@ -124,8 +125,22 @@ const UserLanding = () => {
                     </SectionBox>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <SectionBox title="Make Payment" route = "">
+                    <SectionBox title="View Bills" route = "">
                       Pay the bills and view your payment history
+
+                      <ArrowForwardIosIcon /> 
+                    </SectionBox>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <SectionBox title="My Request" route = "">
+                      To view your existing requests
+
+                      <ArrowForwardIosIcon /> 
+                    </SectionBox>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <SectionBox title="My Reservation" route = "">
+                      To view your existing reservations
 
                       <ArrowForwardIosIcon /> 
                     </SectionBox>
