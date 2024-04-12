@@ -1,4 +1,5 @@
-import { Card, CardContent, Button } from "@mui/material";
+import React, { useState } from "react";
+import { Card, CardContent, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 import AspectRatio from "@mui/joy/AspectRatio";
 import Typography from '@mui/joy/Typography';
 // Define the type for each unit item
@@ -15,6 +16,42 @@ export interface UnitsProps {
 }
 
 const UnitsCards: React.FC<UnitsProps> = ({ units }) => {
+  const [openDialog, setOpenDialog] = useState<boolean>(false); // State to manage dialog visibility
+  const [currentKey, setCurrentKey] = useState<string>(""); // State to store the current key
+  const [unitsWithKeys, setUnitsWithKeys] = useState<Unit[]>(units);
+  
+  const token = localStorage.getItem('token'); 
+  const generateKey = async (unitId: string) => {
+    const response = await fetch('http://localhost:3000/registration', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        type: 'renter',
+        condoId: unitId, 
+      }),
+    });
+
+    if (!response.ok) {
+      console.error("Error generating key");
+      return;
+    }
+
+    const data = await response.json();
+    setCurrentKey(data.registrationKey); // Set the current key
+    setOpenDialog(true); // Show the dialog
+    // Update the units state with the new key
+    setUnitsWithKeys(unitsWithKeys.map(unit => 
+      unit.id === unitId ? { ...unit, registrationKey: data.registrationKey } : unit
+    ));
+  };
+  const handleClose = () => {
+    setOpenDialog(false);
+  };
+
+
   return (
     <>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}>
@@ -39,10 +76,28 @@ const UnitsCards: React.FC<UnitsProps> = ({ units }) => {
             >
               Edit
             </Button>
+            <Button
+            variant = "outlined"
+            onClick={() =>{
+              generateKey(unit.id);
+            }}>
+              Generate Key
+            </Button>
           </CardContent>
         </Card>
       ))}
       </div>
+      <Dialog open={openDialog} onClose={handleClose}>
+        <DialogTitle>Generated Key</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {currentKey}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

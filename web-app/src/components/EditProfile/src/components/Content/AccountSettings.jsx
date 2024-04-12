@@ -120,21 +120,3 @@ const updateProfile = async () => {
 }
 
 export default AccountSettings
-
-
-/*    removing  username change for now.
-      {userRole === 'publicUser' && (
-      
-      <FormControl id="userName">
-        <FormLabel>User Name</FormLabel>
-        <Input
-          focusBorderColor="brand.blue"
-          type="userName"
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
-        />
-      </FormControl>
-
-      )}
-
-*/

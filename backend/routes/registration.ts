@@ -1,5 +1,5 @@
 // Filename: registration.ts
-// Author: bt919
+// Author: bt919, Andy
 // Description: post and patch routes for registration keys
 // Dependencies: express, prisam, and jwt
 
@@ -94,6 +94,7 @@ router.post(
               start_date: parsedBody.startDate,
               end_date: parsedBody.endDate,
               condo_id: parsedBody.condoId,
+              public_user_id: 1
             },
           });
 
@@ -176,5 +177,37 @@ router.patch(
     }
   },
 );
+
+router.get(
+  "/:registrationKey",
+  verifyToken,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { registrationKey } = req.params;
+      const registration = await prisma.registration.findUnique({
+        where: {
+          registration_key: registrationKey,
+        },
+        select: {
+          registration_key: true, 
+          condo_id: true,
+          public_user_id: true,
+        },
+      });
+      if (!registration) {
+        return res.status(404).json({ message: "Registration key not found" });
+      }
+
+      return res.status(200).json({
+        message: "success",
+        data: registration,
+      });
+    } catch (err) {
+      console.log("Error from /registration GET ---- ", err);
+      return res.status(500).json({ message: "Unexpected error" });
+    }
+  },
+);
+
 
 export default router;
