@@ -1,5 +1,5 @@
 // Filename: UserLanding.jsx
-// Author: Ziyi Wang
+// Author: Ziyi Wang, Sarah Abellard
 // Description: Landing page for the public-user
 // Dependencies: React, MUI (Material-UI)
 
@@ -57,8 +57,8 @@ const UserLanding = () => {
   // Define navigation items with associated routes
   const navigationItems = {
     'Owned Condos': '/dashboard-user',
-    'View Bills': '',
-    'My Request': '',
+    'View Bills': '/UserBills',
+    'My Request': '/UserRequests',
     'My Reservation': '',
   };
 
@@ -125,21 +125,21 @@ const UserLanding = () => {
                     </SectionBox>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <SectionBox title="View Bills" route = "">
+                    <SectionBox title="View Bills" route = "/UserBills">
                       Pay the bills and view your payment history
 
                       <ArrowForwardIosIcon /> 
                     </SectionBox>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <SectionBox title="My Request" route = "">
+                    <SectionBox title="My Requests" route = "/UserRequests">
                       To view your existing requests
 
                       <ArrowForwardIosIcon /> 
                     </SectionBox>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <SectionBox title="My Reservation" route = "">
+                    <SectionBox title="My Reservations" route = "">
                       To view your existing reservations
 
                       <ArrowForwardIosIcon /> 

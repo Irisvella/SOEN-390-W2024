@@ -1,3 +1,9 @@
+
+// Filename: addEmployee.ts
+// Author: Samuel Collette, Barthan
+// Description: Backend query to add employees under a specific company's employ
+// Dependencies: jwt, prisma, express, zod
+
 import express from "express";
 const router = express.Router();
 import * as z from "zod";

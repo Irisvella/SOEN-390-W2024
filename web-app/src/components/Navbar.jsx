@@ -1,3 +1,7 @@
+// Filename: NavBar.jsx
+// Author: Andy Sun, Sarah Abellard
+// Description: Navigation bar for website
+// Dependencies: React, MUI (Material-UI)
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaBars } from "react-icons/fa";
@@ -168,6 +172,9 @@ const Navbar = ({}) => {
                 <>
                   <MenuItem onClick={() => navigate("/dashboard-user")}>
                     Dashboard
+                  </MenuItem>
+                  <MenuItem onClick={() => navigate("/UserLanding")}>
+                    Landing Page
                   </MenuItem>
                   <MenuItem onClick={() => navigate("/profiledash")}>
                     Profile
