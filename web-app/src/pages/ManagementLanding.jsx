@@ -62,7 +62,7 @@ const ManagementLanding = () => {
     'Financial System': '/ManagementFinancialOverView',
     'Reservation System': '/reservation-system',
     'Employee': '/Employeesinfo',
-    'Requests': '/requests-management',
+    'Requests': '/RequestManagementTable',
   };
 
   return (

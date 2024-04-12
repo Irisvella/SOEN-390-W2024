@@ -175,6 +175,46 @@ router.get("/viewRequests/:requestID", verifyToken, async (req: Request, res: Re
   }
 });
 
+router.patch(
+  "/update-request",
+  verifyToken,
+  async (req, res) => {
+    try {
+      const { requestId, employeeId, newStatus } = req.body;
+      const request = await prisma.requests.findUnique({ where: { id: requestId } });
+
+      if (!request) {
+        return res.status(404).json({ message: "Request not found" });
+      }
+
+      // If assigning to an employee
+      if (employeeId) {
+        const employee = await prisma.employee_users.findUnique({ where: { user_id: parseInt(employeeId) } });
+        if (!employee) {
+          return res.status(404).json({ message: "Employee not found" });
+        }
+        // Update request to in_progress and set employee
+        await prisma.requests.update({
+          where: { id: requestId },
+          data: { employee_id: parseInt(employeeId), status: 'in_progress' }
+        });
+      }
+
+      // If marking as completed, no need for an employee check
+      if (newStatus === 'completed') {
+        await prisma.requests.update({
+          where: { id: requestId },
+          data: { status: 'completed' }
+        });
+      }
+
+      return res.status(200).json({ message: "Request updated successfully" });
+    } catch (err) {
+      console.error("Error updating request:", err);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+);
 
 
 export default router;
