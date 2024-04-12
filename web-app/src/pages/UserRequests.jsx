@@ -4,7 +4,7 @@
 // Dependencies: React, MUI (Material-UI)
 import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Chip } from '@mui/material';
 import Navbar from '../components/Navbar';
 
 const UserRequests = () => {
@@ -37,15 +37,32 @@ const UserRequests = () => {
   }, []);
 
   const columns = [
-    { field: 'id', headerName: 'Request ID', width: 100 },
     { field: 'title', headerName: 'Title', width: 150 },
     { field: 'description', headerName: 'Description', width: 250 },
     { field: 'request_priority', headerName: 'Priority', width: 130 },
     { field: 'issued_at', headerName: 'Issued At', width: 180 },
     { field: 'date_needed', headerName: 'Date Needed', width: 180 },
     { field: 'address', headerName: 'Property Address', width: 180 },
+    {
+      field: 'status',
+      headerName: 'Status',
+      width: 180,
+      renderCell: (params) => {
+        const getColor = (status) => {
+          if (status === 'completed') return 'success';
+          else if (status === 'in_progress') return 'warning';
+          else return 'default'; // Assuming 'unassigned' and other statuses
+        };
 
-
+        return (
+          <Chip
+            label={params.value}
+            color={getColor(params.value)}
+            variant="outlined"
+          />
+        );
+      }
+    }
   ];
 
   return (
