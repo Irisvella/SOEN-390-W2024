@@ -117,6 +117,7 @@ CREATE TABLE reserved_by (
 );
 
 CREATE TYPE priority AS ENUM('low', 'medium', 'high');
+CREATE TYPE request_status AS ENUM('unassigned', 'in_progress', 'completed');
 
 CREATE TABLE requests (
     id SERIAL PRIMARY KEY,
@@ -124,6 +125,7 @@ CREATE TABLE requests (
     description TEXT NOT NULL,
     request_priority priority DEFAULT 'low',
     issued_at TIMESTAMP DEFAULT NOW(),
+    status request_status DEFAULT 'unassigned',
     condo_owner_id INT NOT NULL REFERENCES public_users(user_id),
     employee_id INT NOT NULL REFERENCES employee_users(user_id),
     UNIQUE (condo_owner_id, employee_id, title, issued_at)
