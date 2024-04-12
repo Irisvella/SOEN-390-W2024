@@ -21,6 +21,77 @@ const StatusChange = z.object({
   status: z.enum(["paid", "unpaid"]),
 });
 
+/*
+router.get(
+  "/",
+  verifyToken,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      jwt.verify(
+        req.token as string,
+        process.env.SECRET as jwt.Secret,
+        async (err, decoded) => {
+          if (err) {
+            console.log("err from /billing GET ---- ", err);
+            return res.status(401).json("Unauthorized");
+          }
+
+          const { id, role, email } = (<any>decoded).data;
+          if (role === "employeeUser") {
+            console.log(
+              `user with email ${email} and role employeeUser accessed /billing GET`,
+            );
+            return res.status(401).json("Unauthorized");
+          } else if (role === "publicUser") {
+            const publicUserExists = await prisma.public_users.findFirst({
+              where: {
+                user_id: id,
+              },
+              include: {
+                billing: true,
+              },
+            });
+
+            if (!publicUserExists) {
+              console.log("public user doesn't exist");
+              return res.status(401).json("Unauthorized");
+            }
+
+            return res
+              .status(200)
+              .json({ message: "success", data: publicUserExists.billing });
+          } else if (role === "company") {
+            const companyUserExists =
+              await prisma.management_companies.findFirst({
+                where: {
+                  user_id: id,
+                },
+                include: {
+                  property: {
+                    include: {
+                      condo_unit: {
+                        include: {
+                          billing: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              });
+
+            if (!companyUserExists) {
+              console.log("company user doesn't exist");
+              return res.status(401).json("Unauthorized");
+            }
+
+            const data = [];
+            const properties = companyUserExists.property;
+            for (let i = 0; i < properties.length; i += 1) {
+              const condos = properties[i].condo_unit;
+              for (let j = 0; j < condos.length; j += 1) {
+                data.push(condos[i].billing);
+*/
+
 router.post(
   "/",
   verifyToken,
@@ -108,89 +179,52 @@ router.post(
   },
 );
 
-router.get(
-  "/",
-  verifyToken,
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      jwt.verify(
-        req.token as string,
-        process.env.SECRET as jwt.Secret,
-        async (err, decoded) => {
-          if (err) {
-            console.log("err from /billing GET ---- ", err);
-            return res.status(401).json("Unauthorized");
-          }
+router.get("/all-bills", verifyToken, async (req: express.Request, res: express.Response) => {
+  try {
+      const decoded = jwt.verify(req.token as string, process.env.SECRET as jwt.Secret) as jwt.JwtPayload;
+      const { id, role } = decoded.data;
 
-          const { id, role, email } = (<any>decoded).data;
-          if (role === "employeeUser") {
-            console.log(
-              `user with email ${email} and role employeeUser accessed /billing GET`,
-            );
-            return res.status(401).json("Unauthorized");
-          } else if (role === "publicUser") {
-            const publicUserExists = await prisma.public_users.findFirst({
-              where: {
-                user_id: id,
-              },
-              include: {
-                billing: true,
-              },
-            });
-
-            if (!publicUserExists) {
-              console.log("public user doesn't exist");
-              return res.status(401).json("Unauthorized");
-            }
-
-            return res
-              .status(200)
-              .json({ message: "success", data: publicUserExists.billing });
-          } else if (role === "company") {
-            const companyUserExists =
-              await prisma.management_companies.findFirst({
-                where: {
-                  user_id: id,
-                },
-                include: {
-                  property: {
-                    include: {
+      if (role !== "company") {
+          return res.status(403).json({ message: "Unauthorized: Access is limited to company accounts only." });
+      }
+      const properties = await prisma.management_companies.findUnique({
+          where: { user_id: id },
+          include: {
+              property: {
+                  include: {
                       condo_unit: {
-                        include: {
-                          billing: true,
-                        },
-                      },
-                    },
-                  },
-                },
-              });
-
-            if (!companyUserExists) {
-              console.log("company user doesn't exist");
-              return res.status(401).json("Unauthorized");
-            }
-
-            const data = [];
-            const properties = companyUserExists.property;
-            for (let i = 0; i < properties.length; i += 1) {
-              const condos = properties[i].condo_unit;
-              for (let j = 0; j < condos.length; j += 1) {
-                data.push(condos[i].billing);
+                          include: {
+                              billing: true
+                          }
+                      }
+                  }
               }
-            }
-
-            return res.status(200).json({ message: "success", data });
           }
+      });
 
-          return res.status(500).json({ message: "Unexpected error" });
-        },
+      if (!properties || properties.property.length === 0) {
+          return res.status(404).json({ message: "No properties found." });
+      }
+      const billingData = properties.property.flatMap(property =>
+          property.condo_unit.flatMap(unit =>
+              unit.billing.map(bill => ({
+                  id: bill.id,
+                  propertyAddress: property.address,
+                  unitNumber: unit.unit_number,
+                  amount: bill.amount,
+                  payBefore: bill.pay_before,
+                  status: bill.status
+              }))
+          )
       );
-    } catch (err) {
-      console.log("err from /billing GET ---- ", err);
-      return res.status(500).json({ message: "Unexpected error" });
-    }
-  },
-);
+
+      return res.status(200).json(billingData);
+  } catch (error) {
+      console.error("Error fetching billing data:", error);
+      return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 
 router.patch(
   "/",
