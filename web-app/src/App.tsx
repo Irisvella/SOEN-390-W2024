@@ -21,6 +21,7 @@ import AddOperationalCost from './pages/AddOperationalCost.jsx';
 import CreateRequestForm from "./components/CreateRequestForm.tsx";
 import UnitsDashboard from './pages/UnitsDashboard.tsx';
 import UserRequests from './pages/UserRequests.jsx';
+import UserBills from './pages/UserBills.jsx';
 
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
             <Route path="/Employeesinfo" element={<Employeesinfo />} />
             <Route path="/Addemployee" element={<Addemployee />} />
             <Route path="/UserRequests" element={<UserRequests />} />
+            <Route path="/UserBills" element={<UserBills />} />
             <Route
               path="/CreateRequest/:propertyId"
               element={<CreateRequestForm />}
