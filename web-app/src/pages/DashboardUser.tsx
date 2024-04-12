@@ -9,39 +9,6 @@ import "../App.css";
 const DashboardUser = () => {
   const [properties, setProperties] = useState<Property[]>([]);
   const navigate = useNavigate();
-  /*
-  const userProperties: Property[] = [
-    {
-      id: "1",
-      imageUrl:
-        "https://accescondos.org/app/uploads/2016/09/fc6_persp_principale.jpg",
-      address: "123 Main St",
-      propertyType: "user",
-    },
-    {
-      id: "2",
-      imageUrl:
-        "https://www.mtlblog.com/media-library/image.jpg?id=26904974&width=1200&height=600&coordinates=0%2C83%2C0%2C83",
-      address: "456 Elm St",
-      propertyType: "user",
-    },
-    {
-      id: "3",
-      imageUrl:
-        "https://images.dailyhive.com/20210429115610/apartment-3636437.jpeg",
-      address: "789 Pine St",
-      propertyType: "user",
-    },
-    {
-      id: "4",
-      imageUrl:
-        "https://www.placedufresne.com/images/slider/appartement_a_montreal_louer.jpg",
-      address: "225 Marc St",
-      propertyType: "user",
-    },
-    // Add more properties as needed
-  ];
-*/
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
