@@ -14,7 +14,7 @@ const UserRequests = () => {
     const fetchRequests = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:3000/CreateRequest/my-requests', {
+        const response = await fetch('http://localhost:3000/CreateRequest/viewRequests', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -40,10 +40,9 @@ const UserRequests = () => {
     { field: 'id', headerName: 'Request ID', width: 100 },
     { field: 'title', headerName: 'Title', width: 150 },
     { field: 'description', headerName: 'Description', width: 250 },
-    { field: 'requestPriority', headerName: 'Priority', width: 130 },
-    { field: 'issuedAt', headerName: 'Issued At', width: 180 },
-    { field: 'dateNeeded', headerName: 'Date Needed', width: 180 },
-    { field: 'propertyAddress', headerName: 'Property Address', width: 200 },
+    { field: 'request_priority', headerName: 'Priority', width: 130 },
+    { field: 'issued_at', headerName: 'Issued At', width: 180 },
+    { field: 'date_needed', headerName: 'Date Needed', width: 180 },
   ];
 
   return (
