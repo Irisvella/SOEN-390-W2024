@@ -1,3 +1,7 @@
+// Filename: UserBills.ts
+// Author: Sarah Abellard
+// Description: Page for viewing bills associated to a public user
+// Dependencies: React, MUI (Material-UI)
 import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Box, Typography, CircularProgress, Chip } from '@mui/material';

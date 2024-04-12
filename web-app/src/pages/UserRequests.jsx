@@ -1,5 +1,5 @@
 // Filename: UserRequests.jsx
-// Author: Sarah Abellard, Samuel Collette
+// Author: Sarah Abellard
 // Description: Component for showing user requests
 // Dependencies: React, MUI (Material-UI)
 import React, { useEffect, useState } from 'react';

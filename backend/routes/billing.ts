@@ -1,3 +1,7 @@
+// Filename: Billing.ts
+// Author: Barthan, Sarah Abellard
+// Description: Routes for the backend of financial system
+// Dependencies: React, MUI (Material-UI)
 import express from "express";
 const router = express.Router();
 import * as z from "zod";

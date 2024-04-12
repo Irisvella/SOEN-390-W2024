@@ -1,5 +1,5 @@
 // Filename: UserLanding.jsx
-// Author: Ziyi Wang
+// Author: Ziyi Wang, Sarah Abellard
 // Description: Landing page for the public-user
 // Dependencies: React, MUI (Material-UI)
 
