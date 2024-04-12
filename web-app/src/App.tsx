@@ -21,6 +21,7 @@ import CreateRequestForm from "./components/CreateRequestForm.tsx";
 import UnitsDashboard from './pages/UnitsDashboard.tsx';
 
 
+
 function App() {
   const isAuthenticated = !!localStorage.getItem("token");
 
@@ -43,7 +44,7 @@ function App() {
             <Route path="/ProfileDash" element={<MinApp />} />
             <Route path="/dashboard-user" element={<DashboardUser />} />
             <Route path="/dashboard-company" element={<DashboardCompany />} />
-            <Route path="/Employeesinfo/:propertyId" element={<Employeesinfo />} />
+            <Route path="/Employeesinfo" element={<Employeesinfo />} />
             <Route path="/Addemployee" element={<Addemployee />} />
             <Route
               path="/CreateRequest/:propertyId"
