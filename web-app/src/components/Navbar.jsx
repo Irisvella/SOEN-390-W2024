@@ -169,6 +169,9 @@ const Navbar = ({}) => {
                   <MenuItem onClick={() => navigate("/dashboard-user")}>
                     Dashboard
                   </MenuItem>
+                  <MenuItem onClick={() => navigate("/UserLanding")}>
+                    Landing Page
+                  </MenuItem>
                   <MenuItem onClick={() => navigate("/profiledash")}>
                     Profile
                   </MenuItem>
