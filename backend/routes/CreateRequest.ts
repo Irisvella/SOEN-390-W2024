@@ -12,6 +12,7 @@ require("dotenv").config();
 
 import { Request, Response, NextFunction } from "express";
 import  {priority}  from "@prisma/client";
+import {request_status} from "@prisma/client";
 
 interface requests {
   id: number;
@@ -23,6 +24,7 @@ interface requests {
   employee_id: number;
   date_needed: Date;
   property_id: number;
+  status: request_status;
   
 }
 
