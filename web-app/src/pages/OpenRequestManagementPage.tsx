@@ -1,4 +1,5 @@
-
+// OpenRequestManagementPage.tsx
+import React from 'react';
 import { CssVarsProvider } from '@mui/joy/styles';
 import CssBaseline from '@mui/joy/CssBaseline';
 import Box from '@mui/joy/Box';
@@ -12,25 +13,27 @@ import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 
 import Sidebar from '../components/Sidebar';
-import OrderRequestManagementForm from '../components/OpenRequestManagementForm';
+import OpenRequestManagementForm from '../components/OpenRequestManagementForm';
 import OrderList from '../components/OrderList';
 import Header from '../components/Header';
 
-
-
-
-
+// Add your property details here
+const propertyDetails = {
+  name: "36 Lee drive",
+  address: "H8B 3M6"
+};
 
 export default function OpenRequestManagementPage() {
+  // You can manage state or perform other logic here
+
   return (
     <CssVarsProvider disableTransitionOnChange>
       <CssBaseline />
-      <Box sx={{ display: 'flex', minHeight: '100dvh' }}>
+      <Box sx={{ display: 'flex', minHeight: '100vh' }}>
         <Header />
         <Sidebar />
         <Box
           component="main"
-          className="MainContent"
           sx={{
             px: { xs: 2, md: 6 },
             pt: {
@@ -43,65 +46,57 @@ export default function OpenRequestManagementPage() {
             display: 'flex',
             flexDirection: 'column',
             minWidth: 0,
-            height: '100dvh',
+            height: '100vh',
             gap: 1,
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Breadcrumbs
-              size="sm"
-              aria-label="breadcrumbs"
-              separator={<ChevronRightRoundedIcon />}
-              sx={{ pl: 0 }}
-            >
-              <Link
-                underline="none"
-                color="neutral"
-                href="#some-link"
-                aria-label="Home"
-              >
-                <HomeRoundedIcon />
-              </Link>
-              <Link
-                underline="hover"
-                color="neutral"
-                href="#some-link"
-                fontSize={12}
-                fontWeight={500}
-              >
-                Dashboard
-              </Link>
-              <Typography color="primary" fontWeight={500} fontSize={12}>
-                Orders
-              </Typography>
-            </Breadcrumbs>
-          </Box>
-          <Box
-            sx={{
-              display: 'flex',
-              mb: 1,
-              gap: 1,
-              flexDirection: { xs: 'column', sm: 'row' },
-              alignItems: { xs: 'start', sm: 'center' },
-              flexWrap: 'wrap',
-              justifyContent: 'space-between',
-            }}
-          >
-            <Typography level="h2" component="h1">
-              Orders
-            </Typography>
-            <Button
-              color="primary"
-              startDecorator={<DownloadRoundedIcon />}
-              size="sm"
-            >
-              Download PDF
-            </Button>
-          </Box>
-          <OrderRequestManagementForm />
-          <OrderList />
-        </Box>
-      </Box>
-    </CssVarsProvider>
-  );
+          <Breadcrumbs
+            size
+="sm"
+aria-label="breadcrumbs"
+separator={<ChevronRightRoundedIcon />}
+>
+<Link underline="none" color="neutral" href="#home" aria-label="Home">
+<HomeRoundedIcon />
+</Link>
+<Link underline="hover" color="neutral" href="#dashboard" fontSize={12} fontWeight={500}>
+Dashboard
+</Link>
+<Typography color="primary" fontWeight={500} fontSize={12}>
+Open Requests
+</Typography>
+</Breadcrumbs>
+<Box
+sx={{
+display: 'flex',
+mb: 1,
+gap: 1,
+flexDirection: { xs: 'column', sm: 'row' },
+alignItems: { xs: 'start', sm: 'center' },
+flexWrap: 'wrap',
+justifyContent: 'space-between',
+}}
+>
+<Typography level="h2" component="h1">
+Open Requests
+</Typography>
+<Button
+color="primary"
+startDecorator={<DownloadRoundedIcon />}
+size="sm"
+>
+Download PDF
+</Button>
+</Box>
+{/* Property Name and Address */}
+<Box sx={{ my: 2 }}>
+  <Typography level="h4" component="h2">{propertyDetails.name}</Typography>
+  <Typography>{propertyDetails.address}</Typography>
+</Box>
+<OpenRequestManagementForm />
+<OrderList />
+</Box>
+</Box>
+</CssVarsProvider>
+);
 }

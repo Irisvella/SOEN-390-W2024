@@ -18,7 +18,8 @@ import AddUnit from './pages/AddUnit.jsx';
 import CreateBillRequest from './pages/CreateBillRequest.jsx';
 import ManagementFinancialOverview from './pages/ManagementFinancialOverview.jsx';
 import AddOperationalCost from './pages/AddOperationalCost.jsx';
-
+import ReservationUser from './pages/ReservationUser.tsx';
+import ReservationCompany from './pages/ReservationCompany.tsx';
 
 function App() {
   const isAuthenticated = !!localStorage.getItem('token');
@@ -51,6 +52,9 @@ function App() {
             <Route path="/createbillrequest" element={<CreateBillRequest/>} />
             <Route path="/ManagementFinancialOverview" element={<ManagementFinancialOverview/>} />
             <Route path="/AddOperationalCost" element={<AddOperationalCost/>} />
+            <Route path="/ReservationUser" element={<ReservationUser/>} />
+            <Route path="/ReservationCompany" element={<ReservationCompany/>} />
+
           </>
         ) : null}
       </Routes>
