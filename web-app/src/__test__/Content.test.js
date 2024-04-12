@@ -41,9 +41,4 @@ describe('Content Component', () => {
     fireEvent.click(screen.getByText('To dashboard'));
     expect(screen.getByText('Dashboard User Page')).toBeInTheDocument();
   });
-
-  test('renders Actions component', () => {
-    renderContent();
-    expect(screen.getByTestId("update")).toBeInTheDocument();
-  });
 });

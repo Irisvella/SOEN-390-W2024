@@ -86,7 +86,7 @@ CREATE TABLE registration ( -- omitted company_id since it could be found using 
     issued_at TIMESTAMP DEFAULT NOW(),
     start_date TIMESTAMP DEFAULT NOW(),
     end_date TIMESTAMP, -- null means ongoing renter or owner
-    public_user_id INT NOT NULL REFERENCES public_users(user_id) ON DELETE CASCADE,
+    public_user_id INT REFERENCES public_users(user_id) ON DELETE CASCADE,
     condo_id INT NOT NULL REFERENCES condo_unit(id) ON DELETE CASCADE,
     UNIQUE (condo_id, end_date) -- only one person at a time can own/rent a specific property
 );
@@ -119,13 +119,14 @@ CREATE TABLE reserved_by (
 CREATE TYPE priority AS ENUM('low', 'medium', 'high');
 
 CREATE TABLE requests (
+    id SERIAL PRIMARY KEY,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     request_priority priority DEFAULT 'low',
     issued_at TIMESTAMP DEFAULT NOW(),
     condo_owner_id INT NOT NULL REFERENCES public_users(user_id),
     employee_id INT NOT NULL REFERENCES employee_users(user_id),
-    PRIMARY KEY (condo_owner_id, employee_id, title, issued_at)
+    UNIQUE (condo_owner_id, employee_id, title, issued_at)
 );
 
 CREATE TYPE file_type AS ENUM('declarations', 'annual budgets', 'board meeting minutes', 'other');

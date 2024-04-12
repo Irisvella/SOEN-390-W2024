@@ -81,7 +81,8 @@ describe('UserLoginForm', () => {
     fireEvent.click(screen.getByRole('button', { name: /login/i }));
 
     await waitFor(() => {
-      expect(window.location.href).toBe('/dashboard-user');
+      expect(window.location.href).toBe('/UserLanding');
+
     });
   });
 });

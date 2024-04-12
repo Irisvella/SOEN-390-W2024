@@ -1,3 +1,7 @@
+// Filename: Billing.ts
+// Author: Sarah Abellard
+// Description: Form to add operational costs to database
+// Dependencies: React, MUI (Material-UI)
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Box from '@mui/material/Box';
@@ -6,102 +10,106 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
+import Alert from '@mui/material/Alert';
 
 const AddOperationalCost = () => {
   const [operationalCostData, setOperationalCostData] = useState({
     propertyAddress: '',
     amount: '',
     description: '',
-    date: null, // Add date field to state
+    date: ''
   });
   
-
   const [errors, setErrors] = useState({
     propertyAddress: false,
     amount: false,
     description: false,
-    propertyNotFound: false, // New state for property not found error
+    date: false,
+    general: ''
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setOperationalCostData((prevData) => ({
+    setOperationalCostData(prevData => ({
       ...prevData,
-      [name]: value,
+      [name]: value
     }));
-    setErrors((prevErrors) => ({
+    setErrors(prevErrors => ({
       ...prevErrors,
-      [name]: value ? false : true,
-      propertyNotFound: false, // Reset property not found error when input changes
+      [name]: !value,
+      general: ''
     }));
   };
 
-  const handleDateChange = (date) => {
-    setOperationalCostData((prevData) => ({
-      ...prevData,
-      date: date,
-    }));
-  };
-  
-
-  const handleSubmit = () => {
-    if (!operationalCostData.propertyAddress || !operationalCostData.amount || !operationalCostData.description) {
+  const handleSubmit = async () => {
+    const { propertyAddress, amount, description, date } = operationalCostData;
+    if (!propertyAddress || !amount || !description || !date) {
       setErrors({
-        propertyAddress: !operationalCostData.propertyAddress,
-        amount: !operationalCostData.amount,
-        description: !operationalCostData.description,
-        propertyNotFound: false, // Reset property not found error if other errors are present
+        propertyAddress: !propertyAddress,
+        amount: !amount,
+        description: !description,
+        date: !date,
+        general: 'Please fill in all fields.'
       });
       return;
     }
-    if (isNaN(operationalCostData.amount)) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        amount: true,
-        propertyNotFound: false, // Reset property not found error if other errors are present
-      }));
-      return;
-    }
-    // Check if the property exists (You need to implement this logic)
-    const propertyExists = checkPropertyExists(operationalCostData.propertyAddress); // Implement this function
-    if (!propertyExists) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        propertyNotFound: true,
-      }));
-      return;
-    }
-    // Add your submit logic here
-    console.log('Operational cost data submitted:', operationalCostData);
-    // Optionally, reset the form
-    setOperationalCostData({
-      propertyAddress: '',
-      amount: '',
-      description: '',
-    });
-    setErrors({
-      propertyAddress: false,
-      amount: false,
-      description: false,
-      propertyNotFound: false,
-    });
-  };
 
-  const checkPropertyExists = (propertyAddress) => {
-    // You need to implement the logic to check if the property exists based on the given property address
-    // This can be an API call or checking in a local database
-    // For now, let's assume the property always exists
-    return true;
+    fetch('http://localhost:3000/billing/operational-costs', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify({
+        propertyAddress,
+        amount: Number(amount),
+        description,
+        date: new Date(date).toISOString()
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.message !== "success") {
+        setErrors(prevErrors => ({
+          ...prevErrors,
+          general: data.message || 'Failed to add operational cost'
+        }));
+      } else {
+        setOperationalCostData({
+          propertyAddress: '',
+          amount: '',
+          description: '',
+          date: ''
+        });
+        setErrors({
+          propertyAddress: false,
+          amount: false,
+          description: false,
+          date: false,
+          general: 'Operational cost added successfully!'
+        });
+      }
+    })
+    .catch(error => {
+      console.error('Failed to add operational cost:', error);
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        general: 'Failed to add operational cost'
+      }));
+    });
   };
 
   return (
     <div>
       <Navbar />
       <Box mt={10} display="flex" flexDirection="column" alignItems="center">
-        <Typography variant="h6">
-          Add Operational Cost
-        </Typography>
+        <Typography variant="h6">Add Operational Cost</Typography>
         <Box mt={2} width="80%">
+          {errors.general && (
+            <Alert severity={errors.general.includes('successfully') ? 'success' : 'error'} sx={{ mb: 2 }}>
+              {errors.general}
+            </Alert>
+          )}
           <FormControl fullWidth variant="outlined" error={errors.propertyAddress}>
             <TextField
               label="Property Address"
@@ -111,18 +119,19 @@ const AddOperationalCost = () => {
               onChange={handleChange}
               margin="normal"
             />
-            {errors.propertyAddress && <FormHelperText>This field is required</FormHelperText>}
+            {errors.propertyAddress && <FormHelperText>This field is required.</FormHelperText>}
           </FormControl>
           <FormControl fullWidth variant="outlined" error={errors.amount}>
             <TextField
               label="Amount"
               variant="outlined"
               name="amount"
+              type="number"
               value={operationalCostData.amount}
               onChange={handleChange}
               margin="normal"
             />
-            {errors.amount && <FormHelperText>Please enter a valid number</FormHelperText>}
+            {errors.amount && <FormHelperText>Please enter a valid number.</FormHelperText>}
           </FormControl>
           <FormControl fullWidth variant="outlined" error={errors.description}>
             <TextField
@@ -133,32 +142,22 @@ const AddOperationalCost = () => {
               onChange={handleChange}
               margin="normal"
             />
-            {errors.description && <FormHelperText>This field is required</FormHelperText>}
+            {errors.description && <FormHelperText>This field is required.</FormHelperText>}
           </FormControl>
-          {errors.propertyNotFound && (
-            <Typography variant="body2" color="error">
-              Property not found. Please check the address.
-            </Typography>
-          )}
-        <FormControl fullWidth variant="outlined" margin="normal" error={errors.date}>
-        <TextField
-          label="Due Date"
-          type="date"
-          variant="outlined"
-          name="date"
-          value={operationalCostData.date}
-          onChange={handleChange}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-        {errors.date && <FormHelperText>This field is required</FormHelperText>}
-      </FormControl>
-
-
-
-
-          <Button variant="contained" color="primary" onClick={handleSubmit} mt={2}>
+          <FormControl fullWidth variant="outlined" error={errors.date}>
+            <TextField
+              label="Due Date"
+              type="date"
+              variant="outlined"
+              name="date"
+              value={operationalCostData.date}
+              onChange={handleChange}
+              InputLabelProps={{ shrink: true }}
+              margin="normal"
+            />
+            {errors.date && <FormHelperText>This field is required.</FormHelperText>}
+          </FormControl>
+          <Button variant="contained" color="primary" onClick={handleSubmit} sx={{ mt: 3 }}>
             Submit
           </Button>
         </Box>
@@ -168,4 +167,3 @@ const AddOperationalCost = () => {
 };
 
 export default AddOperationalCost;
-

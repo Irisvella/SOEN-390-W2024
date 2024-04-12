@@ -1,6 +1,7 @@
 import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
 
 import AccountSettings from './AccountSettings'
+import AddUnit from './AddUnit'
 import Actions from './Actions'
 import { Link } from 'react-router-dom'
 
@@ -58,10 +59,11 @@ const Content = () => {
                   <Link style={{color: "white"}} to= "/dashboard-user" className='to-dashboard'> To dashboard </Link>
             </buttton>
           </TabPanel>
+          <TabPanel>
+            <AddUnit />
+          </TabPanel> 
         </TabPanels>
       </Tabs>
-
-      <Actions />
     </Box>
   )
 }
