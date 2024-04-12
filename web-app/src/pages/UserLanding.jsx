@@ -132,14 +132,14 @@ const UserLanding = () => {
                     </SectionBox>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <SectionBox title="My Request" route = "">
+                    <SectionBox title="My Requests" route = "/UserRequests">
                       To view your existing requests
 
                       <ArrowForwardIosIcon /> 
                     </SectionBox>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <SectionBox title="My Reservation" route = "">
+                    <SectionBox title="My Reservations" route = "">
                       To view your existing reservations
 
                       <ArrowForwardIosIcon /> 
