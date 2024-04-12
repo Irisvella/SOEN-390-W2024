@@ -1,31 +1,42 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import Navbar from '../Navbar';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import { Typography } from '@mui/material';
 
 const columns = [
-  { field: 'propertyAddress', headerName: 'Property Address', width: 200 },
-  { field: 'amount', headerName: 'Amount', width: 150, editable: true },
+  { field: 'propertyAddress', headerName: 'Property Address', width: 300 },
+  { field: 'amount', headerName: 'Amount', width: 150 },
   { field: 'description', headerName: 'Description', width: 300 },
-  { field: 'date', headerName: 'Date', width: 150 }, // New column for date
-];
-
-const initialRows = [
-  { id: 1, propertyAddress: '123 Main St', amount: 100, description: 'Operational cost 1', date: '2024-03-17' },
-  { id: 2, propertyAddress: '456 Elm St', amount: 150, description: 'Operational cost 2', date: '2024-03-18' },
-  { id: 3, propertyAddress: '789 Oak St', amount: 120, description: 'Operational cost 3', date: '2024-03-19' },
+  { field: 'paidOn', headerName: 'Paid On', width: 150 },
 ];
 
 const OperationalCostsTable = () => {
-  const [rows, setRows] = useState(initialRows);
-  const [selectedRow, setSelectedRow] = useState(null);
+  const [rows, setRows] = useState([]);
 
-  const handleCellClick = (params) => {
-    setSelectedRow(params.row);
-  };
+  useEffect(() => {
+    fetch('http://localhost:3000/billing//all-operational-costs', {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
+      },
+    })
+    .then(response => response.json())
+    .then(data => {
+      setRows(data.map(cost => ({
+        id: cost.id,
+        propertyAddress: cost.propertyAddress,
+        amount: cost.amount, // Ensure amount is properly formatted
+        description: cost.description,
+        paidOn: cost.paidOn, // Assuming paidOn is the date the operational cost was paid or recorded
+      })));
+    })
+    .catch(error => console.error('Failed to fetch operational costs:', error));
+  }, []);
 
   return (
     <div>
+      <Navbar />
       <Box mt={10} display="flex" flexDirection="column" alignItems="center">
         <Typography variant="h6">
           Operational Costs
@@ -35,8 +46,6 @@ const OperationalCostsTable = () => {
           columns={columns}
           pageSize={5}
           checkboxSelection
-          onCellClick={handleCellClick}
-          onSelectionModelChange={(newSelection) => setSelectedRow(rows.find(row => row.id === newSelection.selectionModel[0]))}
         />
       </Box>
     </div>
@@ -44,4 +53,3 @@ const OperationalCostsTable = () => {
 };
 
 export default OperationalCostsTable;
-
