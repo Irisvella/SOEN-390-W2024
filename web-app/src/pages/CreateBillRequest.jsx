@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, TextField, Button, Typography, Alert, Container } from '@mui/material';
-import Grid from '@mui/material/Grid';  // Import Grid from MUI for layout
+import Grid from '@mui/material/Grid'; 
 import Navbar from '../components/Navbar';
 
 const CreateBillRequest = () => {
