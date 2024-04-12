@@ -119,26 +119,52 @@ router.get("/viewRequests", verifyToken, async (req: Request, res: Response) => 
           if (role === "company"){
             const requestList = await prisma.$queryRaw<
             requests[]
-            >`select * 
-            from requests
-            where property_id in (
-              select id
-              from property
-              where company_id = ${id}
-            )
+            >`select r.*, p.address
+            from requests as r, property as p
+            where r.property_id = p.id and p.company_id = ${id}
             `;
             res.json(requestList);
             console.log(requestList);
           } else if (role === "publicUser"){
             const requestList = await prisma.$queryRaw<
             requests[]
-            >`select * 
-            from requests
-            where condo_owner_id = ${id}
+            >`select r.*, p.address
+            from requests as r, property as p
+            where condo_owner_id = ${id} and r.property_id = p.id
             `;
             res.json(requestList);
             console.log(requestList);
           }
+          
+  }});
+  } catch (error) {
+    console.error('Failed to get requests:', error);
+    res.status(500).send('Error fetching requests');
+  }
+});
+
+router.get("/viewRequests/:requestID", verifyToken, async (req: Request, res: Response) => {
+  try {
+
+    jwt.verify(
+      req.token as string,
+      process.env.SECRET as jwt.Secret,
+      async (err, decoded) => {
+        if (err) {
+          return res.status(401).json("Unauthorized");
+        } else {
+          console.log("decoded ---- ", decoded);
+          const { id, role, email } = (<any>decoded).data;
+          const body = req.body;
+          const request = await prisma.requests.findFirst({
+            where: {
+              id: body.requestID
+
+            },
+          });
+          res.json(request);
+          console.log(request);
+
           
   }});
   } catch (error) {
