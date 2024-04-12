@@ -78,7 +78,7 @@ router.post(
               }
 
               await createRequest(
-                parseInt(body.property_id),
+                parseInt(body.propertyId),
                 id,
                 body.requestType,
                 body.requestReason,
