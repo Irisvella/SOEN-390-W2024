@@ -82,8 +82,8 @@ router.post(
               end_date: null,
             },
           });
-          if (!condoUser) {
-            console.log("no owner/renter for this condo");
+          if (!condoUser || !condoUser.public_user_id) {
+
             return res
               .status(400)
               .json({ message: "No current owner/renter for this condo" });
