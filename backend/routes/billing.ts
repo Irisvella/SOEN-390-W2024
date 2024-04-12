@@ -21,6 +21,13 @@ const StatusChange = z.object({
   status: z.enum(["paid", "unpaid"]),
 });
 
+const OperationalCostSchema = z.object({
+  propertyAddress: z.string(),
+  amount: z.number(),
+  description: z.string(),
+  date: z.coerce.date(), 
+});
+
 /*
 router.get(
   "/",
@@ -309,5 +316,116 @@ router.patch(
     }
   },
 );
+
+router.post(
+  "/operational-costs",
+  verifyToken,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      jwt.verify(
+        req.token as string,
+        process.env.SECRET as jwt.Secret,
+        async (err, decoded) => {
+          if (err) {
+            console.log("err from /operational-costs POST ---- ", err);
+            return res.status(401).json("Unauthorized");
+          }
+
+          const { id, role, email } = (<any>decoded).data;
+          if (role !== "company") {
+            console.log(
+              `user with email ${email} and role ${role} tried to access /operational-costs POST`,
+            );
+            return res.status(401).json("Unauthorized");
+          }
+
+          const OperationalCostSchema = z.object({
+            propertyAddress: z.string(),
+            amount: z.number(),
+            description: z.string(),
+            date: z.coerce.date(),
+          });
+
+          const parse = OperationalCostSchema.safeParse(req.body);
+          if (!parse.success) {
+            console.log(parse.error.issues);
+            return res.status(400).json(parse.error.issues);
+          }
+
+          const { propertyAddress, amount, description, date } = parse.data;
+          const propertyExists = await prisma.property.findFirst({
+            where: {
+              company_id: id,
+              address: propertyAddress,
+            },
+          });
+
+          if (!propertyExists) {
+            console.log("property doesn't exist");
+            return res.status(404).json({
+              message: "Property with provided address does not exist",
+            });
+          }
+
+          const newOperationalCost = await prisma.operating_fees.create({
+            data: {
+              property_id: propertyExists.id,
+              fee: amount,
+              description: description,
+              payed_on: date,
+            },
+          });
+
+          return res.status(201).json({ message: "Operational cost added successfully", data: newOperationalCost });
+        },
+      );
+    } catch (err) {
+      console.log("err from /operational-costs POST ---- ", err);
+      return res.status(500).json({ message: "Unexpected error" });
+    }
+  }
+);
+
+router.get("/all-operational-costs", verifyToken, async (req: express.Request, res: express.Response) => {
+  try {
+      const decoded = jwt.verify(req.token as string, process.env.SECRET as jwt.Secret) as jwt.JwtPayload;
+      const { id, role } = decoded.data;
+
+      if (role !== "company") {
+          return res.status(403).json({ message: "Unauthorized: Access is limited to company accounts only." });
+      }
+
+      const properties = await prisma.management_companies.findUnique({
+          where: { user_id: id },
+          include: {
+              property: {
+                  include: {
+                      operating_fees: true // Assuming operating fees are directly related to properties
+                  }
+              }
+          }
+      });
+
+      if (!properties || properties.property.length === 0) {
+          return res.status(404).json({ message: "No properties found." });
+      }
+
+      const operationalCostsData = properties.property.flatMap(property =>
+          property.operating_fees.map(fee => ({
+              id: fee.id,
+              propertyAddress: property.address,
+              amount: fee.fee,
+              description: fee.description,
+              paidOn: fee.payed_on ? fee.payed_on.toISOString().split('T')[0] : 'Not Paid'
+          }))
+      );
+
+      return res.status(200).json(operationalCostsData);
+  } catch (error) {
+      console.error("Error fetching operational costs data:", error);
+      return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 
 export default router;
