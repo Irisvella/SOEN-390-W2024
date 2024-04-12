@@ -123,8 +123,7 @@ const PropertySlider: React.FC<PropertySliderProps> = ({ properties }) => {
           <div className="property-details">
             <h3>{property.unit_number} - {property.address}</h3>
             <div className="property-actions">
-              <Button variant="outlined">View Requests</Button>
-              <Button variant="outlined">Financial Information</Button>
+              <Button variant="outlined">Reserve Amenities</Button>
               <Button
                 variant="outlined"
                 onClick={() => navigate(`/CreateRequest/${property.id}`)}
