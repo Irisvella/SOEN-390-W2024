@@ -43,6 +43,9 @@ const UserRequests = () => {
     { field: 'request_priority', headerName: 'Priority', width: 130 },
     { field: 'issued_at', headerName: 'Issued At', width: 180 },
     { field: 'date_needed', headerName: 'Date Needed', width: 180 },
+    { field: 'address', headerName: 'Property Address', width: 180 },
+
+
   ];
 
   return (
