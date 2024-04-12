@@ -40,7 +40,8 @@ const UnitsCards: React.FC<UnitsProps> = ({ units }) => {
     }
 
     const data = await response.json();
-    setCurrentKey(data.registrationKey); // Set the current key
+    console.log(data.data);
+    setCurrentKey(data.data.registrationKey); // Set the current key
     setOpenDialog(true); // Show the dialog
     // Update the units state with the new key
     setUnitsWithKeys(unitsWithKeys.map(unit => 
