@@ -428,4 +428,86 @@ router.get("/all-operational-costs", verifyToken, async (req: express.Request, r
 });
 
 
+
+router.get('/financial-report', verifyToken, async (req: express.Request, res: express.Response) => {
+  try {
+      const decoded = jwt.verify(req.token as string, process.env.SECRET as jwt.Secret) as jwt.JwtPayload;
+      const { id, role } = decoded.data;
+
+      if (role !== "company") {
+          return res.status(403).json({ message: "Unauthorized: Access is limited to company accounts only." });
+      }
+
+      const { startDate, endDate } = req.query;
+
+      // Validate the date range provided in the request
+      if (!startDate || !endDate) {
+          return res.status(400).json({ message: "Bad request: Start date and end date are required." });
+      }
+
+      const properties = await prisma.management_companies.findUnique({
+          where: { user_id: id },
+          include: {
+              property: {
+                  include: {
+                      operating_fees: {
+                          where: {
+                              payed_on: {
+                                  gte: new Date(startDate as string),
+                                  lte: new Date(endDate as string)
+                              }
+                          }
+                      },
+                      condo_unit: {
+                          include: {
+                              billing: {
+                                  where: {
+                                      pay_before: {
+                                          gte: new Date(startDate as string),
+                                          lte: new Date(endDate as string)
+                                      },
+                                      status: 'paid'
+                                  }
+                              }
+                          }
+                      }
+                  }
+              }
+          }
+      });
+
+      if (!properties || properties.property.length === 0) {
+          return res.status(404).json({ message: "No properties or financial records found." });
+      }
+
+      // Calculating totals
+      let sentBillsTotal = 0;
+      let operationalCostsTotal = 0;
+
+      properties.property.forEach(property => {
+          property.operating_fees.forEach(fee => {
+              operationalCostsTotal += Number(fee.fee);
+          });
+          property.condo_unit.forEach(unit => {
+              unit.billing.forEach(bill => {
+                  sentBillsTotal += Number(bill.amount);
+              });
+          });
+      });
+
+      return res.status(200).json({
+          message: "success",
+          sentBillsTotal,
+          operationalCostsTotal,
+          summaryTotal: sentBillsTotal - operationalCostsTotal
+      });
+
+  } catch (error) {
+      console.error("Error fetching financial report data:", error);
+      return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
+
 export default router;
