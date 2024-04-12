@@ -1,6 +1,6 @@
-// Filename: ManagementLanding.jsx
+// Filename: UserLanding.jsx
 // Author: Ziyi Wang
-// Description: Landing page for the company
+// Description: Landing page for the public-user
 // Dependencies: React, MUI (Material-UI)
 
 import React from 'react';
@@ -19,7 +19,6 @@ import {
   ListItemText,
   Divider,
   CardActionArea,
-
 } from '@mui/material';
 import { Link } from 'react-router-dom'; // Import Link for navigation
 import "../App.css";
@@ -54,15 +53,13 @@ const SectionBox = ({ title, children, route }) => (
  
 );
 
-const ManagementLanding = () => {
+const UserLanding = () => {
   // Define navigation items with associated routes
   const navigationItems = {
-    'Property Dashboard': '/dashboard-company',
-    'Manage Condo Listing': '/CreateListingPage',
-    'Financial System': '/ManagementFinancialOverView',
-    'Reservation System': '/reservation-system',
-    'Employee': '/Employeesinfo',
-    'Requests': '/requests-management',
+    'Owned Condos': '/dashboard-user',
+    'View Bills': '',
+    'My Request': '',
+    'My Reservation': '',
   };
 
   return (
@@ -108,6 +105,7 @@ const ManagementLanding = () => {
             {/* Main Content */}
             <Container maxWidth="md">
               <Box sx={{
+                height: 500,
                 backgroundColor: 'white',
                 borderRadius: '8px',
                 boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
@@ -117,31 +115,33 @@ const ManagementLanding = () => {
                 alignItems: 'center',
               }}>
                 <Typography variant="h4" sx={{ mb: 4 }}>
-                  Welcome, Condo Management User!
+                  Welcome to User Landing!
                 </Typography>
                 <Grid container spacing={3}>
-                  {/* Use SectionBox with a route prop */}
                   <Grid item xs={12} sm={6}>
-                    <SectionBox title="Property Dashboard" route = "/dashboard-company">
-                      Owned properties with employee list and request management features
+                    <SectionBox title="Owned Condos" route = "/dashboard-user">
+                      Owned condos with request handling and financial information
                       <ArrowForwardIosIcon /> 
                     </SectionBox>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <SectionBox title="Manage Condo Listing" route = "/CreateListingPage">
-                      Here you can manage and access condo-related documents and files
+                    <SectionBox title="View Bills" route = "">
+                      Pay the bills and view your payment history
+
                       <ArrowForwardIosIcon /> 
                     </SectionBox>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <SectionBox title="Financial System" route = "/ManagementFinancialOverView">
-                      Overview of financial operations, such as billing, and payments
+                    <SectionBox title="My Request" route = "">
+                      To view your existing requests
+
                       <ArrowForwardIosIcon /> 
                     </SectionBox>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <SectionBox title="Reservation System" route = "">
-                      Residents can book amenities and services available in the condo.
+                    <SectionBox title="My Reservation" route = "">
+                      To view your existing reservations
+
                       <ArrowForwardIosIcon /> 
                     </SectionBox>
                   </Grid>
@@ -155,4 +155,4 @@ const ManagementLanding = () => {
   );
 };
 
-export default ManagementLanding;
+export default UserLanding;

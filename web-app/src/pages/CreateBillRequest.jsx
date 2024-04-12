@@ -1,160 +1,134 @@
 import React, { useState } from 'react';
+import { Box, TextField, Button, Typography, Alert, Container } from '@mui/material';
+import Grid from '@mui/material/Grid'; 
 import Navbar from '../components/Navbar';
-import { Box, Typography, TextField, Button, Grid } from '@mui/material';
 
 const CreateBillRequest = () => {
-  
-  const [unitInfo, setUnitInfo] = useState({
-    squareFootage: 0,
-    parkingSpaces: 0,
-  });
-
-  const [unitProperties, setUnitProperties] = useState({
-    pricePerSquareFoot: 0,
-    pricePerParking: 0,
-  });
-
-  const [billData, setBillData] = useState({
-    unitId: '',
-    propertyAddress: '',
-    totalPrice: 0,
-    date: '',
-  });
-
-  const [showBillInfo, setShowBillInfo] = useState(false);
-  const [inputError, setInputError] = useState('');
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setBillData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  const handleGenerateInfo = async () => {
-    if (billData.unitId === '' || billData.propertyAddress === '') {
-      setInputError('Please fill in both Unit ID and Property Address.');
-      return;
-    }
-
-    // Simulate fetching unit info and properties based on unit ID
-    // Replace this with your actual fetch logic
-    setUnitInfo({
-      squareFootage: 1000,
-      parkingSpaces: 2,
+    const [billingData, setBillingData] = useState({
+        address: '',
+        unitNumber: '',
+        amount: '',
+        payBefore: ''
     });
-    setUnitProperties({
-      pricePerSquareFoot: 5,
-      pricePerParking: 10,
-    });
-    setShowBillInfo(true);
-    setInputError('');
-  };
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
 
-  const handleCalculateTotalPrice = () => {
-    const totalPrice = (unitInfo.squareFootage * unitProperties.pricePerSquareFoot) + (unitInfo.parkingSpaces * unitProperties.pricePerParking);
-    setBillData((prevData) => ({
-      ...prevData,
-      totalPrice: totalPrice,
-    }));
-  };
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setBillingData(prev => ({ ...prev, [name]: value }));
+    };
 
-  const handleSubmit = async () => {
-    // Add your submit logic here
-    console.log('Bill data submitted:', billData);
-    // Optionally, reset the form
-    setBillData({
-      unitId: '',
-      propertyAddress: '',
-      totalPrice: 0,
-      date: '',
-    });
-    setShowBillInfo(false);
-  };
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        setError('');
+        setSuccess('');
+        const token = localStorage.getItem('token');
 
-  return (
-    <div>
-      <Navbar/>
-      <Box mt={10} display="flex" flexDirection="column" alignItems="center">
-        <Typography variant="h5" mb={4}>
-          Create condo fee payment request
-        </Typography>
-        <form>
-          <TextField
-            fullWidth
-            label="Unit ID"
-            variant="outlined"
-            name="unitId"
-            value={billData.unitId}
-            onChange={handleChange}
-            margin="normal"
-          />
-          <TextField
-            fullWidth
-            label="Property Address"
-            variant="outlined"
-            name="propertyAddress"
-            value={billData.propertyAddress}
-            onChange={handleChange}
-            margin="normal"
-          />
-          {inputError && (
-            <Typography variant="body2" color="error" mb={2}>
-              {inputError}
-            </Typography>
-          )}
-          <Button variant="contained" color="primary" onClick={handleGenerateInfo} mt={2}>
-            Generate Info
-          </Button>
-          {showBillInfo && (
-            <>
-              <Typography variant="h6" mt={2}>
-                Unit Square Footage: {unitInfo.squareFootage}
-              </Typography>
-              <Typography variant="h6">
-                Number of Parking Spaces: {unitInfo.parkingSpaces}
-              </Typography>
-              <Typography variant="h6">
-                Price per Square Foot: ${unitProperties.pricePerSquareFoot}
-              </Typography>
-              <Typography variant="h6">
-                Price per Parking Space: ${unitProperties.pricePerParking}
-              </Typography>
-              <Grid container spacing={2} mt={2}>
-                <Grid item>
-                  <Button variant="contained" color="primary" onClick={handleCalculateTotalPrice}>
-                    Calculate Total Price
-                  </Button>
+        // Convert amount to a float and payBefore to an ISO string
+        const formattedData = {
+            ...billingData,
+            amount: parseFloat(billingData.amount),
+            payBefore: new Date(billingData.payBefore).toISOString() // Convert to ISO string
+        };
+
+        fetch('http://localhost:3000/billing', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`, 
+            },
+            body: JSON.stringify(formattedData)
+        })
+        .then(response => {
+            if (!response.ok) throw response;
+            return response.json();
+        })
+        .then(data => {
+            setSuccess('Billing information added successfully!');
+        })
+        .catch(async error => {
+            const errMsg = await error.json();
+            setError(errMsg.message || 'Failed to add billing.');
+        });
+    };
+
+    return (
+      <div>
+      <Navbar />
+        <Container maxWidth="sm" style={{marginTop: '100px'}}>  
+            <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 4 }}>
+                <Typography variant="h6" sx={{ mb: 2, textAlign: 'center' }}>
+                    Add Billing Information
+                </Typography>
+                {error && <Alert severity="error">{error}</Alert>}
+                {success && <Alert severity="success">{success}</Alert>}
+                <Grid container spacing={2} direction="column">  
+                    <Grid item>
+                        <TextField
+                            required
+                            fullWidth
+                            id="address"
+                            label="Property Address"
+                            name="address"
+                            value={billingData.address}
+                            onChange={handleChange}
+                        />
+                    </Grid>
+                    <Grid item>
+                        <TextField
+                            required
+                            fullWidth
+                            id="unitNumber"
+                            label="Unit Number"
+                            name="unitNumber"
+                            value={billingData.unitNumber}
+                            onChange={handleChange}
+                        />
+                    </Grid>
+                    <Grid item>
+                        <TextField
+                            required
+                            fullWidth
+                            id="amount"
+                            label="Amount"
+                            name="amount"
+                            type="number"
+                            value={billingData.amount}
+                            onChange={handleChange}
+                        />
+                    </Grid>
+                    <Grid item>
+                        <TextField
+                            required
+                            fullWidth
+                            id="payBefore"
+                            label="Pay Before"
+                            name="payBefore"
+                            type="date"
+                            value={billingData.payBefore}
+                            onChange={handleChange}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                    </Grid>
+                    <Grid item>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            fullWidth
+                            sx={{ mt: 3, mb: 2 }}
+                        >
+                            Add Billing
+                        </Button>
+                    </Grid>
                 </Grid>
-                <Grid item>
-                  <Typography variant="h6">
-                    Total Condo Fee: ${billData.totalPrice}
-                  </Typography>
-                </Grid>
-              </Grid>
-              <TextField
-                fullWidth
-                label="Due Date"
-                type="date"
-                variant="outlined"
-                name="date"
-                value={billData.date}
-                onChange={handleChange}
-                margin="normal"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-              <Button variant="contained" color="primary" onClick={handleSubmit} mt={2}>
-                Submit
-              </Button>
-            </>
-          )}
-        </form>
-      </Box>
-    </div>
-  );
+            </Box>
+        </Container>
+        </div>
+        
+    );
 };
 
 export default CreateBillRequest;
+
