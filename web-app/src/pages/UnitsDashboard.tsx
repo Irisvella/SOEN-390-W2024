@@ -1,68 +1,59 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Box, Card, CardContent, Typography, Button } from '@mui/material';
-import Navbar from '../components/Navbar';
-import AspectRatio from '@mui/joy/AspectRatio';
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import UnitsCards, { Unit } from "../components/UnitsCards"
+import Navbar from "../components/Navbar";
+import { Box, Button } from "@mui/material";
 
+const companyUnits: Unit[] = [];
 function UnitsDashboard() {
   const navigate = useNavigate();
+  const handleAddProperty = () => {
+    // Here you can handle the logic to add a property
+    // For example, opening a dialog or redirecting to a form page
+    navigate("/dashboard-company");
+  };
   const { propertyId } = useParams();
-  const [totalUnits, setTotalUnits] = useState(0);
+  const [units, setUnits] = useState<Unit[]>([]);
 
   useEffect(() => {
-    const fetchTotalUnits = async () => {
-      const token = localStorage.getItem('token');
+    const fetchUnits = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/createEditListing/${propertyId}/units`, {
-          method: 'GET',
+        const token = localStorage.getItem("token");
+        const res = await fetch(`http://localhost:3000/createEditListing/${propertyId}/units`, {
+          method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         });
-
-        if (response.ok) {
-          const propertyData = await response.json();
-          if (propertyData.totalUnit) {
-            setTotalUnits(propertyData.totalUnit);
-          }
+        if (res.ok) {
+          const unitsData: Unit[] = await res.json();
+          setUnits(unitsData);
         } else {
-          console.error('Failed to fetch property details');
+          console.error("Failed to fetch units");
         }
       } catch (error) {
-        console.error('Error fetching property details:', error);
+        console.error("Error fetching units:", error);
       }
     };
 
-    fetchTotalUnits();
+    fetchUnits();
+    console.log(companyUnits);
   }, [propertyId]);
 
   return (
     <>
-      <Navbar />
+      <Navbar /> {/* Assuming Navbar is imported */}
       <Box sx={{ p: 10 }}>
-        {[...Array(totalUnits)].map((_, index) => (
-          <Card key={index} sx={{ mb: 2, width: 320 }}>
-            <AspectRatio minHeight="120px" maxHeight="200px">
-              <img
-                src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
-                alt=""
-                loading="lazy"
-              />
-            </AspectRatio>
-            <CardContent>
-              <Typography>Unit {index + 1}</Typography>
-              {/* Placeholder content for square feet */}
-              <Typography>{/* Add square feet content here */}</Typography>
-              <Button
-                variant="outlined"
-                onClick={() => {/* Handle edit functionality */}}
-              >
-                Edit
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
+        <UnitsCards units={units} />
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ mb: 2 }} // Adjust the margin as needed
+          onClick={handleAddProperty} // Replace with your actual event handler function
+        >
+          GO back 
+        </Button>
       </Box>
     </>
   );

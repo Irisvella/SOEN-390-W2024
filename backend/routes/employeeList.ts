@@ -1,8 +1,7 @@
-
-// Filename: employeeList.ts
-// Author: Samuel Collette
-// Description: Backend query to retrieve the list of employees under a company
-// Dependencies: jwt, prisma, express
+// Filename: employeeList.tx
+// Author: Sarah Abellard, Samuel Collette
+// Description: Endpoints for adding new employees to the system & fetching the information.
+// Dependencies: React, MUI (Material-UI), jsonwebtoken, dotev, mutler, express
 
 import express from "express";
 const router = express.Router();
@@ -65,5 +64,34 @@ router.get(
     }
 
 );
+
+router.get("/employeeList", verifyToken, async (req: Request, res: Response) => {
+    try {
+      const token = req.token;
+      if (!token || !process.env.SECRET) {
+        return res.status(401).json({ message: "Unauthorized: Missing token or secret" });
+      }
+  
+      const decoded = jwt.verify(token, process.env.SECRET) as jwt.JwtPayload;
+      const companyId = decoded.data.id;
+  
+      const employees = await prisma.employed_by.findMany({
+        where: { company_id: companyId },
+        include: { employee_users: true }
+      });
+  
+      const transformedEmployees = employees.map(emp => ({
+        id: emp.employee_user_id,
+        first_name: emp.employee_users.first_name,
+        last_name: emp.employee_users.last_name,
+        role: emp.employee_users.role,
+        phone: emp.employee_users.phone_number
+      }));
+  
+      res.json(transformedEmployees);
+    } catch (error) {
+      res.status(500).json({ message: "Server error"});
+    } 
+  });
 
 export default router;

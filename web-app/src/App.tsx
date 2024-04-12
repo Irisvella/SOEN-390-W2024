@@ -8,6 +8,7 @@ import Employeesinfo from './pages/employeesinfo.jsx';
 import Addemployee from './pages/addemployee.jsx';
 import './App.css';
 import Home from './pages/Home.jsx';
+import UserLanding from './pages/UserLanding.jsx';
 import ManagementLanding from './pages/ManagementLanding.jsx';
 import CreateListingForm from './components/CreateListingForm.tsx';
 import EditListingForm from './components/EditListingForm.tsx';
@@ -40,16 +41,18 @@ function App() {
               element={<EditListingForm />}
             />
             <Route path="/ManagementLanding" element={<ManagementLanding />} />
+            <Route path="/UserLanding" element={<UserLanding />} />
             <Route path="/ProfileDash" element={<MinApp />} />
             <Route path="/dashboard-user" element={<DashboardUser />} />
             <Route path="/dashboard-company" element={<DashboardCompany />} />
-            <Route path="/Employeesinfo/:propertyId" element={<Employeesinfo />} />
+            <Route path="/Employeesinfo" element={<Employeesinfo />} />
             <Route path="/Addemployee" element={<Addemployee />} />
             <Route
               path="/CreateRequest/:propertyId"
               element={<CreateRequestForm />}
             />
              <Route path="/UnitsDashboard/:propertyId" element={<UnitsDashboard />} />
+             <Route path="/CreateRequest" element={<CreateRequestForm />} />
             <Route path="/RequestManagement" element={<RequestManagement />} />
             <Route path="/OpenRequestManagementPage" element={<OpenRequestManagementPage />} />
             <Route path="/AddUnit" element={<AddUnit />} />
