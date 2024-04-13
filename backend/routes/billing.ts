@@ -190,11 +190,13 @@ router.post(
   },
 );
 
+// TODO: readd employee roles to it from previous endpoint
 router.get("/all-bills", verifyToken, async (req: express.Request, res: express.Response) => {
   try {
       const decoded = jwt.verify(req.token as string, process.env.SECRET as jwt.Secret) as jwt.JwtPayload;
       const { id, role } = decoded.data;
 
+      
       if (role !== "company") {
           return res.status(403).json({ message: "Unauthorized: Access is limited to company accounts only." });
       }
