@@ -16,7 +16,7 @@ const User = z.object({
 });
 
 const Company = z.object({
-  email: z.string().email().trim().toLowerCase(),
+  email: z.string().trim().toLowerCase().email(),
   password: z.string().min(6).max(64),
   companyName: z.string().trim().toLowerCase().min(1),
   phoneNumber: z.string().trim().min(10),
@@ -37,53 +37,43 @@ router.post(
   "/public-user",
   async function (req: Request, res: Response, next: NextFunction) {
     try {
-      const body = req.body;
-
-      const result = User.safeParse(body);
-      if (!result.success) {
-        console.log("error ---- ", result.error);
-        console.log("formatted ---- ", result.error.format());
-        return res.status(400).json(result.error.issues);
+      const parse = User.safeParse(req.body);
+      if (!parse.success) {
+        console.log("error ---- ", parse.error);
+        console.log("formatted ---- ", parse.error.format());
+        return res.status(400).json(parse.error.issues);
       }
 
-      const parsedUser = result.data;
+      const parsedBody = parse.data;
       const userExists = await prisma.users.findFirst({
         where: {
-          email: parsedUser.email,
+          email: parsedBody.email,
         },
       });
       if (userExists) {
         return res.status(409).json({ message: "User already exists" });
       }
 
-      async function createPublicUser(hashed_password: string) {
-        await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-          const user = await prisma.users.create({
-            data: {
-              email: body.email,
-              hashed_password,
-            },
-          });
-          const publicUser = await prisma.public_users.create({
-            data: {
-              user_id: user.id,
-              first_name: parsedUser.firstName,
-              last_name: parsedUser.lastName,
-              phone_number: parsedUser.phoneNumber,
-            },
-          });
-        });
-      }
-
       bcrypt.hash(
-        body.password,
+        parsedBody.password,
         10,
-        function (err: Error | null, hash: string) {
-          createPublicUser(hash);
+        async function (err: Error | null, hash: string) {
+          const publicUser = await prisma.users.create({
+            data: {
+              email: parsedBody.email,
+              hashed_password: hash,
+              public_users: {
+                create: {
+                  first_name: parsedBody.firstName,
+                  last_name: parsedBody.lastName,
+                  phone_number: parsedBody.phoneNumber,
+                },
+              },
+            },
+          });
+          return res.status(201).json({ message: "User created successfully" });
         },
       );
-
-      return res.status(201).json({ message: "User created successfully" });
     } catch (err) {
       console.log("err from /signup/public-user ---- ", err);
       return res.status(500).json({ message: "Unexpected error" });
@@ -96,53 +86,43 @@ router.post(
   "/management-company",
   async function (req: Request, res: Response, next: NextFunction) {
     try {
-      const body = req.body;
-
-      const result = Company.safeParse(body);
-      if (!result.success) {
-        console.log("error ---- ", result.error);
-        console.log("formatted ---- ", result.error.format());
-        return res.status(400).json(result.error.issues); // change this later
+      const parse = Company.safeParse(req.body);
+      if (!parse.success) {
+        console.log("error ---- ", parse.error);
+        console.log("formatted ---- ", parse.error.format());
+        return res.status(400).json(parse.error.issues); // change this later
       }
 
-      const parsedCompany = result.data;
+      const parsedBody = parse.data;
       const userExists = await prisma.users.findFirst({
         where: {
-          email: parsedCompany.email,
+          email: parsedBody.email,
         },
       });
       if (userExists) {
         return res.status(409).json({ message: "Email already exists" });
       }
 
-      async function createCompanyUser(hashed_password: string) {
-        await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-          const user = await prisma.users.create({
-            data: {
-              email: body.email,
-              hashed_password,
-            },
-          });
-          const company = await prisma.management_companies.create({
-            data: {
-              user_id: user.id,
-              company_name: parsedCompany.companyName,
-              address: parsedCompany.address,
-              phone_number: parsedCompany.phoneNumber,
-            },
-          });
-        });
-      }
-
       bcrypt.hash(
-        body.password,
+        parsedBody.password,
         10,
-        function (err: Error | null, hash: string) {
-          createCompanyUser(hash);
+        async function (err: Error | null, hash: string) {
+          const companyUser = await prisma.users.create({
+            data: {
+              email: parsedBody.email,
+              hashed_password: hash,
+              management_companies: {
+                create: {
+                  company_name: parsedBody.companyName,
+                  address: parsedBody.address,
+                  phone_number: parsedBody.phoneNumber,
+                },
+              },
+            },
+          });
+          return res.status(201).json({ message: "User created successfully" });
         },
       );
-
-      return res.status(201).json({ message: "User created successfully" });
     } catch (err) {
       console.log("err from /signup/management-company ---- ", err);
       return res.status(500).json({ message: "Unexpected error" });
@@ -154,55 +134,44 @@ router.post(
   "/employee-user",
   async function (req: Request, res: Response, next: NextFunction) {
     try {
-      const body = req.body;
-
-      const result = EmployeeUser.safeParse(body);
-      if (!result.success) {
-        console.log("error ---- ", result.error);
-        console.log("formatted ---- ", result.error.format());
+      const parse = EmployeeUser.safeParse(req.body);
+      if (!parse.success) {
+        console.log("error ---- ", parse.error);
+        console.log("formatted ---- ", parse.error.format());
         return res.status(400);
       }
 
-      const parsedUser = result.data;
+      const parsedBody = parse.data;
       const userExists = await prisma.users.findFirst({
         where: {
-          email: parsedUser.email,
+          email: parsedBody.email,
         },
       });
       if (userExists) {
         return res.status(409).json({ message: "User exists already" });
       }
 
-      async function createEmployeeUser(hashed_password: string) {
-        await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-          const user = await prisma.users.create({
-            data: {
-              email: parsedUser.email,
-              hashed_password,
-            },
-          });
-
-          const employeeUser = await prisma.employee_users.create({
-            data: {
-              user_id: user.id,
-              first_name: parsedUser.firstName,
-              last_name: parsedUser.lastName,
-              phone_number: parsedUser.phoneNumber,
-              role: parsedUser.role,
-            },
-          });
-        });
-      }
-
       bcrypt.hash(
-        parsedUser.password,
+        parsedBody.password,
         10,
-        function (err: Error | null, hash: string) {
-          createEmployeeUser(hash);
+        async function (err: Error | null, hash: string) {
+          const employeeUser = await prisma.users.create({
+            data: {
+              email: parsedBody.email,
+              hashed_password: hash,
+              employee_users: {
+                create: {
+                  first_name: parsedBody.firstName,
+                  last_name: parsedBody.lastName,
+                  phone_number: parsedBody.phoneNumber,
+                  role: parsedBody.role,
+                },
+              },
+            },
+          });
+          return res.status(201).json({ message: "User created successfully" });
         },
       );
-
-      return res.status(201).json({ message: "User created successfully" });
     } catch (err) {
       console.log("err from /signup/employee-user ---- ", err);
       return res.status(500).json({ message: "Unexpected error" });

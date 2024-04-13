@@ -1,3 +1,10 @@
+
+// Filename: createEditListing.ts
+// Author: Samuel Collette, Barthan, Fatou
+// Description: Backend query to create, update and view Listings(poperties) 
+// Dependencies: jwt, prisma, express
+
+
 import express from "express";
 const router = express.Router();
 import * as z from "zod";

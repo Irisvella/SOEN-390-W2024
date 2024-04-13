@@ -1,3 +1,8 @@
+// Filename: employeeList.tx
+// Author: Sarah Abellard, Samuel Collette
+// Description: Endpoints for adding new employees to the system & fetching the information.
+// Dependencies: React, MUI (Material-UI), jsonwebtoken, dotev, mutler, express
+
 import express from "express";
 const router = express.Router();
 import prisma from "../prisma/client";
@@ -60,5 +65,6 @@ router.get(
     }
 
 );
+
 
 export default router;

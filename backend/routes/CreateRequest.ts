@@ -1,3 +1,8 @@
+// Filename: CreateRequest.ts
+// Author: Samuel Collette, Barthan
+// Description: Backend query to createRequests and to view all available requests
+// Dependencies: jwt, prisma, express
+
 import express from "express";
 const router = express.Router();
 import prisma from "../prisma/client";
@@ -7,6 +12,21 @@ require("dotenv").config();
 
 import { Request, Response, NextFunction } from "express";
 import  {priority}  from "@prisma/client";
+import {request_status} from "@prisma/client";
+
+interface requests {
+  id: number;
+  title: string;
+  description: string;
+  request_priority: string;
+  issued_at: Date;
+  condo_owner_id: number;
+  employee_id: number;
+  date_needed: Date;
+  property_id: number;
+  status: request_status;
+  
+}
 
 // Route to handle the submission of a new listing
 router.post(
@@ -60,7 +80,7 @@ router.post(
               }
 
               await createRequest(
-                parseInt(body.property_id),
+                parseInt(body.propertyId),
                 id,
                 body.requestType,
                 body.requestReason,
@@ -83,5 +103,118 @@ router.post(
     }
   },
 );
+
+
+router.get("/viewRequests", verifyToken, async (req: Request, res: Response) => {
+  try {
+
+    jwt.verify(
+      req.token as string,
+      process.env.SECRET as jwt.Secret,
+      async (err, decoded) => {
+        if (err) {
+          return res.status(401).json("Unauthorized");
+        } else {
+          console.log("decoded ---- ", decoded);
+          const { id, role, email } = (<any>decoded).data;
+
+          if (role === "company"){
+            const requestList = await prisma.$queryRaw<
+            requests[]
+            >`select r.*, p.address
+            from requests as r, property as p
+            where r.property_id = p.id and p.company_id = ${id}
+            `;
+            res.json(requestList);
+            console.log(requestList);
+          } else if (role === "publicUser"){
+            const requestList = await prisma.$queryRaw<
+            requests[]
+            >`select r.*, p.address
+            from requests as r, property as p
+            where condo_owner_id = ${id} and r.property_id = p.id
+            `;
+            res.json(requestList);
+            console.log(requestList);
+          }
+          
+  }});
+  } catch (error) {
+    console.error('Failed to get requests:', error);
+    res.status(500).send('Error fetching requests');
+  }
+});
+
+router.get("/viewRequests/:requestID", verifyToken, async (req: Request, res: Response) => {
+  try {
+
+    jwt.verify(
+      req.token as string,
+      process.env.SECRET as jwt.Secret,
+      async (err, decoded) => {
+        if (err) {
+          return res.status(401).json("Unauthorized");
+        } else {
+          console.log("decoded ---- ", decoded);
+          const { id, role, email } = (<any>decoded).data;
+          const body = req.body;
+          const request = await prisma.requests.findFirst({
+            where: {
+              id: body.requestID
+
+            },
+          });
+          res.json(request);
+          console.log(request);
+
+          
+  }});
+  } catch (error) {
+    console.error('Failed to get requests:', error);
+    res.status(500).send('Error fetching requests');
+  }
+});
+
+router.patch(
+  "/update-request",
+  verifyToken,
+  async (req, res) => {
+    try {
+      const { requestId, employeeId, newStatus } = req.body;
+      const request = await prisma.requests.findUnique({ where: { id: requestId } });
+
+      if (!request) {
+        return res.status(404).json({ message: "Request not found" });
+      }
+
+      // If assigning to an employee
+      if (employeeId) {
+        const employee = await prisma.employee_users.findUnique({ where: { user_id: parseInt(employeeId) } });
+        if (!employee) {
+          return res.status(404).json({ message: "Employee not found" });
+        }
+        // Update request to in_progress and set employee
+        await prisma.requests.update({
+          where: { id: requestId },
+          data: { employee_id: parseInt(employeeId), status: 'in_progress' }
+        });
+      }
+
+      // If marking as completed, no need for an employee check
+      if (newStatus === 'completed') {
+        await prisma.requests.update({
+          where: { id: requestId },
+          data: { status: 'completed' }
+        });
+      }
+
+      return res.status(200).json({ message: "Request updated successfully" });
+    } catch (err) {
+      console.error("Error updating request:", err);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+);
+
 
 export default router;

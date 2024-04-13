@@ -46,7 +46,10 @@ function CreateRequestForm() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`, //checking if you are logged in or not
         },
-        body: JSON.stringify({ ...formData, property_id: propertyId }),
+        body: JSON.stringify({
+          ...formData,
+          propertyId,
+        }),
       });
 
       if (response.ok) {
@@ -54,7 +57,6 @@ function CreateRequestForm() {
         setFormData({
           requestType: "",
           date: "",
-
           requestReason: "",
           priority: "",
         });
