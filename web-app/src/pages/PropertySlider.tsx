@@ -85,18 +85,20 @@ const PropertySlider: React.FC<PropertySliderProps> = ({ properties }) => {
           <div className="property-details">
             <h3>{property.address}</h3>
             <div className="property-actions">
-              <Button
+              {/*<Button
                 variant="outlined"
                 onClick={() => navigate(`/Employeesinfo/${property.id}`)}
               >
                 Visit Employee List
-              </Button>
+              </Button>*/}
+              {/*
               <Button
                 variant="outlined"
                 onClick={() => navigate(`/OpenRequestManagementPage`)}
               >
                 Requests
               </Button>
+              */}
               <Button
                 variant="outlined"
                 onClick={() => navigate(`/EditListing/${property.id}`)}

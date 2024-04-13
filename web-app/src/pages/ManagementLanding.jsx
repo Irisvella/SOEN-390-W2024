@@ -61,7 +61,7 @@ const ManagementLanding = () => {
     'Manage Condo Listing': '/CreateListingPage',
     'Financial System': '/ManagementFinancialOverView',
     'Reservation System': '/reservation-system',
-    'Employee': '/Employeesinfo',
+    'Employees': '/Employeesinfo',
     'Requests': '/RequestManagementTable',
   };
 
