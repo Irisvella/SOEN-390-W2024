@@ -24,18 +24,34 @@ const CreateListingForm = () => {
     parkingSpaces: "",
     amenities: "",
     description: "",
-    parkingFee: "", // Added field
-    pricePerSquareFoot: "", // Added field
-    lockerFee: "", // Added field
+    parkingFee: "",
+    pricePerSquareFoot: "",
+    lockerFee: "",
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: { target: { id: any; value: any; }; }) => {
     const { id, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [id]: value,
-    }));
-  };
+
+    // Numeric fields list
+    const numericFields = ['totalUnit', 'parkingSpaces', 'parkingFee', 'pricePerSquareFoot', 'lockerFee'];
+
+    // Check if the current field requires numeric input
+    if (numericFields.includes(id)) {
+        // Allow changes if the value is either empty, a number, possibly with a negative sign, or a decimal point
+        if (value === "" || /^-?\d*\.?\d*$/.test(value)) { // regex allows numbers, decimal points, and negative values
+            setFormData((prevData) => ({
+                ...prevData,
+                [id]: value,
+            }));
+        }
+    } else {
+        // For non-numeric fields, update normally
+        setFormData((prevData) => ({
+            ...prevData,
+            [id]: value,
+        }));
+    }
+};
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault(); // Prevent default form submission behavior
@@ -84,7 +100,7 @@ const CreateListingForm = () => {
             theme.palette.mode === "dark" ? "#1A2027" : "#F0F0F0",
         }}
       >
-        <form onSubmit={handleSubmit}>
+         <form onSubmit={handleSubmit}>
           <Grid container direction="column" padding={5}>
             <Grid item xs container direction="row" spacing={2}>
               <Grid item xs marginBottom={5}>
