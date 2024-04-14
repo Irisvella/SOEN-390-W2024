@@ -35,26 +35,30 @@ const FileUploadComponent = () => {
             alert('Please select a property and a file.');
             return;
         }
-
+    
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('propertyId', selectedProperty);
-
-        const response = await fetch('http://localhost:3000/files', {
+        formData.append('property_id', selectedProperty);
+    
+        const response = await fetch('http://localhost:3000/files/upload-file', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
+                // 'Content-Type': 'application/json' // Remove this line
             },
             body: formData
         });
-
+    
         if (response.ok) {
             const result = await response.json();
             alert('File uploaded successfully: ' + result.data.file_key);
         } else {
-            alert('Failed to upload file.');
+            const errorMsg = await response.text(); // Assuming the error message is plain text
+            alert('Failed to upload file: ' + errorMsg);
         }
     };
+    
+
 
     return (
         <div>

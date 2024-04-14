@@ -23,7 +23,7 @@ import UnitsDashboard from './pages/UnitsDashboard.tsx';
 import UserRequests from './pages/UserRequests.jsx';
 import UserBills from './pages/UserBills.jsx';
 import RequestManagementTable from './pages/RequestManagementTable.jsx';
-//import FileUploadComponent from './pages/FileUploadComponent.jsx';
+import FileUploadComponent from './pages/FileUploadComponent.jsx';
 
 function App() {
   const isAuthenticated = !!localStorage.getItem("token");
@@ -53,7 +53,7 @@ function App() {
             <Route path="/UserRequests" element={<UserRequests />} />
             <Route path="/UserBills" element={<UserBills />} />
             <Route path="/RequestManagementTable" element={<RequestManagementTable />} />
-            {/*<Route path="/FileUploadComponent" element={<FileUploadComponent />} />*/}
+            {<Route path="/FileUploadComponent" element={<FileUploadComponent />} />}
 
             <Route
               path="/CreateRequest/:propertyId"

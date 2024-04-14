@@ -16,7 +16,7 @@ import employeeList from "./routes/employeeList";
 import CreateRequest from "./routes/CreateRequest";
 import billingRouter from "./routes/billing";
 import registrationRouter from "./routes/registration";
-//import files from "./routes/files"
+import files from "./routes/files"
 
 declare global {
   namespace Express {
@@ -45,7 +45,7 @@ app.use("/employeeList", employeeList);
 app.use("/CreateRequest", CreateRequest);
 app.use("/billing", billingRouter);
 app.use("/registration", registrationRouter);
-//app.use("/files", files);
+app.use("/files", files);
 
 const port = process.env.PORT || 3000;
 app.listen(port || 3000, () => {
