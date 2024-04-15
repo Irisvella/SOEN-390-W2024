@@ -17,7 +17,7 @@ useEffect(() => {
     try {
       //http://localhost:3000/profile
       const response = await fetch("https://estate-api-production.up.railway.app/profile",
-      , {
+       {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
