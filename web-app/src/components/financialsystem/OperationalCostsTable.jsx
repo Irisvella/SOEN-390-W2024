@@ -15,7 +15,7 @@ const OperationalCostsTable = () => {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:3000/billing//all-operational-costs', {
+    fetch('https://estate-api-production.up.railway.app/billing/all-operational-costs', {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
         'Content-Type': 'application/json',

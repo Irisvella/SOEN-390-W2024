@@ -16,7 +16,7 @@ const UserBills = () => {
       setLoading(true);
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:3000/billing/my-bills', {
+        const response = await fetch('https://estate-api-production.up.railway.app/billing/my-bills', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,

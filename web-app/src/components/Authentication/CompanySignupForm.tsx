@@ -26,7 +26,7 @@ const CompanySignupForm = () => {
     try {
       // Replace 'http://localhost:3000' with actual backend endpoint
       const response = await fetch(
-        "http://localhost:3000/signup/management-company",
+        "https://estate-api-production.up.railway.app/signup/management-company",
         {
           method: "POST",
           headers: {

@@ -14,7 +14,7 @@ const UserRequests = () => {
     const fetchRequests = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:3000/CreateRequest/viewRequests', {
+        const response = await fetch('https://estate-api-production.up.railway.app/CreateRequest/viewRequests', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,

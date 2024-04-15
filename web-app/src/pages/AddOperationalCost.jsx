@@ -54,7 +54,7 @@ const AddOperationalCost = () => {
       return;
     }
 
-    fetch('http://localhost:3000/billing/operational-costs', {
+    fetch('https://estate-api-production.up.railway.app/billing/operational-costs', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

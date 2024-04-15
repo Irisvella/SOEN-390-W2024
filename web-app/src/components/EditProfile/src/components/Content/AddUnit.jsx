@@ -19,7 +19,7 @@ const toast = useToast(); // Using Chakra UI's Toast for feedback
         }
         console.log('Sending payload:', payload);
         try {
-            const response = await fetch('http://localhost:3000/registration', {
+            const response = await fetch('https://estate-api-production.up.railway.app/registration', {
                 method: 'PATCH',
                 headers: {
                     'Authorization': `Bearer ${token}`,
