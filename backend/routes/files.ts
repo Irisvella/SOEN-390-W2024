@@ -27,11 +27,11 @@ router.post('/upload-file', verifyToken, upload.single('file'), async (req, res)
         const decoded = jwt.verify(req.token as string, process.env.SECRET as jwt.Secret);
         const { id, role } = (<any>decoded).data;
 
-        /*
+        
         if (role !== "company") {
             return res.status(401).json({ message: "Unauthorized: Access is limited to company accounts only." });
         }
-        */
+        
 
         // Build a file path that includes the company ID to ensure files are stored per company
         const filePath = `property-files/${property_id}/${originalname}`;
