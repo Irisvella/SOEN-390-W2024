@@ -14,7 +14,7 @@ const CompanyLoginForm = () => {
   
     try {
       // Replace 'http://localhost:3000' with actual backend endpoint
-      const response = await fetch('https://estate-api-production.up.railway.app/',  {
+      const response = await fetch('https://estate-api-production.up.railway.app/login',  {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
