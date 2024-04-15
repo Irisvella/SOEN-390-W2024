@@ -14,7 +14,7 @@ const CompanyLoginForm = () => {
   
     try {
       // Replace 'http://localhost:3000' with actual backend endpoint
-      const response = await fetch('https://estate-flow-backend.vercel.app',  {
+      const response = await fetch('https://estate-api-production.up.railway.app/',  {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
