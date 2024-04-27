@@ -42,6 +42,9 @@ router.post(
                     address: addr,
                     flat_fee: 0.0,
                     company_id: company_id,
+                    parking_fee: body.parkingFee, // Added field
+                    price_per_square_foot: body.pricePerSquareFoot, // Added field
+                    locker_fee: body.lockerFee, // Added field
                   },
                 });
                 
@@ -51,6 +54,7 @@ router.post(
                       property_id: property.id,
                       unit_number: i.toString(),
                       square_feet: 250.00,
+                      
 
                     }
                   });

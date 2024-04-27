@@ -143,6 +143,7 @@ model requests {
   employee_id                                        Int?
   date_needed                                        DateTime?
   id                                                 Int             @id @default(autoincrement())
+  status                                             request_status? @default(unassigned)
   public_users_requests_condo_owner_idTopublic_users public_users    @relation("requests_condo_owner_idTopublic_users", fields: [condo_owner_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
   public_users_requests_employee_idTopublic_users    employee_users? @relation("requests_employee_idTopublic_users", fields: [employee_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
   property_requests_property_idToid                  property        @relation("requests_property_idToid", fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -217,4 +218,10 @@ enum user_role {
 enum billing_status {
   paid
   unpaid
+}
+
+enum request_status {
+  unassigned
+  in_progress
+  completed
 }
