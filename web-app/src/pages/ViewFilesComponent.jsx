@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, MenuItem, Select, FormControl, InputLabel, List, ListItem, ListItemText, Button } from '@mui/material';
-import Navbar from '../components/Navbar'; 
+import { Box, Typography, MenuItem, Select, FormControl, InputLabel, List, ListItem, ListItemText, Button, Snackbar } from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
+import Navbar from '../components/Navbar';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const ViewFilesComponent = () => {
     const [properties, setProperties] = useState([]);
     const [selectedProperty, setSelectedProperty] = useState('');
     const [files, setFiles] = useState([]);
+    const [openAlert, setOpenAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
 
     useEffect(() => {
         fetchProperties();
@@ -24,8 +31,26 @@ const ViewFilesComponent = () => {
         const response = await fetch(`http://localhost:3000/files/list-files?property_id=${event.target.value}`, {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         });
-        const result = await response.json();
-        setFiles(result.files);
+        if (!response.ok) {
+            const errorMsg = await response.text(); // Assuming the error message is plain text
+            setAlertMessage('Failed to fetch files: ' + errorMsg);
+            setOpenAlert(true);
+            setFiles([]); // Ensure no files are shown
+        } else {
+            const result = await response.json();
+            if (result.files.length === 0) {
+                setAlertMessage('No files found for the selected property.');
+                setOpenAlert(true);
+            }
+            setFiles(result.files);
+        }
+    };
+
+    const handleCloseAlert = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenAlert(false);
     };
 
     return (
@@ -33,7 +58,7 @@ const ViewFilesComponent = () => {
             <Navbar />
             <Box sx={{ mt: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <Typography variant="h6">View Files for Property</Typography>
-                <FormControl sx={{ mt: 2, mb: 2 }}>
+                <FormControl sx={{ mt: 2, mb: 2, width: '30%' }}>
                     <InputLabel id="property-select-label">Select Property</InputLabel>
                     <Select
                         labelId="property-select-label"
@@ -48,25 +73,32 @@ const ViewFilesComponent = () => {
                         ))}
                     </Select>
                 </FormControl>
-                <List dense={true}>
-                    {files.map((file, index) => (
-                        <ListItem key={index}>
-                            <ListItemText
-                                primary={file.name}
-                                secondary={`Uploaded on: ${new Date(file.created_at).toLocaleDateString()}`}
-                            />
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                component="a"
-                                href={file.signedUrl}
-                                download
-                            >
-                                Download
-                            </Button>
-                        </ListItem>
-                    ))}
-                </List>
+                {files.length > 0 && (
+                    <List dense={true} sx={{ width: '100%' }}>
+                        {files.map((file, index) => (
+                            <ListItem key={index}>
+                                <ListItemText
+                                    primary={file.description || file.file_type}
+                                    secondary={`File Type: ${file.file_type}`}
+                                />
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    component="a"
+                                    href={file.signed_url}
+                                    download
+                                >
+                                    Download
+                                </Button>
+                            </ListItem>
+                        ))}
+                    </List>
+                )}
+                <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleCloseAlert}>
+                    <Alert onClose={handleCloseAlert} severity="info" sx={{ width: '100%' }}>
+                        {alertMessage}
+                    </Alert>
+                </Snackbar>
             </Box>
         </div>
     );

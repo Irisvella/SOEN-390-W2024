@@ -16,6 +16,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const router = express.Router();
 
+
 router.post('/upload-file', verifyToken, upload.single('file'), async (req, res) => {
     if (!req.file) {
         return res.status(400).send('No file was uploaded.');
@@ -158,8 +159,17 @@ router.get('/list-files', verifyToken, async (req, res) => {
 
 */
 
+
+
 router.get('/list-files', verifyToken, async (req, res) => {
-    const { property_id } = req.query;
+    // Ensure property_id is a string and is not undefined
+    const propertyId = req.query.property_id;
+
+    if (typeof propertyId !== 'string') {
+        return res.status(400).json({ message: "Invalid or missing property ID." });
+    }
+
+    const property_id = parseInt(propertyId, 10); // Use radix 10 for decimal
 
     try {
         const decoded = jwt.verify(req.token as string, process.env.SECRET as jwt.Secret);
@@ -169,34 +179,31 @@ router.get('/list-files', verifyToken, async (req, res) => {
             return res.status(401).json({ message: "Unauthorized: Access is limited to company accounts only." });
         }
 
-        const { data, error } = await supabase.storage
-            .from('property-files')
-            .list(`property-files/${property_id}`, {
-                limit: 100, // Limit the number of files returned
-                offset: 0, // Start at the beginning of the list
-                sortBy: { column: 'created_at', order: 'asc' },
-            });
-
-        if (error) throw error;
-
-        // Fetch signed URLs for each file
-        const filesWithSignedUrls = await Promise.all(data.map(async file => {
-            const { data: signedUrlData, error: signedUrlError } = await supabase.storage
-                .from('property-files')
-                .createSignedUrl(file.name, 60 * 60); // Valid for 1 hour
-
-            if (signedUrlError) {
-                throw signedUrlError;
+        const files = await prisma.condo_management_files.findMany({
+            where: {
+                property_id: property_id,  // Use the parsed integer value
+                company_id: id
+            },
+            select: {
+                file_key: true,
+                file_type: true,
+                description: true,
+                signed_url: true,
             }
+        });
 
-            return { ...file, signedUrl: signedUrlData.signedUrl };
-        }));
+        if (!files.length) {
+            // No files found, provide a specific error message
+            return res.status(404).json({ message: 'No files found for the specified property.' });
+        }
 
-        res.json({ files: filesWithSignedUrls });
+        res.json({ files });
     } catch (error) {
         console.error('Error listing files:', error);
-        res.status(500).json({ message: 'Failed to list files' });
+        res.status(500).json({ message: 'Failed to list files due to server error.' });
     }
 });
 
 export default router;
+
+
