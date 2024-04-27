@@ -26,6 +26,7 @@ model condo_management_files {
   company_id           Int
   property_id          Int
   description          String?
+  signed_url           String?
   management_companies management_companies @relation(fields: [company_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
   property             property             @relation(fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
