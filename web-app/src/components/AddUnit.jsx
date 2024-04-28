@@ -3,17 +3,19 @@
 // Description: Component for adding new units to the system.
 // Dependencies: React, MUI (Material-UI)
 import React, { useState } from 'react';
-import Navbar from '../components/Navbar';
+import Navbar from './Navbar';
 import { Box, Typography, TextField, Button } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const AddUnit = () => {
   const [unitData, setUnitData] = useState({
+    UnitNumber:'',
     squareUnits: '',
     parkingSpots: '',
   });
 
   const [errors, setErrors] = useState({
+    UnitNumber:false,
     squareUnits: false,
     parkingSpots: false,
   });
@@ -52,8 +54,10 @@ const AddUnit = () => {
       console.log('Unit data submitted:', unitData);
       // Optionally, reset the form
       setUnitData({
+        UnitNumber:'',
         squareUnits: '',
         parkingSpots: '',
+
       });
     } else {
       console.log('Please correct the input errors');
@@ -82,6 +86,19 @@ const AddUnit = () => {
               onChange={handleFileChange}
             />
           </Button>
+
+          <TextField
+            fullWidth
+            label="Unit Number"//This is a replacement for unitId to make it less complex 
+            variant="outlined"
+            name="UnitNumber"
+            value={unitData.UnitNumber}
+            onChange={handleChange}
+            margin="normal"
+            error={errors.UnitNumber}
+            helperText={errors.UnitNumber ? 'Please enter a valid number' : ''}
+          />
+          
           <TextField
             fullWidth
             label="Number of Square Units"

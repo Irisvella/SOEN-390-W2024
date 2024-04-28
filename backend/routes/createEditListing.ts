@@ -1,3 +1,10 @@
+
+// Filename: createEditListing.ts
+// Author: Samuel Collette, Barthan, Fatou
+// Description: Backend query to create, update and view Listings(poperties) 
+// Dependencies: jwt, prisma, express
+
+
 import express from "express";
 const router = express.Router();
 import * as z from "zod";
@@ -35,9 +42,25 @@ router.post(
                     address: addr,
                     flat_fee: 0.0,
                     company_id: company_id,
+                    parking_fee: body.parkingFee, // Added field
+                    price_per_square_foot: body.pricePerSquareFoot, // Added field
+                    locker_fee: body.lockerFee, // Added field
                   },
                 });
+                
+                for (let i = body.totalUnit; i>0; i-- ){
+                  const unit = await prisma.condo_unit.create({
+                    data: {
+                      property_id: property.id,
+                      unit_number: i.toString(),
+                      square_feet: 250.00,
+                      
+
+                    }
+                  });
               }
+              }
+
 
               createProperty(body.address, id);
 
@@ -111,6 +134,32 @@ router.put("/:propertyId", verifyToken, async (req, res) => {
     res.status(500).send("Error updating property");
   }
 });
+
+// Route to get units by propertyId
+router.get("/:propertyId/units", verifyToken, async (req: Request, res: Response) => {
+  try {
+    const { propertyId } = req.params;
+    const units = await prisma.condo_unit.findMany({
+      where: { property_id: parseInt(propertyId) },
+      
+    });
+    res.json(units);
+    console.log(units);
+  } catch (error) {
+    console.error('Failed to get units:', error);
+    res.status(500).send('Error fetching units');
+  }
+});
+
+
+
+
+
+
+
+
+
+
 
 
 export default router;
