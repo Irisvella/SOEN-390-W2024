@@ -2,6 +2,7 @@
 // Filename: files.ts
 // Author: Sarah Abellard
 // Description: Backend file to upload files and view files
+// Dependencies: jwt, prisma, express, dotenv, multer
 import { createClient } from '@supabase/supabase-js';
 import express from "express";
 import multer from "multer";
@@ -17,13 +18,7 @@ const supabaseKey = process.env.SUPABASE_KEY;
 const supabase = createClient(supabaseUrl!, supabaseKey!);
 
 const storage = multer.memoryStorage();
-const upload = multer({
-    storage: storage,
-    limits: {
-      fileSize: 1024 * 1024 * 1024  // Limit file size to 5MB
-    }
-  });
-  
+const upload = multer({ storage: storage });
 const router = express.Router();
 
 
