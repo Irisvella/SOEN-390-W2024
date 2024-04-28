@@ -43,13 +43,6 @@ const FilesUser = () => {
     }
   };
 
-  const fetchProperties = async () => {
-    const response = await fetch('http://localhost:3000/dashboard', {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-    });
-    const data = await response.json();
-    setProperties(data);
-};
 
   const handleCloseAlert = (event, reason) => {
     if (reason === 'clickaway') {
