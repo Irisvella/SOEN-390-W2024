@@ -17,9 +17,8 @@ const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_KEY;
 const supabase = createClient(supabaseUrl!, supabaseKey!);
 
-const storage = multer.memoryStorage();
 const upload = multer({
-    storage: storage,
+    storage: multer.memoryStorage(),
     limits: {
       fileSize: 7 * 1024 * 1024  // Limit file size to 5MB
     }
