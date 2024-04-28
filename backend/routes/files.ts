@@ -1,3 +1,8 @@
+
+// Filename: files.ts
+// Author: Sarah Abellard
+// Description: Backend file to upload files and view files
+// Dependencies: jwt, prisma, express, dotenv, mutler
 import { createClient } from '@supabase/supabase-js';
 import express from "express";
 import multer from "multer";

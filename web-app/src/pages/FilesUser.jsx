@@ -1,3 +1,7 @@
+// Filename: ViewFilesComponent.jsx
+// Author: Sarah Abellard
+// Description: frontend form to view files for user
+// Dependencies: React, MUI
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Typography, List, ListItem, ListItemText, Button, Snackbar } from '@mui/material';

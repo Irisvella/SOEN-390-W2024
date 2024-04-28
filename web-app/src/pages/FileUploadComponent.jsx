@@ -1,3 +1,7 @@
+// Filename: FileUploadComponent.jsx
+// Author: Sarah Abellard
+// Description: frontend form to upload files for condo management companies
+// Dependencies: React, MUI
 import React, { useState, useEffect } from 'react';
 import { Button, TextField, MenuItem, Select, InputLabel, FormControl, Box, Typography } from '@mui/material';
 import Navbar from '../components/Navbar';

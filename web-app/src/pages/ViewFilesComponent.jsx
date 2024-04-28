@@ -1,3 +1,7 @@
+// Filename: ViewFilesComponent.jsx
+// Author: Sarah Abellard
+// Description: frontend form to view files for condo management companies
+// Dependencies: React, MUI
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, MenuItem, Select, FormControl, InputLabel, List, ListItem, ListItemText, Button, Snackbar } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
