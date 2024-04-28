@@ -13,6 +13,7 @@ const ViewFilesComponent = () => {
     const [files, setFiles] = useState([]);
     const [openAlert, setOpenAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
+    const BucketUrl = 'https://wvoqgfpyksgruootcynr.supabase.co/storage/v1/object/public/property-files/'
 
     useEffect(() => {
         fetchProperties();
@@ -85,10 +86,10 @@ const ViewFilesComponent = () => {
                                     variant="contained"
                                     color="primary"
                                     component="a"
-                                    href={file.signed_url}
-                                    download
+                                    target="_blank"
+                                    href={BucketUrl + file.file_key}
                                 >
-                                    Download
+                                    View
                                 </Button>
                             </ListItem>
                         ))}
