@@ -67,6 +67,9 @@ const FilesUser = () => {
                   primary={file.description || file.file_type}
                   secondary={`File Type: ${file.file_type}`}
                 />
+                <ListItemText
+                    primary={`${file.description}`}
+                                />
                 <Button
                   variant="contained"
                   color="primary"
