@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity, Platform, ScrollView, Keyboard, TouchableWithoutFeedback, SafeAreaView, KeyboardAvoidingView } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -45,7 +45,7 @@ const CreateServiceRequests = ({ navigation }) => {
       id: 1, 
     };
 
-    const url = 'http://192.168.2.13:3000/CreateRequest';
+    const url = 'https://estate-api-production.up.railway.app/CreateRequest';
     const storedToken = await AsyncStorage.getItem('token');
 
     try {

@@ -63,7 +63,7 @@ const HomeScreen = ({ navigation }) => {
     if (!storedToken) return;
       
 
-    const url = 'http://192.168.2.13:3000/profile';
+    const url = 'https://estate-api-production.up.railway.app/profile';
     try {
       const response = await fetch(url, {
         method: 'GET',
