@@ -23,6 +23,7 @@ import UnitsDashboard from './pages/UnitsDashboard.tsx';
 import UserRequests from './pages/UserRequests.jsx';
 import UserBills from './pages/UserBills.jsx';
 import RequestManagementTable from './pages/RequestManagementTable.jsx';
+import ReservationUser from './pages/ReservationUser.tsx';
 
 
 function App() {
@@ -66,7 +67,7 @@ function App() {
             <Route path="/ManagementFinancialOverview" element={<ManagementFinancialOverview/>} />
             <Route path="/AddOperationalCost" element={<AddOperationalCost/>} />
             <Route path="/UnitsDashboard" element={<UnitsDashboard/>} />
-           
+            <Route path="/ReservationUser" element={<ReservationUser/>} />
            
 
           </>
