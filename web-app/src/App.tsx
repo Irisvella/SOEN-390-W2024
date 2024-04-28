@@ -8,6 +8,10 @@ import Employeesinfo from './pages/employeesinfo.jsx';
 import Addemployee from './pages/addemployee.jsx';
 import './App.css';
 import Home from './pages/Home.jsx';
+import Features from './pages/Features.jsx';
+import WhyEstateFlow from './pages/WhyEstateFlow.jsx';
+import Pricing from './pages/pricing.jsx';
+import Contact from './pages/Contact.jsx';
 import UserLanding from './pages/UserLanding.jsx';
 import ManagementLanding from './pages/ManagementLanding.jsx';
 import CreateListingForm from './components/CreateListingForm.tsx';
@@ -31,6 +35,10 @@ function App() {
         <Route path="/Signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Home />} />
+        <Route path="/Features" element={<Features />} />
+        <Route path="/Pricing" element={<Pricing />} />
+        <Route path="/WhyEstateFlow" element={<WhyEstateFlow />}/>
+        <Route path="/Contact" element={<Contact />}/>
 
         {/* Use the PrivateRoute directly for the protected routes */}
         {isAuthenticated ? (
