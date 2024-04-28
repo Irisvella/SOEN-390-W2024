@@ -95,6 +95,14 @@ const ViewFilesComponent = () => {
                         ))}
                     </List>
                 )}
+                <Button
+                    variant="contained"
+                    color="primary"
+                    component="a"
+                    href="/FileUploadComponent"
+                    >
+                    Add file
+                </Button>
                 <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleCloseAlert}>
                     <Alert onClose={handleCloseAlert} severity="info" sx={{ width: '100%' }}>
                         {alertMessage}
