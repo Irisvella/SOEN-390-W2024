@@ -82,6 +82,9 @@ const ViewFilesComponent = () => {
                                     primary={file.description || file.file_type}
                                     secondary={`File Type: ${file.file_type}`}
                                 />
+                                <ListItemText
+                                    primary={`${file.description}`}
+                                />
                                 <Button
                                     variant="contained"
                                     color="primary"
@@ -100,6 +103,7 @@ const ViewFilesComponent = () => {
                     color="primary"
                     component="a"
                     href="/FileUploadComponent"
+                    
                     >
                     Add file
                 </Button>
