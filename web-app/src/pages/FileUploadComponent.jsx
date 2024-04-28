@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Button, TextField, MenuItem, Select, InputLabel, FormControl, Box, Typography } from '@mui/material';
-import Navbar from '../components/Navbar'; // Adjust path as needed
+import Navbar from '../components/Navbar';
 
 const FileUploadComponent = () => {
     const [properties, setProperties] = useState([]);
     const [selectedProperty, setSelectedProperty] = useState('');
     const [file, setFile] = useState(null);
+    const [fileType, setFileType] = useState('');
+    const [fileDescription, setFileDescription] = useState('');
 
     useEffect(() => {
         const fetchProperties = async () => {
@@ -29,26 +31,35 @@ const FileUploadComponent = () => {
         setFile(event.target.files[0]);
     };
 
+    const handleFileTypeChange = (event) => {
+        setFileType(event.target.value);
+    };
+
+    const handleDescriptionChange = (event) => {
+        setFileDescription(event.target.value);
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         if (!file || !selectedProperty) {
             alert('Please select a property and a file.');
             return;
         }
-    
+
         const formData = new FormData();
         formData.append('file', file);
         formData.append('property_id', selectedProperty);
-    
+        formData.append('file_type', fileType);
+        formData.append('description', fileDescription);
+
         const response = await fetch('http://localhost:3000/files/upload-file', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
-                // 'Content-Type': 'application/json' // Remove this line
             },
             body: formData
         });
-    
+
         if (response.ok) {
             const result = await response.json();
             alert('File uploaded successfully: ' + result.data.file_key);
@@ -57,8 +68,6 @@ const FileUploadComponent = () => {
             alert('Failed to upload file: ' + errorMsg);
         }
     };
-    
-
 
     return (
         <div>
@@ -91,11 +100,35 @@ const FileUploadComponent = () => {
                         name="file"
                         onChange={handleFileChange}
                     />
+                    <FormControl fullWidth sx={{ mt: 2 }}>
+                        <InputLabel id="file-type-label">File Type</InputLabel>
+                        <Select
+                            labelId="file-type-label"
+                            id="file-type-select"
+                            value={fileType}
+                            label="File Type"
+                            onChange={handleFileTypeChange}
+                        >
+                            <MenuItem value="declarations">Declarations</MenuItem>
+                            <MenuItem value="annual budgets">Annual budgets</MenuItem>
+                            <MenuItem value="board meeting minutes">Board meeting minutes</MenuItem>
+                            <MenuItem value="other">Other</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <TextField
+                        label="Description"
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        value={fileDescription}
+                        onChange={handleDescriptionChange}
+                        inputProps={{ maxLength: 100 }}
+                    />
                     <Button
                         type="submit"
                         fullWidth
                         variant="contained"
-                        sx={{ mt: 3, mb: 2 }}
+                        sx={{ mt: 3, mb:  2 }}
                     >
                         Upload File
                     </Button>
@@ -106,3 +139,4 @@ const FileUploadComponent = () => {
 };
 
 export default FileUploadComponent;
+

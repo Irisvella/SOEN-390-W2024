@@ -33,10 +33,10 @@ const ViewFilesComponent = () => {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         });
         if (!response.ok) {
-            const errorMsg = await response.text(); // Assuming the error message is plain text
+            const errorMsg = await response.text(); 
             setAlertMessage('Failed to fetch files: ' + errorMsg);
             setOpenAlert(true);
-            setFiles([]); // Ensure no files are shown
+            setFiles([]);
         } else {
             const result = await response.json();
             if (result.files.length === 0) {
