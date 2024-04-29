@@ -38,26 +38,28 @@ const CreateListingForm = () => {
     gym: false,
   });
 
-  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+  const handleChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
     const target = event.target as HTMLTextAreaElement | HTMLInputElement;
     const { id, value } = target;
-    const isCheckbox = target.type === 'checkbox';
-  
+    const isCheckbox = target.type === "checkbox";
+
     if (isCheckbox) {
       // Cast the target to HTMLInputElement to access 'checked'
       const checked = (target as HTMLInputElement).checked;
-      setState(prevState => ({
+      setState((prevState) => ({
         ...prevState,
-        [id]: checked
+        [id]: checked,
       }));
     } else {
       // Handle all other inputs including textarea
-      setFormData(prevData => ({
+      setFormData((prevData) => ({
         ...prevData,
-        [id]: value
+        [id]: value,
       }));
     }
-  
+
     // Numeric fields list
     const numericFields = [
       "totalUnit",
@@ -89,6 +91,13 @@ const CreateListingForm = () => {
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault(); // Prevent default form submission behavior
     navigate("/dashboard-company");
+
+    // Merge amenities state with formData
+    const completeFormData = {
+      ...formData,
+      amenities: state, // Here you map the amenities state directly into formData
+    };
+
     const token = localStorage.getItem("token");
     try {
       const response = await fetch("http://localhost:3000/createEditListing", {
@@ -97,7 +106,7 @@ const CreateListingForm = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`, //checking if you are logged in or not
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(completeFormData),
       });
 
       if (response.ok) {
@@ -114,6 +123,12 @@ const CreateListingForm = () => {
           pricePerSquareFoot: "",
           lockerFee: "",
         });
+        setState({
+          spa: false,
+          skylounge: false,
+          gym: false,
+        });
+
       } else {
         console.error("Failed to submit listing data");
       }
@@ -342,51 +357,51 @@ const CreateListingForm = () => {
 
             {/* Existing Fields */}
             <Grid container spacing={2} marginBottom={5}>
-            <Grid container spacing={2}>
-                      Facilities
-              {/* New checkbox group added below */}
-              <FormControl
-                sx={{ m: 3 }}
-                component="fieldset"
-                variant="standard"
-              >
-                <FormGroup>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={state.spa}
-                        onChange={handleChange}
-                        name="spa"
-                        id="spa"
-                      />
-                    }
-                    label="Spa"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={state.skylounge}
-                        onChange={handleChange}
-                        name="skylounge"
-                        id="skylounge"
-                      />
-                    }
-                    label="Sky Lounge"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={state.gym}
-                        onChange={handleChange}
-                        name="gym"
-                        id="gym"
-                      />
-                    }
-                    label="Gym"
-                  />
-                </FormGroup>
-              </FormControl>
-            </Grid>
+              <Grid container spacing={2}>
+                Facilities
+                {/* New checkbox group added below */}
+                <FormControl
+                  sx={{ m: 3 }}
+                  component="fieldset"
+                  variant="standard"
+                >
+                  <FormGroup>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={state.spa}
+                          onChange={handleChange}
+                          name="spa"
+                          id="spa"
+                        />
+                      }
+                      label="Spa"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={state.skylounge}
+                          onChange={handleChange}
+                          name="skylounge"
+                          id="skylounge"
+                        />
+                      }
+                      label="Sky Lounge"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={state.gym}
+                          onChange={handleChange}
+                          name="gym"
+                          id="gym"
+                        />
+                      }
+                      label="Gym"
+                    />
+                  </FormGroup>
+                </FormControl>
+              </Grid>
             </Grid>
             <Grid container spacing={2}>
               <FormControl fullWidth required>
@@ -407,7 +422,6 @@ const CreateListingForm = () => {
                 </Box>
               </FormControl>
             </Grid>
-            
 
             <Grid container direction="column" padding={5}>
               <Button type="submit" variant="contained" color="primary">
