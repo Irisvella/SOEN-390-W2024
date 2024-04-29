@@ -26,6 +26,7 @@ model condo_management_files {
   company_id           Int
   property_id          Int
   description          String?
+  signed_url           String?
   management_companies management_companies @relation(fields: [company_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
   property             property             @relation(fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
@@ -144,6 +145,7 @@ model requests {
   date_needed                                        DateTime?
   id                                                 Int             @id @default(autoincrement())
   status                                             request_status? @default(unassigned)
+  notifications                                      notifications[]
   public_users_requests_condo_owner_idTopublic_users public_users    @relation("requests_condo_owner_idTopublic_users", fields: [condo_owner_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
   public_users_requests_employee_idTopublic_users    employee_users? @relation("requests_employee_idTopublic_users", fields: [employee_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
   property_requests_property_idToid                  property        @relation("requests_property_idToid", fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -182,6 +184,15 @@ model billing {
   public_users   public_users    @relation(fields: [public_user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
 
   @@unique([condo_id, public_user_id, pay_before])
+}
+
+model notifications {
+  id          Int            @id @default(autoincrement())
+  request_id  Int
+  status      request_status
+  inserted_at DateTime?      @default(now()) @db.Timestamp(6)
+  seen        Boolean?       @default(false)
+  requests    requests       @relation(fields: [request_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 enum employee_role {
