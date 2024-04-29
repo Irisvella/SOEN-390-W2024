@@ -8,12 +8,16 @@ import {
   Stack,
   Typography,
   Box,
+  FormGroup,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 
 import Navbar from "./Navbar";
 import { Img } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@mui/joy";
+import React from "react";
 
 const CreateListingForm = () => {
   const navigate = useNavigate();
@@ -28,30 +32,59 @@ const CreateListingForm = () => {
     pricePerSquareFoot: "",
     lockerFee: "",
   });
+  const [state, setState] = React.useState({
+    spa: false,
+    skylounge: false,
+    gym: false,
+  });
 
-  const handleChange = (e: { target: { id: any; value: any; }; }) => {
-    const { id, value } = e.target;
-
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    const target = event.target as HTMLTextAreaElement | HTMLInputElement;
+    const { id, value } = target;
+    const isCheckbox = target.type === 'checkbox';
+  
+    if (isCheckbox) {
+      // Cast the target to HTMLInputElement to access 'checked'
+      const checked = (target as HTMLInputElement).checked;
+      setState(prevState => ({
+        ...prevState,
+        [id]: checked
+      }));
+    } else {
+      // Handle all other inputs including textarea
+      setFormData(prevData => ({
+        ...prevData,
+        [id]: value
+      }));
+    }
+  
     // Numeric fields list
-    const numericFields = ['totalUnit', 'parkingSpaces', 'parkingFee', 'pricePerSquareFoot', 'lockerFee'];
+    const numericFields = [
+      "totalUnit",
+      "parkingSpaces",
+      "parkingFee",
+      "pricePerSquareFoot",
+      "lockerFee",
+    ];
 
     // Check if the current field requires numeric input
     if (numericFields.includes(id)) {
-        // Allow changes if the value is either empty, a number, possibly with a negative sign, or a decimal point
-        if (value === "" || /^-?\d*\.?\d*$/.test(value)) { // regex allows numbers, decimal points, and negative values
-            setFormData((prevData) => ({
-                ...prevData,
-                [id]: value,
-            }));
-        }
-    } else {
-        // For non-numeric fields, update normally
+      // Allow changes if the value is either empty, a number, possibly with a negative sign, or a decimal point
+      if (value === "" || /^-?\d*\.?\d*$/.test(value)) {
+        // regex allows numbers, decimal points, and negative values
         setFormData((prevData) => ({
-            ...prevData,
-            [id]: value,
+          ...prevData,
+          [id]: value,
         }));
+      }
+    } else {
+      // For non-numeric fields, update normally
+      setFormData((prevData) => ({
+        ...prevData,
+        [id]: value,
+      }));
     }
-};
+  };
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault(); // Prevent default form submission behavior
@@ -100,7 +133,7 @@ const CreateListingForm = () => {
             theme.palette.mode === "dark" ? "#1A2027" : "#F0F0F0",
         }}
       >
-         <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <Grid container direction="column" padding={5}>
             <Grid item xs container direction="row" spacing={2}>
               <Grid item xs marginBottom={5}>
@@ -309,23 +342,51 @@ const CreateListingForm = () => {
 
             {/* Existing Fields */}
             <Grid container spacing={2} marginBottom={5}>
-              <FormControl fullWidth required>
-                <Box sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
-                  <label
-                    htmlFor="amenities"
-                    style={{ marginTop: "8px", alignSelf: "flex-start" }}
-                  >
-                    Amenities:
-                  </label>
-                  <TextareaAutosize
-                    id="amenities"
-                    minRows={3}
-                    style={{ width: "100%" }}
-                    value={formData.amenities}
-                    onChange={handleChange}
+            <Grid container spacing={2}>
+                      Facilities
+              {/* New checkbox group added below */}
+              <FormControl
+                sx={{ m: 3 }}
+                component="fieldset"
+                variant="standard"
+              >
+                <FormGroup>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={state.spa}
+                        onChange={handleChange}
+                        name="spa"
+                        id="spa"
+                      />
+                    }
+                    label="Spa"
                   />
-                </Box>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={state.skylounge}
+                        onChange={handleChange}
+                        name="skylounge"
+                        id="skylounge"
+                      />
+                    }
+                    label="Sky Lounge"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={state.gym}
+                        onChange={handleChange}
+                        name="gym"
+                        id="gym"
+                      />
+                    }
+                    label="Gym"
+                  />
+                </FormGroup>
               </FormControl>
+            </Grid>
             </Grid>
             <Grid container spacing={2}>
               <FormControl fullWidth required>
@@ -346,6 +407,7 @@ const CreateListingForm = () => {
                 </Box>
               </FormControl>
             </Grid>
+            
 
             <Grid container direction="column" padding={5}>
               <Button type="submit" variant="contained" color="primary">
