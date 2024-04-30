@@ -82,7 +82,7 @@ function App() {
             <Route path="/AddOperationalCost" element={<AddOperationalCost/>} />
             <Route path="/UnitsDashboard" element={<UnitsDashboard/>} />
             <Route path="/UnitsDashboard" element={<UnitsDashboard/>} />
-            <Route path="/ReservationUser" element={<ReservationUser/>} />
+            <Route path="/ReservationUser/:propertyId" element={<ReservationUser/>} />
            
             
           </>

@@ -1,6 +1,5 @@
 import { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import {
-  SelectChangeEvent,
   Container,
   Card,
   CardContent,
@@ -16,19 +15,46 @@ import {
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
-
+import { SelectChangeEvent } from "@mui/material";
 
 function ReservationUser() {
   const navigate = useNavigate();
-  const { property_id } = useParams();
+  const { propertyId } = useParams();
+  const [amenities, setAmenities]= useState<any[]>();
+
   const [reservationData, setReservationData] = useState({
     date: "",
     startTime: "",
     endTime: "",
-    reservationType: "", // Default should be empty to force a selection
+    reservationType: "",
   });
 
-  const { propertyId } = useParams();
+  useEffect(() => {
+    const fetchAmenities = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+      try {
+        const response = await fetch(`http://localhost:3000/makeReservation/${propertyId}`, {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setAmenities(data);
+          // console.log(amenities[1], "amenities");
+        } else {
+          console.error("Failed to fetch amenities");
+        }
+      } catch (error) {
+        console.error("Error fetching amenities:", error);
+      }
+    };
+
+    fetchAmenities();
+  }, [navigate, propertyId]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -46,8 +72,6 @@ function ReservationUser() {
     }));
   };
 
-  //This make sure we enter all fields before being able to reserve 
-
   const validateForm = () => {
     const { date, startTime, endTime } = reservationData;
     if (!date || !startTime || !endTime) {
@@ -56,7 +80,7 @@ function ReservationUser() {
     }
     const selectedDate = new Date(`${date}T${startTime}`);
     if (selectedDate < new Date()) {
-      console.log("Selected date and time are in the past.");
+      alert("Selected date and time are in the past.");
       return false;
     }
     return true;
@@ -68,10 +92,13 @@ function ReservationUser() {
       alert("Please fill all fields correctly.");
       return;
     }
-    
-    const startTime = new Date(`${reservationData.date}T${reservationData.startTime}`);
-    const endTime = new Date(`${reservationData.date}T${reservationData.endTime}`);
 
+    const startTime = new Date(
+      `${reservationData.date}T${reservationData.startTime}`
+    );
+    const endTime = new Date(
+      `${reservationData.date}T${reservationData.endTime}`
+    );
     const token = localStorage.getItem("token");
     if (!token) {
       navigate("/login");
@@ -79,25 +106,36 @@ function ReservationUser() {
     }
 
     try {
-      const response = await fetch(`http://localhost:3000/${propertyId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          amenities_id: reservationData.reservationType, // Assuming this maps correctly to an ID
-          start_date: startTime.toISOString(),
-          end_date: endTime.toISOString(),
-        
-        }),
-      });
-
+      console.log(reservationData);
+      if(!amenities){
+        return;
+      }
+      console.log(amenities);
+      console.log(reservationData);
+      // console.log(reservationType);
+      const amenity= amenities.filter(a=>a.description.startsWith(reservationData.reservationType));
+      console.log(amenity, "random string");
+      const response = await fetch(
+        `http://localhost:3000/makeReservation/${propertyId}/newReservation`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            amenities_id: amenity[0]["id"],
+            start_date: startTime.toISOString(),
+            end_date: endTime.toISOString(),
+          }),
+        }
+      );
+      console.log(response);
       if (response.ok) {
         const reservationDetails = await response.json();
         console.log("Reservation successful!", reservationDetails);
         alert("Reservation successful!");
-        navigate("/dashboard"); // Navigate to a confirmation page or dashboard
+        navigate("/dashboard");
       } else {
         alert("Failed to make a reservation. Please try another time slot.");
       }
@@ -175,7 +213,9 @@ function ReservationUser() {
                 </FormControl>
               </Box>
               <FormControl fullWidth margin="normal" sx={{ mb: 2 }}>
-                <InputLabel id="reservation-type-label">Reservation Type</InputLabel>
+                <InputLabel id="reservation-type-label">
+                  Reservation Type
+                </InputLabel>
                 <Select
                   labelId="reservation-type-label"
                   name="reservationType"
@@ -183,10 +223,9 @@ function ReservationUser() {
                   onChange={handleSelectChange}
                   label="Reservation Type"
                 >
-                  <MenuItem value="spa">Spa</MenuItem>
-                  <MenuItem value="skylounge">Sky Lounge</MenuItem>
+                  <MenuItem value="Spa">Spa</MenuItem>
+                  <MenuItem value="Sky Lounge">Sky Lounge</MenuItem>
                   <MenuItem value="gym">Gym</MenuItem>
-                  {/* Add other reservation types as MenuItems here */}
                 </Select>
               </FormControl>
               <Button variant="contained" type="submit" sx={{ mt: 2 }}>
