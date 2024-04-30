@@ -128,7 +128,7 @@ const ManagementLanding = () => {
                     </SectionBox>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <SectionBox title="Manage Condo Listing" route = "/CreateListingPage">
+                    <SectionBox title="Manage Condo Listing" route = "/ViewFilesComponent">
                       Here you can manage and access condo-related documents and files
                       <ArrowForwardIosIcon /> 
                     </SectionBox>
