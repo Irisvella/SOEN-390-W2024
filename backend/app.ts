@@ -16,8 +16,8 @@ import employeeList from "./routes/employeeList";
 import CreateRequest from "./routes/CreateRequest";
 import billingRouter from "./routes/billing";
 import registrationRouter from "./routes/registration";
-import files from "./routes/files"
-import makeReservation from "./routes/makeReservation";
+import notificationsRouter from "./routes/notifications";
+import files from "./routes/files";
 
 
 declare global {
@@ -47,6 +47,7 @@ app.use("/employeeList", employeeList);
 app.use("/CreateRequest", CreateRequest);
 app.use("/billing", billingRouter);
 app.use("/registration", registrationRouter);
+app.use("/notifications", notificationsRouter);
 app.use("/files", files);
 app.use("/makeReservation", makeReservation);
 
