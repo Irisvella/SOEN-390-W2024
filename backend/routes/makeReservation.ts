@@ -5,19 +5,12 @@ import jwt from "jsonwebtoken";
 import verifyToken from "../middleware/verify-token";
 require("dotenv").config();
 
-interface reservations {
-  id: number;
-  property_id: number;
-  public_user_id:number;
-  amenities_id:number;
-  start_date:number;
-  end_date:number;
-}
 
 import { Request, Response } from "express";
 
 // Route to make a reservation if available
-router.post("/makeReservation", verifyToken, async (req: Request, res: Response) => {
+router.post("/:propertyId/newReservation", verifyToken, async (req: Request, res: Response) => {
+  const { propertyId } = req.params;
   jwt.verify(
     req.token as string,
     process.env.SECRET as jwt.Secret,
@@ -26,24 +19,15 @@ router.post("/makeReservation", verifyToken, async (req: Request, res: Response)
         return res.status(401).json({ message: "Unauthorized" });
       }
 
-      const { public_user_id, amenities_id, start_date, end_date } = req.body;
-     
+      const body  = req.body;
+      const startDate:Date = new Date(body.start_date) 
       try {
+        const { id, role, email } = (<any>decoded).data;
         const overlappingReservation = await prisma.reserved_by.findFirst({
           where: {
-            amenities_id: parseInt(amenities_id),
-            OR: [
-              {
-                start_date: {
-                  lte: new Date(end_date),
-                },
-              },
-              {
-                end_date: {
-                  gte: new Date(start_date),
-                },
-              },
-            ],
+            amenities_id: parseInt(body.amenities_id),
+            start_date: startDate,
+              
           },
         });
 
@@ -53,10 +37,10 @@ router.post("/makeReservation", verifyToken, async (req: Request, res: Response)
           // No overlapping reservation, proceed to create new reservation
           const newReservation = await prisma.reserved_by.create({
             data: {
-              public_user_id: parseInt(public_user_id),
-              amenities_id: parseInt(amenities_id),
-              start_date: new Date(start_date),
-              end_date: new Date(end_date),
+              public_user_id: id,
+              amenities_id: parseInt(body.amenities_id),
+              start_date: new Date(body.start_date),
+              end_date: new Date(body.end_date),
             },
           });
           res.status(201).json(newReservation);
@@ -78,8 +62,6 @@ router.get("/:propertyId", verifyToken, async (req: Request, res: Response) => {
       if (err) {
         return res.status(401).json({ message: "Unauthorized" });
       }
-
-      const { public_user_id, amenities_id, start_date, end_date } = req.body;
      
       try {
         const amenities = await prisma.amenities.findMany({
