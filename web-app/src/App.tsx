@@ -30,6 +30,7 @@ import RequestManagementTable from './pages/RequestManagementTable.jsx';
 import FileUploadComponent from './pages/FileUploadComponent.jsx';
 import ViewFilesComponent from './pages/ViewFilesComponent.jsx';
 import FilesUser from './pages/FilesUser.jsx';
+import ReservationUser from './pages/ReservationUser.tsx';
 
 function App() {
   const isAuthenticated = !!localStorage.getItem("token");
@@ -80,9 +81,10 @@ function App() {
             <Route path="/ManagementFinancialOverview" element={<ManagementFinancialOverview/>} />
             <Route path="/AddOperationalCost" element={<AddOperationalCost/>} />
             <Route path="/UnitsDashboard" element={<UnitsDashboard/>} />
+            <Route path="/UnitsDashboard" element={<UnitsDashboard/>} />
+            <Route path="/ReservationUser" element={<ReservationUser/>} />
            
-           
-
+            
           </>
         ) : null}
       </Routes>
