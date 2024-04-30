@@ -37,7 +37,7 @@ export default function App() {
           if (!storedToken) return;
             
 
-          const url = 'http://192.168.2.13:3000/profile';
+          const url = 'https://estate-api-production.up.railway.app/profile';
           try {
             const response = await fetch(url, {
               method: 'GET',
@@ -71,7 +71,7 @@ export default function App() {
 
         console.log("now in upload" + imageUri); 
         const storedToken = await AsyncStorage.getItem('token');
-        const url = 'http://192.168.2.13:3000/profile/public-user';
+        const url = 'https://estate-api-production.up.railway.app/profile/public-user';
     
         let formData = new FormData();
         formData.append('isUpload', '1'); 
@@ -224,7 +224,12 @@ export default function App() {
                     </ScrollView>
                 </View>
 
-                <Text style={[styles.subText, styles.recent]}>Recent Activity</Text>
+                    <View style={styles.recentContainer}>
+                    <Text style={[styles.subText, styles.recent]}>Recent Activity</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate('RecentActivity')}>
+                    <Text style={styles.viewMoreButton}>View More</Text>
+                    </TouchableOpacity>
+                    </View>
                 <View style={{ alignItems: "center" }}>
                     <View style={styles.recentItem}>
                         <View style={styles.activityIndicator}></View>
@@ -350,9 +355,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 1
     },
     recent: {
-        marginLeft: 78,
-        marginTop: 32,
-        marginBottom: 6,
+        marginLeft: 38,
+        marginBottom: 20,
         fontSize: 10
     },
     recentItem: {
@@ -388,4 +392,14 @@ const styles = StyleSheet.create({
         marginLeft: 310, 
 
     },
+    viewMoreButton: {
+        color: 'purple',
+        fontSize: 12,
+        marginLeft: 160,
+    },
+   
+    recentContainer: {
+        flexDirection: "row",
+        marginTop: 32, 
+    }
 });

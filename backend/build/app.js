@@ -15,6 +15,7 @@ const login_1 = __importDefault(require("./routes/login"));
 const profile_1 = __importDefault(require("./routes/profile"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
+app.use(cors({origin: '*'}));
 app.use((0, morgan_1.default)("dev"));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));

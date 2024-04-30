@@ -19,6 +19,7 @@ import registrationRouter from "./routes/registration";
 import notificationsRouter from "./routes/notifications";
 import files from "./routes/files";
 
+
 declare global {
   namespace Express {
     export interface Request {
@@ -48,6 +49,7 @@ app.use("/billing", billingRouter);
 app.use("/registration", registrationRouter);
 app.use("/notifications", notificationsRouter);
 app.use("/files", files);
+app.use("/makeReservation", makeReservation);
 
 const port = process.env.PORT || 3000;
 app.listen(port || 3000, () => {
