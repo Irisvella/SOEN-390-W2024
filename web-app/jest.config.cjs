@@ -13,5 +13,6 @@ module.exports = {
       "^.+\\.[t|j]sx?$": "ts-jest",
       "\\.(css|less)$": "jest-css-modules-transform"
     },
+
     };
   
