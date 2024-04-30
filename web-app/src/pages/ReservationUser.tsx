@@ -28,6 +28,8 @@ function ReservationUser() {
     reservationType: "", // Default should be empty to force a selection
   });
 
+  const { propertyId } = useParams();
+
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setReservationData((prevData) => ({
@@ -77,7 +79,7 @@ function ReservationUser() {
     }
 
     try {
-      const response = await fetch(`http://localhost:3000/`, {
+      const response = await fetch(`http://localhost:3000/${propertyId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
