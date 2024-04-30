@@ -132,6 +132,12 @@ const PropertySlider: React.FC<PropertySliderProps> = ({ properties }) => {
               >
                 Create Request
               </Button>
+              <Button
+                variant="outlined"
+                onClick={() => navigate(`/FilesUser/${property.id}`)}
+              >
+                View Files
+              </Button>
             </div>
           </div>
         </div>
