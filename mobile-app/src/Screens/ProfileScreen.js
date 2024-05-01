@@ -19,7 +19,11 @@ export default function App() {
     const [userRole, setUserRole] = useState(''); 
     const [companyName, setCompanyName] = useState(''); 
     const [profileImage, setProfileImage] = useState(null); // will use when we implement image upload with backend endpoint
+    const [properties, setProperties] = useState([]);
+    const [unitsByPropertyId, setUnitsByPropertyId] = useState({});
+    const [totalUnits, setTotalUnits] = useState(0);
 
+    
     const handleLogout = async () => {
         await AsyncStorage.removeItem('token');
         setUsername('');
@@ -37,7 +41,8 @@ export default function App() {
           if (!storedToken) return;
             
 
-          const url = 'https://estate-api-production.up.railway.app/profile';
+           const url = 'https://estate-api-production.up.railway.app/profile';
+          // const url = 'http://192.168.2.30:3000/profile';
           try {
             const response = await fetch(url, {
               method: 'GET',
@@ -66,12 +71,100 @@ export default function App() {
         }
     };
 
+    const fetchUserProperties = async () => {
+        const storedToken = await AsyncStorage.getItem('token');
+       
+        if (!storedToken) {
+          Alert.alert("Session expired", "Please log in again.");
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Auth', state: { routes: [{ name: 'Login' }] } }],
+          });
+          return;
+        }
+       // const url = 'http://192.168.2.30:3000/login';
+
+         const url = 'https://estate-api-production.up.railway.app/dashboard'; 
+        try {
+          const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${storedToken}`,
+            },
+          });
+      
+          const data = await response.json();
+          if (response.ok) {
+            console.log('Properties:', data);
+            setProperties(data); 
+        
+            data.forEach(property => {
+              fetchUnits(property.id, storedToken);
+            });
+          } else {
+            Alert.alert("Error", data.message || "Failed to fetch properties");
+          }
+        } catch (error) {
+          console.error('Error fetching properties:', error);
+          Alert.alert("Error", "An error occurred while fetching properties");
+        }
+      };
+      
+      const fetchUnits = async (propertyId, token) => {
+        try {
+          const res = await fetch(`https://estate-api-production.up.railway.app/createEditListing/${propertyId}/units`, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+      
+          if (res.ok) {
+            const unitsData = await res.json();
+            console.log("Units for propertyId", propertyId, unitsData);
+            setUnitsByPropertyId(prevState => ({
+              ...prevState,
+              [propertyId]: unitsData
+            }));
+          } else {
+            console.error("Failed to fetch units for propertyId: ", propertyId);
+          }
+        } catch (error) {
+          console.error("Error fetching units for propertyId: ", propertyId, error);
+        }
+      };
+      
+      useEffect(() => {
+        const fetchOnNavigate = navigation.addListener('focus', () => {
+        fetchUserProperties();
+        });
+
+        return fetchOnNavigate;
+      }, [navigation]);
+
+      useEffect(() => {
+        setTotalUnits(properties.length); 
+    }, [properties]); 
+   
+    useEffect(() => {
+        const fetchOnNavigate = navigation.addListener('focus', () => {
+          fetchUserProfile();
+        });
+    
+        return fetchOnNavigate;
+      }, [navigation]);
+
+      const navigateToUnitStats = (property) => {
+        const unitsOwnedByUser = unitsByPropertyId[property.id].filter(unit => unit.unit_number === property.unit_number);
+        navigation.navigate('UnitStats', { units: unitsOwnedByUser, propertyId: property.id });
+    };
       
     const uploadImage = async (imageUri) => {
 
         console.log("now in upload" + imageUri); 
         const storedToken = await AsyncStorage.getItem('token');
-        const url = 'https://estate-api-production.up.railway.app/profile/public-user';
+        const url = 'https://estate-api-production.up.railway.app/profile';
     
         let formData = new FormData();
         formData.append('isUpload', '1'); 
@@ -85,10 +178,12 @@ export default function App() {
             name: `photo.${fileType}`,
             type: `image/${fileType}`, 
         });
+
+        console.log('formData:', formData);
     
         try {
             const response = await fetch(url, {
-                method: 'PATCH',
+                method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${storedToken}`,
                 },
@@ -126,14 +221,6 @@ export default function App() {
           }
       };
 
-      useEffect(() => {
-        const fetchOnNavigate = navigation.addListener('focus', () => {
-          fetchUserProfile();
-        });
-      
-
-        return fetchOnNavigate;
-      }, [navigation]);
       
 
     return (
@@ -199,8 +286,8 @@ export default function App() {
                         <Text style={[styles.text, styles.subText]}>Parking #</Text>
                     </View>
                     <View style={[styles.statsBox, { borderColor: "#DFD8C8", borderLeftWidth: 1, borderRightWidth: 1 }]}>
-                        <Text style={[styles.text, { fontSize: 24 }]}>4503</Text>
-                        <Text style={[styles.text, styles.subText]}>Condo Unit # </Text>
+                    <Text style={[styles.text, { fontSize: 24 }]}>{totalUnits}</Text>
+                    <Text style={[styles.text, styles.subText]}>Total Units</Text>
                     </View>
                     <View style={styles.statsBox}>
                         <Text style={[styles.text, { fontSize: 24 }]}>252</Text>
@@ -211,16 +298,17 @@ export default function App() {
             
                 <View style={{ marginTop: 32 }}>
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                        {/* We can insert condo plans here */}
-                        <View style={styles.mediaImageContainer}>
-                            <Image source={require("../../assets/condo.png")} style={styles.image} resizeMode="cover"></Image>
-                        </View>
-                        <View style={styles.mediaImageContainer}>
-                            <Image source={require("../../assets/condo.png")} style={styles.image} resizeMode="cover"></Image>
-                        </View>
-                        <View style={styles.mediaImageContainer}>
-                            <Image source={require("../../assets/condo.png")} style={styles.image} resizeMode="cover"></Image>
-                        </View>
+                        {properties.map((property, index) => (
+                            <TouchableOpacity
+                             key={index} 
+                             style={styles.mediaImageContainer}
+                             onPress={() => navigateToUnitStats(property)}
+                             >
+                                <Image source={{ uri: property.imageUrl }} style={styles.image} resizeMode="cover"></Image>
+                                <Text style={styles.propertyAddress}>{property.address} </Text>  
+                                <Text style={styles.propertyAddress}>Unit #{property.unit_number}</Text>
+                            </TouchableOpacity>
+                        ))}
                     </ScrollView>
                 </View>
 
@@ -337,6 +425,13 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         overflow: "hidden",
         marginHorizontal: 10
+    },
+    propertyAddress: {
+        color: "#333", 
+        fontSize: 14, 
+        marginTop: 5, 
+        textAlign: 'center', 
+        paddingHorizontal: 5, 
     },
     mediaCount: {
         backgroundColor: "#41444B",

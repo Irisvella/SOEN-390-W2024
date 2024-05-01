@@ -17,6 +17,7 @@ import CreateRequest from "./routes/CreateRequest";
 import billingRouter from "./routes/billing";
 import registrationRouter from "./routes/registration";
 import notificationsRouter from "./routes/notifications";
+import makeReservation from "./routes/makeReservation";
 import files from "./routes/files";
 import makeReservation from "./routes/makeReservation";
 
@@ -49,8 +50,8 @@ app.use("/CreateRequest", CreateRequest);
 app.use("/billing", billingRouter);
 app.use("/registration", registrationRouter);
 app.use("/notifications", notificationsRouter);
-app.use("/files", files);
 app.use("/makeReservation", makeReservation);
+app.use("/files", files);
 
 const port = process.env.PORT || 3000;
 app.listen(port || 3000, () => {

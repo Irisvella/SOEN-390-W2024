@@ -235,4 +235,49 @@ router.get("/unread", verifyToken, async (req: Request, res: Response) => {
   }
 });
 
+// mark all notifications as seen for a specific user
+router.post(
+  '/mark-all-seen',
+  verifyToken,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      jwt.verify(
+        req.token as string,
+        process.env.SECRET as jwt.Secret,
+        async (err, decoded) => {
+          if (err) {
+            console.log("Error during token verification in /mark-all-seen POST", err);
+            return res.status(401).json("Unauthorized");
+          }
+
+          const { id } = (<any>decoded).data;
+
+          
+          const updateResults = await prisma.notifications.updateMany({
+            where: {
+              requests: {
+                condo_owner_id: id,  
+              },
+              seen: false 
+            },
+            data: {
+              seen: true
+            }
+          });
+
+          return res.status(200).json({
+            message: "All notifications marked as seen",
+            updatedCount: updateResults.count
+          });
+        },
+      );
+    } catch (err) {
+      console.log("Server error in /mark-all-seen POST", err);
+      return res.status(500).json({ message: "Unexpected error" });
+    }
+  }
+);
+
+
+
 export default router;

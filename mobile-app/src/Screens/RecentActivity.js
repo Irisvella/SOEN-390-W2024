@@ -26,7 +26,7 @@ const daysUntilRentDue = calculateDaysUntilNextMonth();
 
 const activities = [
  
-    { id: '1', type: 'payment', description: `Rent is due in ${daysUntilRentDue} days`, amount: '$1500', issued_at: `${new Date()}` },
+    { id: '1', type: 'payment', description: `Rent is due in ${daysUntilRentDue} day(s)`, amount: '$1500', issued_at: `${new Date()}` },
     { id: '3', type: 'notification', description: 'New document available: Lease Agreement',  issued_at: '2021-04-10' },
     // Add more items here
 ];
@@ -39,15 +39,15 @@ const ActivityItem = ({ item, onPress }) => {
     switch (item.type) {
         case 'payment':
             iconName = 'attach-money';
-            iconColor = '#4CAF50'; // Green
+            iconColor = '#4CAF50'; 
             break;
         case 'notification':
             iconName = 'notifications';
-            iconColor = '#2196F3'; // Blue
+            iconColor = '#2196F3'; 
             break;
         default:
             iconName = 'build-circle';
-            iconColor = '#FF9800'; // Orange
+            iconColor = '#FF9800'; 
    
     }
 
