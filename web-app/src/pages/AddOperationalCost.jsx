@@ -1,3 +1,7 @@
+// Filename: Billing.ts
+// Author: Sarah Abellard
+// Description: Form to add operational costs to database
+// Dependencies: React, MUI (Material-UI)
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Box from '@mui/material/Box';

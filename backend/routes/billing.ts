@@ -1,3 +1,7 @@
+// Filename: Billing.ts
+// Author: Barthan, Sarah Abellard
+// Description: Routes for the backend of financial system
+// Dependencies: React, MUI (Material-UI)
 import express from "express";
 const router = express.Router();
 import * as z from "zod";
@@ -186,11 +190,13 @@ router.post(
   },
 );
 
+// TODO: readd employee roles to it from previous endpoint
 router.get("/all-bills", verifyToken, async (req: express.Request, res: express.Response) => {
   try {
       const decoded = jwt.verify(req.token as string, process.env.SECRET as jwt.Secret) as jwt.JwtPayload;
       const { id, role } = decoded.data;
 
+      
       if (role !== "company") {
           return res.status(403).json({ message: "Unauthorized: Access is limited to company accounts only." });
       }
@@ -508,6 +514,50 @@ router.get('/financial-report', verifyToken, async (req: express.Request, res: e
   }
 });
 
+router.get("/my-bills", verifyToken, async (req: express.Request, res: express.Response) => {
+  try {
+      const decoded = jwt.verify(req.token as string, process.env.SECRET as jwt.Secret) as jwt.JwtPayload;
+      const publicUserId = decoded.data.id; // Assuming the JWT includes the public user's ID
+
+      if (decoded.data.role !== "publicUser") {
+          return res.status(403).json({ message: "Unauthorized: Access is limited to public users only." });
+      }
+
+      // Fetch the registrations to find condo units associated with the public user
+      const registrations = await prisma.registration.findMany({
+          where: { public_user_id: publicUserId, end_date: null },
+          include: {
+              condo_unit: {
+                  include: {
+                      billing: true,
+                      property: true // include the property to access property address
+                  }
+              }
+          }
+      });
+
+      if (!registrations.length) {
+          return res.status(404).json({ message: "No bills found for the user." });
+      }
+
+      // Flatten the billing data and format it
+      const billingData = registrations.flatMap(reg =>
+          reg.condo_unit.billing.map(bill => ({
+              id: bill.id,
+              propertyAddress: reg.condo_unit.property.address,
+              unitNumber: reg.condo_unit.unit_number,
+              amount: bill.amount,
+              payBefore: bill.pay_before ? bill.pay_before.toISOString() : "Date not set", // Safe check for null
+              status: bill.status
+          }))
+      );
+
+      return res.status(200).json(billingData);
+  } catch (error) {
+      console.error("Error fetching bills for public user:", error);
+      return res.status(500).json({ message: "Internal server error" });
+  }
+});
 
 
 export default router;
