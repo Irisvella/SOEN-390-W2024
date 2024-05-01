@@ -1,4 +1,5 @@
-import { useState, ChangeEvent, FormEvent, useEffect } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
+//import { useEffect } from "react";
 import {
   SelectChangeEvent,
   Container,
@@ -20,7 +21,7 @@ import Navbar from "../components/Navbar";
 
 function ReservationUser() {
   const navigate = useNavigate();
-  const { property_id } = useParams();
+  //const { property_id } = useParams();
   const [reservationData, setReservationData] = useState({
     date: "",
     startTime: "",
