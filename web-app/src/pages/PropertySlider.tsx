@@ -125,7 +125,13 @@ const PropertySlider: React.FC<PropertySliderProps> = ({ properties }) => {
           <div className="property-details">
             <h3>{property.unit_number} - {property.address}</h3>
             <div className="property-actions">
-              <Button variant="outlined">Reserve Amenities</Button>
+              <Button 
+              variant="outlined"
+              onClick={() => navigate(`/ReservationUser/${property.id}`)}
+              >Reserve Facilities
+             
+              
+              </Button>
               <Button
                 variant="outlined"
                 onClick={() => navigate(`/CreateRequest/${property.id}`)}
