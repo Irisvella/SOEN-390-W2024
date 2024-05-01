@@ -98,7 +98,8 @@ router.get(
           const count: any = await prisma.$queryRaw`SELECT COUNT(DISTINCT n.id) 
                                         FROM notifications n, requests r
                                         WHERE r.condo_owner_id = ${parseInt(id)} 
-                                          AND r.id = n.request_id`;
+                                          AND r.id = n.request_id 
+                                          AND seen = FALSE`;
           if (count.length === 0) {
             console.log("err count length 0");
             return res.status(500);
@@ -199,40 +200,5 @@ router.get(
   },
 );
 
-// Add an endpoint to count unread notifications
-router.get("/unread", verifyToken, async (req: Request, res: Response) => {
-  try {
-    const decoded = jwt.verify(
-      req.token as string,
-      process.env.SECRET as jwt.Secret,
-    );
-    const { id, role } = (<any>decoded).data;
-
-    if (role !== "publicUser") {
-      return res
-        .status(401)
-        .json({ message: "Unauthorized: Access is limited to public users." });
-    }
-
-    const count = await prisma.notifications.count({
-      where: {
-        requests: {
-          condo_owner_id: id,
-        },
-        seen: false,
-      },
-    });
-
-    return res.status(200).json({ unreadCount: count });
-  } catch (error) {
-    console.error("Error fetching unread notification count:", error);
-    return res
-      .status(500)
-      .json({
-        message:
-          "Failed to fetch unread notification count due to server error.",
-      });
-  }
-});
 
 export default router;
