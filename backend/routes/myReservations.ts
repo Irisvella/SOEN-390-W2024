@@ -7,7 +7,12 @@ require("dotenv").config();
 
 
 import { Request, Response } from "express";
-
+interface amenities {
+    amenities_id: number;
+    start_date: string;
+    image_uend_daterl: string;
+    text_id: string;
+  }
 
 router.get("/", verifyToken, async (req: Request, res: Response) => {
   
@@ -21,11 +26,10 @@ router.get("/", verifyToken, async (req: Request, res: Response) => {
        
         try {
           const { id, role, email } = (<any>decoded).data;
-          const reservations = await prisma.reserved_by.findMany({
-            where:{
-                public_user_id: id
-          },
-        });
+          const reservations = await prisma.$queryRaw<amenities[]>
+          `select r.amenities_id, r.start_date, r.end_date, a.text_id
+          from reserved_by as r, amenities as a
+          where r.amenities_id = a.id and r. public_user_id = ${id}`;
         res.status(201).json(reservations);
          
         } catch (error) {
