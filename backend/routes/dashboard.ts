@@ -1,3 +1,9 @@
+
+// Filename: dashboard.ts
+// Author: Samuel Collette
+// Description: Backend file to retrieve all porperties under the logged in user, for the dashboard
+// Dependencies: jwt, prisma, express
+
 import express from "express";
 const router = express.Router();
 import prisma from "../prisma/client";
@@ -17,6 +23,7 @@ interface companyData {
 interface userData {
   id: number;
   address: string;
+  unit_number: string;
   image_url: string;
   username: string;
 }
@@ -48,7 +55,7 @@ router.get(
             } else if (role === "publicUser") {
               const publicUser = await prisma.$queryRaw<
                 userData[]
-              >`SELECT pu.user_id, p.id, p.address, p.image_url AS "imageUrl", pu.first_name, 'user' AS "propertyType"
+              >`SELECT pu.user_id, p.id, p.address, p.image_url AS "imageUrl", pu.first_name, 'user' AS "propertyType", c.unit_number
               FROM property AS p, public_users as pu, registration as r, condo_unit as c
                 WHERE pu.user_id = ${id} and pu.user_id = r.public_user_id and c.id = r.condo_id and c.property_id = p.id;
                 `;

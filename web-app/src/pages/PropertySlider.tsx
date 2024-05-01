@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 interface Property {
   imageUrl: string;
   address: string;
+  unit_number: string;
   id: string;
   isSpecial?: boolean;
   propertyType: "user" | "company";
@@ -84,18 +85,20 @@ const PropertySlider: React.FC<PropertySliderProps> = ({ properties }) => {
           <div className="property-details">
             <h3>{property.address}</h3>
             <div className="property-actions">
-              <Button
+              {/*<Button
                 variant="outlined"
                 onClick={() => navigate(`/Employeesinfo/${property.id}`)}
               >
                 Visit Employee List
-              </Button>
+              </Button>*/}
+              {/*
               <Button
                 variant="outlined"
                 onClick={() => navigate(`/OpenRequestManagementPage`)}
               >
                 Requests
               </Button>
+              */}
               <Button
                 variant="outlined"
                 onClick={() => navigate(`/EditListing/${property.id}`)}
@@ -120,15 +123,20 @@ const PropertySlider: React.FC<PropertySliderProps> = ({ properties }) => {
         <div key={property.id} className="property-slide">
           <img src={property.imageUrl} alt={property.address} />
           <div className="property-details">
-            <h3>{property.address}</h3>
+            <h3>{property.unit_number} - {property.address}</h3>
             <div className="property-actions">
-              <Button variant="outlined">View Requests</Button>
-              <Button variant="outlined">Financial Information</Button>
+              <Button variant="outlined">Reserve Amenities</Button>
               <Button
                 variant="outlined"
                 onClick={() => navigate(`/CreateRequest/${property.id}`)}
               >
                 Create Request
+              </Button>
+              <Button
+                variant="outlined"
+                onClick={() => navigate(`/FilesUser/${property.id}`)}
+              >
+                View Files
               </Button>
             </div>
           </div>

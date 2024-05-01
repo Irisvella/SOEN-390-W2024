@@ -113,7 +113,7 @@ const updateProfile = async () => {
       </>
       )}
       
-      <Button onClick={updateProfile} style={{ width: '150px', height: '40px', marginTop: '50px',marginTop: 'auto', alignSelf: 'flex-start'} }>Update</Button>
+      <Button onClick={updateProfile} style={{ width: '150px', height: '40px', marginTop: 'auto', alignSelf: 'flex-start'} }>Update</Button>
     </Grid>
     
   );

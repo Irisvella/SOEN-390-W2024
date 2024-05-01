@@ -8,6 +8,10 @@ import Employeesinfo from './pages/employeesinfo.jsx';
 import Addemployee from './pages/addemployee.jsx';
 import './App.css';
 import Home from './pages/Home.jsx';
+import Features from './pages/Features.jsx';
+import WhyEstateFlow from './pages/WhyEstateFlow.jsx';
+import Pricing from './pages/pricing.jsx';
+import Contact from './pages/Contact.jsx';
 import UserLanding from './pages/UserLanding.jsx';
 import ManagementLanding from './pages/ManagementLanding.jsx';
 import CreateListingForm from './components/CreateListingForm.tsx';
@@ -20,7 +24,12 @@ import ManagementFinancialOverview from './pages/ManagementFinancialOverview.jsx
 import AddOperationalCost from './pages/AddOperationalCost.jsx';
 import CreateRequestForm from "./components/CreateRequestForm.tsx";
 import UnitsDashboard from './pages/UnitsDashboard.tsx';
-
+import UserRequests from './pages/UserRequests.jsx';
+import UserBills from './pages/UserBills.jsx';
+import RequestManagementTable from './pages/RequestManagementTable.jsx';
+import FileUploadComponent from './pages/FileUploadComponent.jsx';
+import ViewFilesComponent from './pages/ViewFilesComponent.jsx';
+import FilesUser from './pages/FilesUser.jsx';
 
 function App() {
   const isAuthenticated = !!localStorage.getItem("token");
@@ -31,6 +40,10 @@ function App() {
         <Route path="/Signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Home />} />
+        <Route path="/Features" element={<Features />} />
+        <Route path="/Pricing" element={<Pricing />} />
+        <Route path="/WhyEstateFlow" element={<WhyEstateFlow />}/>
+        <Route path="/Contact" element={<Contact />}/>
 
         {/* Use the PrivateRoute directly for the protected routes */}
         {isAuthenticated ? (
@@ -47,6 +60,13 @@ function App() {
             <Route path="/dashboard-company" element={<DashboardCompany />} />
             <Route path="/Employeesinfo" element={<Employeesinfo />} />
             <Route path="/Addemployee" element={<Addemployee />} />
+            <Route path="/UserRequests" element={<UserRequests />} />
+            <Route path="/UserBills" element={<UserBills />} />
+            <Route path="/RequestManagementTable" element={<RequestManagementTable />} />
+            <Route path="/FileUploadComponent" element={<FileUploadComponent />} />
+            <Route path="/ViewFilesComponent" element={<ViewFilesComponent />} />
+            <Route path="/FilesUser/:propertyId" element={<FilesUser />} />
+
             <Route
               path="/CreateRequest/:propertyId"
               element={<CreateRequestForm />}
