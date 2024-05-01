@@ -18,6 +18,7 @@ import billingRouter from "./routes/billing";
 import registrationRouter from "./routes/registration";
 import files from "./routes/files"
 import makeReservation from "./routes/makeReservation";
+import myReservations from "./routes/myReservations";
 
 
 declare global {
@@ -49,6 +50,7 @@ app.use("/billing", billingRouter);
 app.use("/registration", registrationRouter);
 app.use("/files", files);
 app.use("/makeReservation", makeReservation);
+app.use("/myReservations", myReservations);
 
 const port = process.env.PORT || 3000;
 app.listen(port || 3000, () => {
