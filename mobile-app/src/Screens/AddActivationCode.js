@@ -1,16 +1,44 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
+
 
 const ActivationScreen = ({ navigation }) => {
   const [activationCode, setActivationCode] = useState('');
 
-  const handleActivation = () => {
-   
-    // send code to backend 
-    Alert.alert('Activation Attempt', `Code entered: ${activationCode}`);
-    
+  const handleActivation = async () => {
+
+    if (activationCode.trim() === '') {
+      Alert.alert('Missing Code', 'Please enter an activation code before continuing.');
+      return; 
+    }
+
+    try {
+      // Assuming 'token' is saved in localStorage (adjust as needed for React Native)
+      const token = await AsyncStorage.getItem('token');
+      const response = await fetch('https://estate-api-production.up.railway.app/registration', {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ registrationKey: activationCode })
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        Alert.alert('Success', 'Unit registered successfully');
+        navigation.goBack();
+      } else {
+        Alert.alert('Registration Failed', data.message || 'Failed to register unit');
+      }
+    } catch (error) {
+      console.error('Error registering unit:', error);
+      Alert.alert('Error', 'An error occurred while trying to register the unit');
+    }
   };
+
 
   return (
     <View style={styles.container}>
@@ -25,7 +53,7 @@ const ActivationScreen = ({ navigation }) => {
         placeholder="Activation Code"
         keyboardType="numeric" 
       />
-       <TouchableOpacity style={styles.activateButton} onPress={() => console.log('Activation confirmed')}>
+       <TouchableOpacity style={styles.activateButton} onPress={handleActivation}>
         <Text style={styles.activateButtonText}>Activate</Text>
       </TouchableOpacity>
     </View>

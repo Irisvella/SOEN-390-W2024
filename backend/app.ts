@@ -16,7 +16,9 @@ import employeeList from "./routes/employeeList";
 import CreateRequest from "./routes/CreateRequest";
 import billingRouter from "./routes/billing";
 import registrationRouter from "./routes/registration";
-import files from "./routes/files"
+import notificationsRouter from "./routes/notifications";
+import makeReservation from "./routes/makeReservation";
+import files from "./routes/files";
 import makeReservation from "./routes/makeReservation";
 import myReservations from "./routes/myReservations";
 
@@ -48,9 +50,10 @@ app.use("/employeeList", employeeList);
 app.use("/CreateRequest", CreateRequest);
 app.use("/billing", billingRouter);
 app.use("/registration", registrationRouter);
-app.use("/files", files);
+app.use("/notifications", notificationsRouter);
 app.use("/makeReservation", makeReservation);
 app.use("/myReservations", myReservations);
+app.use("/files", files);
 
 const port = process.env.PORT || 3000;
 app.listen(port || 3000, () => {
