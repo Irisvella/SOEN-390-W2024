@@ -73,8 +73,29 @@ const NotificationsUser = () => {
     };
 
     const columns = [
+        {
+            field: 'message',
+            headerName: 'Message',
+            width: 310,
+            renderCell: (params) => {
+                let message = '';
+                switch (params.row.status) {
+                    case 'unassigned':
+                        message = 'Your request has been submitted.';
+                        break;
+                    case 'completed':
+                        message = 'Your request has been marked as completed.';
+                        break;
+                    case 'in_progress':
+                        message = 'Your request has been seen and is in progress.';
+                        break;
+                    default:
+                        message = 'Status not recognized.';
+                }
+                return <span>{message}</span>;
+            }
+        },
         { field: 'title', headerName: 'Request Title', width: 200 },
-        { field: 'status', headerName: 'Status', width: 120 },
         { field: 'inserted_at', headerName: 'Date', width: 180 },
         {
             field: 'seen',
@@ -93,7 +114,10 @@ const NotificationsUser = () => {
             ),
             width: 150
         }
+
     ];
+    
+    
 
     return (
         <div>
@@ -102,7 +126,7 @@ const NotificationsUser = () => {
                 <Typography variant="h4" sx={{ mb: 4 }}>
                     Notifications
                 </Typography>
-                <Box sx={{ height: '60%', width: '45%' }}>
+                <Box sx={{ height: '60%', width: '55%' }}>
                     <DataGrid
                         rows={notifications}
                         columns={columns}
