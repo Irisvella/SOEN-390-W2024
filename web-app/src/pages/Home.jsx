@@ -6,7 +6,7 @@ const Home = () => {
   return (
     <div className="home-background">
       <Navbar />
-      <div className="content">
+      <div data-testid='home_content' className="content">
         <h1>Welcome to EstateFlow</h1>
         <p><h2>Discover Your Dream Space</h2></p>
         <p>

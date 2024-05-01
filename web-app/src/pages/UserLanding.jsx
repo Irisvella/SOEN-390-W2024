@@ -73,7 +73,7 @@ const UserLanding = () => {
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
-      <div className="home-background">
+      <div className="home-background" data-testid='content'>
         <Navbar />
         <Box sx={{
           display: 'flex',
