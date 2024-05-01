@@ -7,6 +7,7 @@ import verifyToken from "../middleware/verify-token";
 require("dotenv").config();
 
 import { Request, Response, NextFunction } from "express";
+import { profile } from "console";
 
 router.get(
   "/",
@@ -89,7 +90,7 @@ router.put("/", verifyToken, async (req: Request, res: Response) => {
     );
     const { id, role } = (<any>decoded).data;
 
-    const { phoneNumber, firstName, lastName, companyName, address } = req.body; // Extract fields from request body
+    const { phoneNumber, firstName, lastName, companyName, address, avatar } = req.body; // Extract fields from request body
 
     if (role === "company") {
       const company = await prisma.management_companies.update({
@@ -113,7 +114,7 @@ router.put("/", verifyToken, async (req: Request, res: Response) => {
           first_name: firstName,
           last_name: lastName,
           phone_number: phoneNumber,
-          //profile_image_key: avatar,
+           profile_image_key: avatar,
         },
       });
       console.log("Updated user data:", public_users);

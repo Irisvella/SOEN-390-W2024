@@ -34,8 +34,8 @@ export default function SignupScreen() {
 
         // URL should be replaced with your actual backend endpoint
         const url = userType === 'publicUser' ?
-        'http://192.168.2.13:3000/signup/public-user' :
-        'http://192.168.2.13:3000/signup/management-company';        //  OR const url = ' http://localhost:3000/signup/public-user'; 
+        'https://estate-api-production.up.railway.app/signup/public-user' :
+        'https://estate-api-production.up.railway.app/signup/management-company';        //  OR const url = ' http://localhost:3000/signup/public-user'; 
 
  if (userType === 'publicUser') {     
         try {

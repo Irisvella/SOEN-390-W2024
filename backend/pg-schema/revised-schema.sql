@@ -131,6 +131,14 @@ CREATE TABLE requests (
     UNIQUE (condo_owner_id, employee_id, title, issued_at)
 );
 
+CREATE TABLE notifications ( -- only for condo owners and only for requests table
+    id SERIAL PRIMARY KEY,
+    request_id INT NOT NULL REFERENCES requests(id),
+    status request_status NOT NULL,
+    inserted_at TIMESTAMP DEFAULT NOW(),
+    seen boolean DEFAULT FALSE
+);
+
 CREATE TYPE file_type AS ENUM('declarations', 'annual budgets', 'board meeting minutes', 'other');
 
 CREATE TABLE condo_management_files (
@@ -198,3 +206,24 @@ CREATE TRIGGER decrement_unit_count
 AFTER DELETE ON condo_unit
 FOR EACH ROW
 EXECUTE FUNCTION decrement_unit_count_function();
+
+
+-- trigger for whenever a request is created, a notifcation is created also
+CREATE FUNCTION insert_notification_function()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO notifications (request_id, status) VALUES (NEW.id, NEW.status);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER insert_notification
+AFTER INSERT ON requests
+FOR EACH ROW
+EXECUTE FUNCTION insert_notification_function();
+
+-- trigger for whenever a request is updated, a notification is created for updated request
+CREATE TRIGGER insert_update_notification
+AFTER UPDATE ON requests
+FOR EACH ROW
+EXECUTE FUNCTION insert_notification_function();
