@@ -80,18 +80,6 @@ router.post(
                       }
                   });
               }
-              if ("spa" in body){
-                const spa = await prisma.amenities.create({
-                  data: {
-                    property_id: property.id,
-                    text_id: "Spa",
-                    fee: 0,
-                    description: "Spa",
-                    
-
-                  }
-              });
-              }
               if ("gym" in body){
                 const gym = await prisma.amenities.create({
                   data: {
@@ -113,6 +101,59 @@ router.post(
                     description: "Sky Lounge",
                     
 
+                  }
+              });
+              }
+              if ("pool" in body){
+                const pool = await prisma.amenities.create({
+                  data: {
+                    property_id: property.id,
+                    text_id: "pool",
+                    fee: 0,
+                    description: "Pool",
+                  }
+              });
+              }
+              
+              if ("sauna" in body){
+                const sauna = await prisma.amenities.create({
+                  data: {
+                    property_id: property.id,
+                    text_id: "sauna",
+                    fee: 0,
+                    description: "sauna",
+                  }
+              });
+              }
+              
+              if ("massageRoom" in body){
+                const massageRoom = await prisma.amenities.create({
+                  data: {
+                    property_id: property.id,
+                    text_id: "massageRoom",
+                    fee: 0,
+                    description: "massage room",
+                  }
+              });
+              }
+  
+              if ("conferenceRoom" in body){
+                const conferenceRoom = await prisma.amenities.create({
+                  data: {
+                    property_id: property.id,
+                    text_id: "conferenceRoom",
+                    fee: 0,
+                    description: "conference room",
+                  }
+              });
+              }
+              if ("partyRoom" in body){
+                const partyRoom = await prisma.amenities.create({
+                  data: {
+                    property_id: property.id,
+                    text_id: "partyRoom",
+                    fee: 0,
+                    description: "party room",
                   }
               });
               }

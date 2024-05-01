@@ -41,8 +41,8 @@ export default function App() {
           if (!storedToken) return;
             
 
-           const url = 'https://estate-api-production.up.railway.app/profile';
-          // const url = 'http://192.168.2.30:3000/profile';
+           // const url = 'https://estate-api-production.up.railway.app/profile';
+           const url = 'http://192.168.2.30:3000/profile';
           try {
             const response = await fetch(url, {
               method: 'GET',
@@ -82,9 +82,9 @@ export default function App() {
           });
           return;
         }
-       // const url = 'http://192.168.2.30:3000/login';
+        const url = 'http://192.168.2.30:3000/dashboard';
 
-         const url = 'https://estate-api-production.up.railway.app/dashboard'; 
+       //  const url = 'https://estate-api-production.up.railway.app/dashboard'; 
         try {
           const response = await fetch(url, {
             method: 'GET',
@@ -323,7 +323,7 @@ export default function App() {
                         <View style={styles.activityIndicator}></View>
                         <View style={{ width: 250 }}>
                             <Text style={[styles.text, { color: "#41444B", fontWeight: "300" }]}>
-                                Rent is Due in <Text style={{ fontWeight: "400" }}> 5 days</Text>
+                                Rent is Due <Text style={{ fontWeight: "400" }}> soon</Text>
                             </Text>
                         </View>
                     </View>

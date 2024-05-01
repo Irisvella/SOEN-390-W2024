@@ -19,7 +19,6 @@ import registrationRouter from "./routes/registration";
 import notificationsRouter from "./routes/notifications";
 import makeReservation from "./routes/makeReservation";
 import files from "./routes/files";
-import makeReservation from "./routes/makeReservation";
 import myReservations from "./routes/myReservations";
 
 

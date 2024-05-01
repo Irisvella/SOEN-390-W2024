@@ -16,6 +16,7 @@ import BookSauna from './src/Screens/Bookings/BookSauna';
 import BookMassage from './src/Screens/Bookings/BookMassage';
 import BookConference from './src/Screens/Bookings/BookConference';
 import BookParty from './src/Screens/Bookings/BookParty';
+import BookSkyLounge from './src/Screens/Bookings/BookSkyLounge';
 import ViewBookings from './src/Screens/Bookings/ViewBookings';
 import CreateServiceRequests from './src/Screens/CreateServiceRequests';
 import ContactManagement from './src/Screens/ContactManagement';
@@ -111,6 +112,7 @@ function App() {
         <MainStack.Screen name="BookMassage" component={BookMassage} />
         <MainStack.Screen name="BookConference" component={BookConference} />
         <MainStack.Screen name="BookParty" component={BookParty} />
+        <MainStack.Screen name="BookLounge" component={BookSkyLounge}/> 
         <MainStack.Screen name="ViewBookings" component={ViewBookings} />
         <MainStack.Screen name="ServiceRequest" component={CreateServiceRequests} />
         <MainStack.Screen name="ContactManagement" component={ContactManagement} />

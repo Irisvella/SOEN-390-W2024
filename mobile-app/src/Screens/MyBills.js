@@ -78,7 +78,9 @@ const UnitBillsComponent = ({ navigation }) => {
                     ))}
                 </ScrollView>
             ) : (
+                <View style={styles.centeredContainer}>
                 <Text>No bills available.</Text>
+                </View>
             )}
         </View>
     );
@@ -101,6 +103,14 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         
     },
+    centeredContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center',
+        padding: 20,
+        backgroundColor: "#FFF"
+      },
     billItem: {
         backgroundColor: '#ffffff',
         borderRadius: 10,

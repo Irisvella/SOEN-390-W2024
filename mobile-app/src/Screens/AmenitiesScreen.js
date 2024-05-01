@@ -1,71 +1,115 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, TouchableOpacity, Dimensions } from "react-native";
 import { Ionicons } from '@expo/vector-icons'; 
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const { width } = Dimensions.get("screen");
 
 const AmenitiesScreen = () => {
+ 
+  const route = useRoute();
   const navigation = useNavigation();
+  const propertyId = route.params?.propertyId || 1;
+  const [amenities, setAmenities] = useState([]); 
+
+  const amenitiesMapping = {
+    gym: {
+      image: require("../../assets/gym.png"),
+      text: "Gym",
+      navigationRoute: "BookGym",
+    },
+    skylounge: {
+      image: require("../../assets/sky_lounge.png"), 
+      text: "Sky Lounge",
+      navigationRoute: "BookLounge",
+    },
+    pool: {
+      image: require("../../assets/pool.png"),
+      text: "Pool",
+      navigationRoute: "BookPool",
+    },
+    sauna: {
+      image: require("../../assets/sauna.png"),
+      text: "Sauna",
+      navigationRoute: "BookSauna",
+    },
+    massageRoom: {
+      image: require("../../assets/massage.png"),
+      text: "Massage Room",
+      navigationRoute: "BookMassage",
+    },
+    conferenceRoom: {
+      image: require("../../assets/conference.png"),
+      text: "Conference Room",
+      navigationRoute: "BookConference",
+    },
+    partyRoom: {
+      image: require("../../assets/party.png"),
+      text: "Party Room",
+      navigationRoute: "BookParty",
+    },
+  };
+  
+
+  useEffect(() => {
+    const fetchAmenities = async () => {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        navigation.navigate("Login");
+        return;
+      }
+      try {
+        const response = await fetch(
+          `http://172.20.10.7:3000/makeReservation/${propertyId}`, 
+          {
+            method: "GET",
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data);
+          setAmenities(data);
+        } else {
+          console.error("Failed to fetch amenities");
+        }
+      } catch (error) {
+        console.error("Error fetching amenities:", error);
+      }
+    };
+  
+    fetchAmenities();
+  }, [navigation, propertyId]);
+
+
+  if (amenities.length === 0) {
+    return (
+      <View style={styles.centeredContainer}>
+        <Text>No available amenities</Text>
+      </View>
+    );
+  }
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        <View style={styles.mediaImageContainer}>
-            <Image source={require("../../assets/pool.png")} style={styles.image} resizeMode="cover"></Image>
-               <View style={styles.textBackground}>
-               <Text style={styles.text}>Pool</Text>
-               </View>
-            <TouchableOpacity style={styles.bookButton} onPress={() => navigation.navigate('BookPool')}>
-                <Ionicons name="add-circle" size={24} color="#FFF" />
-            </TouchableOpacity>
-        </View>
-        <View style={styles.mediaImageContainer}>
-            <Image source={require("../../assets/gym.png")} style={styles.image} resizeMode="cover"></Image>
-            <View style={styles.textBackground}>
-            <Text style={styles.text}>Gym</Text>
-            </View> 
-              <TouchableOpacity style={styles.bookButton} onPress={() => navigation.navigate('BookGym')}>
-                <Ionicons name="add-circle" size={24} color="#FFF" />
-            </TouchableOpacity>
-        </View>
-        <View style={styles.mediaImageContainer}>
-            <Image source={require("../../assets/sauna.png")} style={styles.image} resizeMode="cover"></Image>
-            <View style={styles.textBackgroundSauna}>  
-            <Text style={styles.text}>Sauna</Text>
+      {amenities.map((amenity) => {
+        const amenityInfo = amenitiesMapping[amenity.text_id];
+        
+
+        return (
+          <View key={amenity.id} style={styles.mediaImageContainer}>
+            <Image source={amenityInfo.image} style={styles.image} resizeMode="cover"></Image>
+            <View style={styles.textBackground}>  
+              <Text style={styles.text}>{amenityInfo.text}</Text>
             </View>
-              <TouchableOpacity style={styles.bookButton} onPress={() => navigation.navigate('BookSauna')}>
-                <Ionicons name="add-circle" size={24} color="#FFF" />
+            <TouchableOpacity style={styles.bookButton} onPress={() => navigation.navigate(amenityInfo.navigationRoute, { amenityId: amenity.id, propertyId: propertyId })}>
+              <Ionicons name="add-circle" size={24} color="#FFF" />
             </TouchableOpacity>
-        </View>
-        <View style={styles.mediaImageContainer}>
-            <Image source={require("../../assets/massage.png")} style={styles.image} resizeMode="cover"></Image>
-            <View style={styles.textBackgroundLong3}>
-            <Text style={styles.text}>Massage Room</Text>
-            </View>
-              <TouchableOpacity style={styles.bookButton} onPress={() => navigation.navigate('BookMassage')}>
-                <Ionicons name="add-circle" size={24} color="#FFF" />
-            </TouchableOpacity>
-        </View>
-        <View style={styles.mediaImageContainer}>
-            <Image source={require("../../assets/conference.png")} style={styles.image} resizeMode="cover"></Image>
-            <View style={styles.textBackgroundLong2}>
-            <Text style={styles.text}>Conference Room</Text>
-            </View>
-              <TouchableOpacity style={styles.bookButton}  onPress={() => navigation.navigate('BookConference')}>
-                <Ionicons name="add-circle" size={24} color="#FFF" />
-            </TouchableOpacity>
-        </View>
-        <View style={styles.mediaImageContainer}>
-            <Image source={require("../../assets/party.png")} style={styles.image} resizeMode="cover"></Image>
-            <View style={styles.textBackgroundLong}>
-            <Text style={styles.text}>Party Room</Text>
-            </View>
-              <TouchableOpacity style={styles.bookButton}  onPress={() => navigation.navigate('BookParty')}>
-                <Ionicons name="add-circle" size={24} color="#FFF" />
-            </TouchableOpacity>
-        </View>
-        {/* Add more amenities as needed */}
+          </View>
+        );
+      })}
     </ScrollView>
   );
 };
@@ -75,6 +119,14 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 10,
     paddingVertical: 10,
+    backgroundColor: "#FFF"
+  },
+  centeredContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    padding: 20,
     backgroundColor: "#FFF"
   },
   mediaImageContainer: {
