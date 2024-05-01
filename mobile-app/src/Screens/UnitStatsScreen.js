@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const UnitStatsScreen = ({ route, navigation }) => {
-    const [bills, setBills] = useState([]);
-    const [loading, setLoading] = useState(false);
     const { units } = route.params;
 
     const navigateToCreateRequest = () => {
         navigation.navigate('ServiceRequest', { propertyId: units[0].property_id });
     };
 
+    const navigateToBookAmenities = () => {
+        navigation.navigate('Book Amenities', { propertyId: units[0].property_id });
+    };             
 
+    const navigateToViewBookings = () => {
+        navigation.navigate('ViewBookings', { propertyId: units[0].property_id });
+    };          
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Unit Info</Text>
@@ -40,6 +44,14 @@ const UnitStatsScreen = ({ route, navigation }) => {
             <TouchableOpacity style={styles.makeRequestButton} onPress={navigateToCreateRequest}>
                 <FontAwesome5 name="tools" size={20} color="white" /> 
                 <Text style={styles.makeRequestButtonText}>Make A Service Request</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.makeRequestButton} onPress={navigateToBookAmenities}>
+                <FontAwesome5 name="plus" size={20} color="white" /> 
+                <Text style={styles.makeRequestButtonText}>Book Amenity</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.makeRequestButton} onPress={navigateToViewBookings}>
+                <FontAwesome5 name="calendar-alt" size={20} color="white" /> 
+                <Text style={styles.makeRequestButtonText}>View Bookings</Text>
             </TouchableOpacity>
         </View>
     );

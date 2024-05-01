@@ -3,20 +3,63 @@ import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'rea
 import { Calendar } from 'react-native-calendars';
 import { Picker } from '@react-native-picker/picker';
 import { MaterialIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const BookConference = ({ navigation }) => {
-  const [selectedTime, setSelectedTime] = useState("10:00 AM");
-  const [selectedDate, setSelectedDate] = useState(new Date());
+const BookConference = ({ route, navigation }) => {
+  const [selectedHour, setSelectedHour] = useState("1");
+  const [selectedModifier, setSelectedModifier] = useState('AM');
+  const [duration, setDuration] = useState('1'); 
+  const [selectedDate, setSelectedDate] = useState(); 
+
+  const amenityId = route.params?.amenityId; 
+  const propertyId = route.params?.propertyId;
+
+  const formatTimeForRequest = (hour, modifier) => {
+    const normalizedHour = hour % 12 + (modifier === 'PM' ? 12 : 0);
+    return `${normalizedHour.toString().padStart(2, '0')}:00:00`;
+};
 
 
-  const onDaySelect = (day) => {
-    setSelectedDate(day.dateString);
-  };
+const bookSlot = async () => {
+  const startTime = formatTimeForRequest(selectedHour, selectedModifier);
+  const endTime = formatTimeForRequest(parseInt(selectedHour) + parseInt(duration), selectedModifier); 
+  const token = await AsyncStorage.getItem("token"); 
+  if (!token) {
+    console.log('No token found, redirecting to login');
+    navigation.navigate("Login");
+    return;
+  }
+  console.log(`${selectedDate}T${startTime}`);
+  console.log(`${selectedDate}T${endTime}`);
+  
+  try {
+    const response = await fetch(`http://192.168.2.30:3000/makeReservation/${propertyId}/newReservation`, {
+      method: "POST",
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        amenities_id: amenityId, 
+        start_date: `${selectedDate}T${startTime}`, 
+        end_date: `${selectedDate}T${endTime}`, 
+      })
+    });
 
-  const markedDates = {
-    [selectedDate]: {selected: true, selectedColor: '#00adf5'}
-  };
+    if (response.ok) {
+      const data = await response.json();
+      alert('Booking successful!');
+      navigation.goBack();  
+    } else {
+      const errorData = await response.json();
+      alert(`Failed to book: ${errorData.message}`);
+    }
+  } catch (error) {
+    console.error("Error booking gym slot:", error);
+    alert('Error making reservation');
+  }
+};
 
   return (
     <ScrollView style={styles.container}>
@@ -31,30 +74,40 @@ const BookConference = ({ navigation }) => {
         </Text>
       </View>
       <Calendar
-        current={Date()}
-        onDayPress={onDaySelect}
-        markedDates={markedDates}
-        theme={{
-          selectedDayBackgroundColor: '#00adf5',
-          todayTextColor: '#00adf5',
-          arrowColor: 'blue',
+         current={selectedDate}
+         onDayPress={(day) => setSelectedDate(day.dateString)}
+         markedDates={{[selectedDate]: {selected: true, selectedColor: '#00adf5'}}}
+         theme={{
+           selectedDayBackgroundColor: '#00adf5',
+           todayTextColor: '#00adf5',
+           arrowColor: 'blue',
         }}
       />
-      <Text style={styles.timePickerLabel}>Select Time:</Text>
-      <Picker
-        selectedValue={selectedTime}
-        style={styles.timePicker}
-        onValueChange={(itemValue, itemIndex) => setSelectedTime(itemValue)}
-      >
-        {/* Example time slots, need to adjust to be dynamic w database */}
-        <Picker.Item label="10:00 AM" value="10:00 AM" />
-        <Picker.Item label="11:00 AM" value="11:00 AM" />
-        <Picker.Item label="12:00 PM" value="12:00 PM" />
-      </Picker>
-      <TouchableOpacity style={styles.bookButton} onPress={() => console.log('Booking confirmed')}>
-        <Text style={styles.bookButtonText}>Book Now</Text>
-      </TouchableOpacity>
-    </ScrollView>
+      <View style={styles.pickerContainer}>
+     <Picker
+       selectedValue={selectedHour}
+       style={styles.hourPicker}
+       onValueChange={(itemValue) => setSelectedHour(itemValue)}>
+       {Array.from({ length: 12 }, (_, i) => <Picker.Item label={`${i+1}:00`} value={`${i+1}`} key={i} />)}
+     </Picker>
+     <Picker
+       selectedValue={selectedModifier}
+       style={styles.hourPicker}
+       onValueChange={(itemValue) => setSelectedModifier(itemValue)}>
+       <Picker.Item label="AM" value="AM" />
+       <Picker.Item label="PM" value="PM" />
+     </Picker>
+     <Picker
+       selectedValue={duration}
+       style={styles.hourPicker}
+       onValueChange={(itemValue) => setDuration(itemValue)}>
+       {Array.from({ length: 3 }, (_, i) => <Picker.Item label={`${i+1} h`} value={`${i+1}`} key={i} />)}
+     </Picker>
+     </View>
+     <TouchableOpacity style={styles.bookButton} onPress={bookSlot}>
+       <Text style={styles.bookButtonText}>Book Now</Text>
+     </TouchableOpacity>
+   </ScrollView>
   );
 };
 
@@ -62,6 +115,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  pickerContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    },
+    hourPicker: {
+     width: 125,
+    },
   headerImage: {
     width: '100%',
     height: 200,

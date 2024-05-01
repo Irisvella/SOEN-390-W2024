@@ -6,7 +6,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const BookPool = ({ route, navigation }) => {
+const BookSkyLounge = ({ route, navigation }) => {
   const [selectedHour, setSelectedHour] = useState("1");
   const [selectedModifier, setSelectedModifier] = useState('AM');
   const [duration, setDuration] = useState('1'); 
@@ -63,14 +63,14 @@ const bookSlot = async () => {
 
   return (
     <ScrollView style={styles.container}>
-      <Image source={require("../../../assets/pool.png")} style={styles.headerImage} />
+      <Image source={require("../../../assets/sky_lounge.png")} style={styles.headerImage} />
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                 <MaterialIcons name="arrow-back-ios" size={26} color="#52575D" />
         </TouchableOpacity>
-      <Text style={styles.headerText}>Pool Booking</Text>
+      <Text style={styles.headerText}>Sky Lounge Booking</Text>
       <View style={styles.descriptionContainer}>
         <Text style={styles.descriptionText}>
-          Dive into the refreshing waters of our serene pool. Book your slot now to enjoy a rejuvenating swim or relax by the poolside.
+          Intro message
         </Text>
       </View>
       <Calendar
@@ -171,4 +171,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BookPool;
+export default BookSkyLounge;

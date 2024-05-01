@@ -33,9 +33,13 @@ const CreateListingForm = () => {
     lockerFee: "",
   });
   const [state, setState] = React.useState({
-    spa: false,
     skylounge: false,
     gym: false,
+    pool: false,
+    sauna: false,
+    massageRoom: false,
+    conferenceRoom: false,
+    partyRoom: false,
   });
 
   const handleChange = (
@@ -124,9 +128,13 @@ const CreateListingForm = () => {
           lockerFee: "",
         });
         setState({
-          spa: false,
           skylounge: false,
           gym: false,
+          pool: false,
+          sauna: false,
+          massageRoom: false,
+          conferenceRoom: false,
+          partyRoom: false,
         });
 
       } else {
@@ -369,17 +377,6 @@ const CreateListingForm = () => {
                     <FormControlLabel
                       control={
                         <Checkbox
-                          checked={state.spa}
-                          onChange={handleChange}
-                          name="spa"
-                          id="spa"
-                        />
-                      }
-                      label="Spa"
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
                           checked={state.skylounge}
                           onChange={handleChange}
                           name="skylounge"
@@ -398,6 +395,61 @@ const CreateListingForm = () => {
                         />
                       }
                       label="Gym"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={state.pool}
+                          onChange={handleChange}
+                          name="pool"
+                          id="pool"
+                        />
+                      }
+                      label="Pool"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={state.sauna}
+                          onChange={handleChange}
+                          name="sauna"
+                          id="sauna"
+                        />
+                      }
+                      label="Sauna"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={state.massageRoom}
+                          onChange={handleChange}
+                          name="massageRoom"
+                          id="massageRoom"
+                        />
+                      }
+                      label="Massage Room"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={state.conferenceRoom}
+                          onChange={handleChange}
+                          name="conferenceRoom"
+                          id="conferenceRoom"
+                        />
+                      }
+                      label="Conference Room"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={state.partyRoom}
+                          onChange={handleChange}
+                          name="partyRoom"
+                          id="partyRoom"
+                        />
+                      }
+                      label="Party Room"
                     />
                   </FormGroup>
                 </FormControl>

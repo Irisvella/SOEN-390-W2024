@@ -55,7 +55,6 @@ function ReservationUser() {
           setAmenities(data);
           console.log(data);
           setAreAmenitiesAvailable(data.length > 0); // Check if amenities are available
-          // console.log(amenities[1], "amenities");
         } else {
           console.error("Failed to fetch amenities");
         }

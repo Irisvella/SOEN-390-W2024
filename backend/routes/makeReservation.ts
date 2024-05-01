@@ -69,8 +69,12 @@ router.get("/:propertyId", verifyToken, async (req: Request, res: Response) => {
           where:{
               OR: [
                 { text_id: "skylounge",},
-                { text_id: "Spa" },
                 { text_id: "gym" },
+                { text_id: "pool" },
+                { text_id: "partyroom" },
+                {text_id: "conferenceRoom"}, 
+                {text_id: "sauna"}, 
+                {text_id: "massageRoom"}
               ],
               property_id: Number(propertyId)
         },
