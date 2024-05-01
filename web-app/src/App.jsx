@@ -30,6 +30,11 @@ import RequestManagementTable from './pages/RequestManagementTable.jsx';
 import FileUploadComponent from './pages/FileUploadComponent.jsx';
 import ViewFilesComponent from './pages/ViewFilesComponent.jsx';
 import FilesUser from './pages/FilesUser.jsx';
+import NotificationsUser from './pages/NotificationsUser.jsx';
+import ReservationUser from './pages/ReservationUser.tsx';
+import MyReservations from './pages/MyReservations.jsx';
+
+
 
 function App() {
   const isAuthenticated = !!localStorage.getItem("token");
@@ -66,7 +71,7 @@ function App() {
             <Route path="/FileUploadComponent" element={<FileUploadComponent />} />
             <Route path="/ViewFilesComponent" element={<ViewFilesComponent />} />
             <Route path="/FilesUser/:propertyId" element={<FilesUser />} />
-
+            <Route path="/Notifications" element={<NotificationsUser />} />
             <Route
               path="/CreateRequest/:propertyId"
               element={<CreateRequestForm />}
@@ -80,9 +85,10 @@ function App() {
             <Route path="/ManagementFinancialOverview" element={<ManagementFinancialOverview/>} />
             <Route path="/AddOperationalCost" element={<AddOperationalCost/>} />
             <Route path="/UnitsDashboard" element={<UnitsDashboard/>} />
-           
-           
-
+            <Route path="/UnitsDashboard" element={<UnitsDashboard/>} />
+            <Route path="/ReservationUser/:propertyId" element={<ReservationUser/>} />
+            <Route path="/MyReservations" element={<MyReservations />} />
+            
           </>
         ) : null}
       </Routes>

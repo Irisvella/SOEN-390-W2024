@@ -8,12 +8,16 @@ import {
   Stack,
   Typography,
   Box,
+  FormGroup,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 
 import Navbar from "./Navbar";
 import { Img } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@mui/joy";
+import React from "react";
 
 const CreateListingForm = () => {
   const navigate = useNavigate();
@@ -28,34 +32,76 @@ const CreateListingForm = () => {
     pricePerSquareFoot: "",
     lockerFee: "",
   });
+  const [state, setState] = React.useState({
+    skylounge: false,
+    gym: false,
+    pool: false,
+    sauna: false,
+    massageRoom: false,
+    conferenceRoom: false,
+    partyRoom: false,
+  });
 
-  const handleChange = (e: { target: { id: any; value: any; }; }) => {
-    const { id, value } = e.target;
+  const handleChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    const target = event.target as HTMLTextAreaElement | HTMLInputElement;
+    const { id, value } = target;
+    const isCheckbox = target.type === "checkbox";
+
+    if (isCheckbox) {
+      // Cast the target to HTMLInputElement to access 'checked'
+      const checked = (target as HTMLInputElement).checked;
+      setState((prevState) => ({
+        ...prevState,
+        [id]: checked,
+      }));
+    } else {
+      // Handle all other inputs including textarea
+      setFormData((prevData) => ({
+        ...prevData,
+        [id]: value,
+      }));
+    }
 
     // Numeric fields list
-    const numericFields = ['totalUnit', 'parkingSpaces', 'parkingFee', 'pricePerSquareFoot', 'lockerFee'];
+    const numericFields = [
+      "totalUnit",
+      "parkingSpaces",
+      "parkingFee",
+      "pricePerSquareFoot",
+      "lockerFee",
+    ];
 
     // Check if the current field requires numeric input
     if (numericFields.includes(id)) {
-        // Allow changes if the value is either empty, a number, possibly with a negative sign, or a decimal point
-        if (value === "" || /^-?\d*\.?\d*$/.test(value)) { // regex allows numbers, decimal points, and negative values
-            setFormData((prevData) => ({
-                ...prevData,
-                [id]: value,
-            }));
-        }
-    } else {
-        // For non-numeric fields, update normally
+      // Allow changes if the value is either empty, a number, possibly with a negative sign, or a decimal point
+      if (value === "" || /^-?\d*\.?\d*$/.test(value)) {
+        // regex allows numbers, decimal points, and negative values
         setFormData((prevData) => ({
-            ...prevData,
-            [id]: value,
+          ...prevData,
+          [id]: value,
         }));
+      }
+    } else {
+      // For non-numeric fields, update normally
+      setFormData((prevData) => ({
+        ...prevData,
+        [id]: value,
+      }));
     }
-};
+  };
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault(); // Prevent default form submission behavior
     navigate("/dashboard-company");
+
+    // Merge amenities state with formData
+    const completeFormData = {
+      ...formData,
+      amenities: state, // Here you map the amenities state directly into formData
+    };
+
     const token = localStorage.getItem("token");
     try {
 
@@ -65,7 +111,7 @@ const CreateListingForm = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`, //checking if you are logged in or not
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(completeFormData),
       });
 
       if (response.ok) {
@@ -82,6 +128,16 @@ const CreateListingForm = () => {
           pricePerSquareFoot: "",
           lockerFee: "",
         });
+        setState({
+          skylounge: false,
+          gym: false,
+          pool: false,
+          sauna: false,
+          massageRoom: false,
+          conferenceRoom: false,
+          partyRoom: false,
+        });
+
       } else {
         console.error("Failed to submit listing data");
       }
@@ -101,7 +157,7 @@ const CreateListingForm = () => {
             theme.palette.mode === "dark" ? "#1A2027" : "#F0F0F0",
         }}
       >
-         <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <Grid container direction="column" padding={5}>
             <Grid item xs container direction="row" spacing={2}>
               <Grid item xs marginBottom={5}>
@@ -310,23 +366,95 @@ const CreateListingForm = () => {
 
             {/* Existing Fields */}
             <Grid container spacing={2} marginBottom={5}>
-              <FormControl fullWidth required>
-                <Box sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
-                  <label
-                    htmlFor="amenities"
-                    style={{ marginTop: "8px", alignSelf: "flex-start" }}
-                  >
-                    Amenities:
-                  </label>
-                  <TextareaAutosize
-                    id="amenities"
-                    minRows={3}
-                    style={{ width: "100%" }}
-                    value={formData.amenities}
-                    onChange={handleChange}
-                  />
-                </Box>
-              </FormControl>
+              <Grid container spacing={2}>
+                Facilities
+                {/* New checkbox group added below */}
+                <FormControl
+                  sx={{ m: 3 }}
+                  component="fieldset"
+                  variant="standard"
+                >
+                  <FormGroup>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={state.skylounge}
+                          onChange={handleChange}
+                          name="skylounge"
+                          id="skylounge"
+                        />
+                      }
+                      label="Sky Lounge"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={state.gym}
+                          onChange={handleChange}
+                          name="gym"
+                          id="gym"
+                        />
+                      }
+                      label="Gym"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={state.pool}
+                          onChange={handleChange}
+                          name="pool"
+                          id="pool"
+                        />
+                      }
+                      label="Pool"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={state.sauna}
+                          onChange={handleChange}
+                          name="sauna"
+                          id="sauna"
+                        />
+                      }
+                      label="Sauna"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={state.massageRoom}
+                          onChange={handleChange}
+                          name="massageRoom"
+                          id="massageRoom"
+                        />
+                      }
+                      label="Massage Room"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={state.conferenceRoom}
+                          onChange={handleChange}
+                          name="conferenceRoom"
+                          id="conferenceRoom"
+                        />
+                      }
+                      label="Conference Room"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={state.partyRoom}
+                          onChange={handleChange}
+                          name="partyRoom"
+                          id="partyRoom"
+                        />
+                      }
+                      label="Party Room"
+                    />
+                  </FormGroup>
+                </FormControl>
+              </Grid>
             </Grid>
             <Grid container spacing={2}>
               <FormControl fullWidth required>

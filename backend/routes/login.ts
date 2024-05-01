@@ -74,6 +74,7 @@ router.post(
             role: "publicUser",
             subRole: publicUserExists.role,
             imageKey: publicUserExists.profile_image_key,
+            phoneNumber: publicUserExists.phone_number,
           },
         });
       } else if (parsedUser.role === "company") {

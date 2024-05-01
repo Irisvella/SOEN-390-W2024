@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity, Platform, ScrollView, Keyboard, TouchableWithoutFeedback, SafeAreaView, KeyboardAvoidingView } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -7,13 +7,14 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const CreateServiceRequests = ({ navigation }) => {
+const CreateServiceRequests = ({ route, navigation }) => {
   const [description, setDescription] = useState('');
   const [requestType, setRequestType] = useState('');
   const [priorityType, setPriorityType] = useState('');
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
 
+   const { propertyId } = route.params;
 
   const onDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -34,10 +35,10 @@ const CreateServiceRequests = ({ navigation }) => {
       return;
     } 
     
-    console.log('Request Type:', requestType, 'Priority:', priorityType, 'Date:', date, 'Description:', description);
+    console.log('Request Type:', requestType, 'Priority:', priorityType, 'Date:', date, 'Description:', description, 'Property ID:', propertyId);
 
     const formData = {
-      propertyId: 1, // Example, replace with actual property ID
+      propertyId: propertyId, 
       requestType,
       requestReason: description,
       priority: priorityType.toLowerCase(),
@@ -45,7 +46,7 @@ const CreateServiceRequests = ({ navigation }) => {
       id: 1, 
     };
 
-    const url = 'http://192.168.2.13:3000/CreateRequest';
+    const url = 'https://estate-api-production.up.railway.app/CreateRequest';
     const storedToken = await AsyncStorage.getItem('token');
 
     try {

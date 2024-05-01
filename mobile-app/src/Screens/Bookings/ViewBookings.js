@@ -1,39 +1,122 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Mock data for user bookings
-const mockBookings = [
-  {
-    id: '1',
-    facility: 'Pool',
-    date: '2023-07-20',
-    time: '2:00 PM - 3:00 PM',
-  },
-  {
-    id: '2',
-    facility: 'Gym',
-    date: '2023-07-22',
-    time: '5:00 PM - 6:00 PM',
-  },
-  {
-    id: '3',
-    facility: 'Sauna',
-    date: '2023-07-25',
-    time: '6:00 PM - 7:00 PM',
-  },
-];
 
-const ViewBookings = ({ navigation }) => {
-  const [bookings, setBookings] = useState(mockBookings);
 
-  const renderBookingItem = ({ item }) => (
-    <View style={styles.bookingItem}>
-      <Text style={styles.bookingText}><Text style={styles.boldText}>Facility:</Text> {item.facility}</Text>
-      <Text style={styles.bookingText}><Text style={styles.boldText}>Date:</Text> {item.date}</Text>
-      <Text style={styles.bookingText}><Text style={styles.boldText}>Time:</Text> {item.time}</Text>
+const ViewBookings = ({ route, navigation }) => {
+  const [bookings, setBookings] = useState();
+  const [amenities, setAmenities] = useState([]);
+  const propertyId = route.params?.propertyId;
+
+
+  useEffect(() => {
+    const fetchAmenities = async () => {
+
+      if (!propertyId) {
+        alert('Please select a property to view bookings.');
+        navigation.navigate('Profile'); // Assume 'ProfileScreen' is where properties can be selected
+      }
+
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        navigation.navigate("Login");
+        return;
+      }
+      try {
+        const response = await fetch(
+          `http://192.168.2.30:3000/makeReservation/${propertyId}`, 
+          {
+            method: "GET",
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Amenities fetched:", data);
+        setAmenities(data.map(amenity => ({
+        ...amenity,
+        id: amenity.id
+      })));
+        } else {
+          console.error("Failed to fetch amenities");
+        }
+      } catch (error) {
+        console.error("Error fetching amenities:", error);
+      }
+    };
+  
+    fetchAmenities();
+  }, [navigation, propertyId]);
+
+  useEffect(() => {
+    const fetchReservations = async () => {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        navigation.navigate("Login");
+        return;
+      }
+      try {
+        const response = await fetch(
+          `http://192.168.2.30:3000/myReservations/`, 
+          {
+            method: "GET",
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Reservations fetched: ',data);
+          const validBookings = data.filter(booking => amenities.some(a => parseInt(a.id) === parseInt(booking.amenities_id)));
+          setBookings(validBookings);
+          } else {
+          console.error("Failed to fetch amenities");
+        }
+      } catch (error) {
+        console.error("Error fetching amenities:", error);
+      }
+    };
+  
+    if (amenities.length > 0) {  
+      fetchReservations();
+    }
+  }, [navigation, amenities]);  
+
+
+  const renderBookingItem = ({ item }) => {
+    const amenity = amenities.find(a => parseInt(a.id) === parseInt(item.amenities_id));
+
+    console.log(`Trying to find: ${item.amenities_id} Found: ${amenity ? amenity.description : 'none'}`);
+  
+    return (
+      <View style={styles.bookingItem}>
+        <Text style={styles.bookingText}><Text style={styles.boldText}>Facility:</Text> {amenity ? amenity.description : 'Unknown'}</Text>
+        <Text style={styles.bookingText}><Text style={styles.boldText}>Date:</Text> {new Date(item.start_date).toLocaleDateString()}</Text>
+        <Text style={styles.bookingText}><Text style={styles.boldText}>Time:</Text> {`${new Date(item.start_date).toLocaleTimeString()} - ${new Date(item.end_date).toLocaleTimeString()}`}</Text>
+      </View>
+    );
+  };
+
+  if (!bookings || !amenities) {
+    return   <View style={styles.centeredContainer}>
+      <Text>Loading...</Text>
     </View>
-  );
+  };
+
+  if (bookings.length === 0 || amenities.length === 0) {
+    return (
+      <View style={styles.container}>
+      <Text style={styles.title}>My Bookings</Text>
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+            <MaterialIcons name="arrow-back-ios" size={26} color="#52575D" />
+        </TouchableOpacity>
+      <View style={styles.centeredContainer}>
+        <Text>No available bookings</Text>
+      </View>
+    </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -53,6 +136,14 @@ const ViewBookings = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 20,
+    backgroundColor: "#FFF"
+  },
+  centeredContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
     padding: 20,
     backgroundColor: "#FFF"
   },

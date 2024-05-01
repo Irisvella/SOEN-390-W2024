@@ -94,7 +94,7 @@ router.post(
               start_date: parsedBody.startDate,
               end_date: parsedBody.endDate,
               condo_id: parsedBody.condoId,
-              public_user_id: 1
+              public_user_id: 1,
             },
           });
 
@@ -154,6 +154,54 @@ router.patch(
             },
           });
 
+          // assign a locker to the user and a parking spot (possibly)
+          const condo = await prisma.condo_unit.findFirst({
+            where: {
+              id: registration.condo_id,
+            },
+          });
+          if (condo) {
+            const property = await prisma.property.findFirst({
+              where: {
+                id: condo.property_id,
+              },
+            });
+            if (property) {
+              // assign locker
+              const availableLocker: any = await prisma.$queryRaw`SELECT * 
+                FROM amenities a
+                WHERE property_id = ${property.id} AND text_id LIKE 'Locker'
+                    AND a.id NOT IN (SELECT amenities_id 
+                                     FROM reserved_by) 
+                                     LIMIT 1`;
+              console.log(availableLocker);
+              if (availableLocker.length != 0) {
+                const reserveLocker = await prisma.reserved_by.create({
+                  data: {
+                    amenities_id: availableLocker[0].id,
+                    public_user_id: id,
+                  },
+                });
+              }
+              // assign parking spot
+              const availableParking: any = await prisma.$queryRaw`SELECT * 
+                FROM amenities a
+                WHERE property_id = ${property.id} AND text_id LIKE 'Parking' 
+                AND a.id NOT IN (SELECT amenities_id
+                                 FROM reserved_by) 
+                                 LIMIT 1`;
+              console.log(availableParking);
+              if (availableParking.length != 0) {
+                const reserveParking = await prisma.reserved_by.create({
+                  data: {
+                    amenities_id: availableParking[0].id,
+                    public_user_id: id,
+                  },
+                });
+              }
+            }
+          }
+
           const updateRole = await prisma.public_users.update({
             where: {
               user_id: id,
@@ -189,7 +237,7 @@ router.get(
           registration_key: registrationKey,
         },
         select: {
-          registration_key: true, 
+          registration_key: true,
           condo_id: true,
           public_user_id: true,
         },
@@ -208,6 +256,5 @@ router.get(
     }
   },
 );
-
 
 export default router;

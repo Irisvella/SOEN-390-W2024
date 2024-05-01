@@ -33,7 +33,7 @@ router.post(
 
             if (role === "company") {
               const body = req.body; //constant
-
+              console.log(body)
               async function createProperty(addr: string, company_id: number) {
                 const property = await prisma.property.create({
                   data: {
@@ -45,6 +45,7 @@ router.post(
                     parking_fee: body.parkingFee, // Added field
                     price_per_square_foot: body.pricePerSquareFoot, // Added field
                     locker_fee: body.lockerFee, // Added field
+
                   },
                 });
                 
@@ -54,12 +55,110 @@ router.post(
                       property_id: property.id,
                       unit_number: i.toString(),
                       square_feet: 250.00,
-                      
-
                     }
+                    
+                  });
+                    
+                    const locker = await prisma.amenities.create({
+                      data: {
+                        property_id: property.id,
+                        text_id: "Locker",
+                        fee: body.lockerFee,
+                        description: "locker",
+                      }
+                });
+              }
+              for (let i = body.parkingSpaces; i>0; i-- ){
+              const parking = await prisma.amenities.create({
+                      data: {
+                        property_id: property.id,
+                        text_id: "Parking",
+                        fee: body.parkingFee,
+                        description: "parking",
+                        
+
+                      }
                   });
               }
+              if ("gym" in body){
+                const gym = await prisma.amenities.create({
+                  data: {
+                    property_id: property.id,
+                    text_id: "gym",
+                    fee: 0,
+                    description: "gym",
+                    
+
+                  }
+              });
               }
+              if ("skylounge" in body){
+                const skylounge = await prisma.amenities.create({
+                  data: {
+                    property_id: property.id,
+                    text_id: "skylounge",
+                    fee: 0,
+                    description: "Sky Lounge",
+                    
+
+                  }
+              });
+              }
+              if ("pool" in body){
+                const pool = await prisma.amenities.create({
+                  data: {
+                    property_id: property.id,
+                    text_id: "pool",
+                    fee: 0,
+                    description: "Pool",
+                  }
+              });
+              }
+              
+              if ("sauna" in body){
+                const sauna = await prisma.amenities.create({
+                  data: {
+                    property_id: property.id,
+                    text_id: "sauna",
+                    fee: 0,
+                    description: "sauna",
+                  }
+              });
+              }
+              
+              if ("massageRoom" in body){
+                const massageRoom = await prisma.amenities.create({
+                  data: {
+                    property_id: property.id,
+                    text_id: "massageRoom",
+                    fee: 0,
+                    description: "massage room",
+                  }
+              });
+              }
+  
+              if ("conferenceRoom" in body){
+                const conferenceRoom = await prisma.amenities.create({
+                  data: {
+                    property_id: property.id,
+                    text_id: "conferenceRoom",
+                    fee: 0,
+                    description: "conference room",
+                  }
+              });
+              }
+              if ("partyRoom" in body){
+                const partyRoom = await prisma.amenities.create({
+                  data: {
+                    property_id: property.id,
+                    text_id: "partyRoom",
+                    fee: 0,
+                    description: "party room",
+                  }
+              });
+              }
+            }
+              
 
 
               createProperty(body.address, id);
