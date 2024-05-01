@@ -11,33 +11,37 @@ const myReservations = () => {
     const fetchReservations = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:3000/makeReservation/${propertyId}', {
+        const response = await fetch('http://localhost:3000/myReservations', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
         });
-
+  
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-
+  
         const data = await response.json();
-        setReservations(data.map(req => ({ ...req, id: req.id }))); 
+        setReservations(data.map(req => ({
+          ...req,
+          id: req.id || req.public_user_id,  // Ensure each row has a unique ID
+          amenityName: req.amenity?.name || "No amenity"  // Accessing nested amenity name
+        }))); 
       } catch (error) {
-        console.error("Failed to fetch requests:", error);
+        console.error("Failed to fetch reservations:", error);
       }
     };
-
+  
     fetchReservations();
   }, []);
+  
 
   const columns = [
     { field: 'amenities_id', headerName: 'Reservation Type', width: 250 },
-    { field: 'start_date', headerName: 'start time', width: 250 },
-    { field: 'end_date', headerName: 'end time', width: 130 },
-    
+    { field: 'start_date', headerName: 'start time', width: 500 },
+    { field: 'end_date', headerName: 'end time', width: 500 },
     
   ];
 
