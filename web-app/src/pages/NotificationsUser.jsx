@@ -133,6 +133,12 @@ const NotificationsUser = () => {
                         pageSize={5}
                         rowsPerPageOptions={[5]}
                         checkboxSelection
+                        sortModel={[
+                            {
+                                field: 'inserted_at',
+                                sort: 'desc', 
+                            },
+                        ]}
                     />
                 </Box>
             </Box>
