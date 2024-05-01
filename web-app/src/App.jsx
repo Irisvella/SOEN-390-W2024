@@ -31,6 +31,9 @@ import FileUploadComponent from './pages/FileUploadComponent.jsx';
 import ViewFilesComponent from './pages/ViewFilesComponent.jsx';
 import FilesUser from './pages/FilesUser.jsx';
 import ReservationUser from './pages/ReservationUser.tsx';
+import MyReservations from './pages/MyReservations.jsx';
+
+
 
 function App() {
   const isAuthenticated = !!localStorage.getItem("token");
@@ -83,7 +86,7 @@ function App() {
             <Route path="/UnitsDashboard" element={<UnitsDashboard/>} />
             <Route path="/UnitsDashboard" element={<UnitsDashboard/>} />
             <Route path="/ReservationUser/:propertyId" element={<ReservationUser/>} />
-            
+            <Route path="/MyReservations" element={<MyReservations />} />
             
           </>
         ) : null}

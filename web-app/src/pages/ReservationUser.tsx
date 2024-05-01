@@ -17,6 +17,7 @@ import {
   Select,
   MenuItem,
   Button,
+  Alert,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
@@ -25,8 +26,8 @@ import { SelectChangeEvent } from "@mui/material";
 function ReservationUser() {
   const navigate = useNavigate();
   const { propertyId } = useParams();
-  const [amenities, setAmenities] = useState<any[]>();
-
+  const [amenities, setAmenities] = useState<any[]>([]);
+  const [areAmenitiesAvailable, setAreAmenitiesAvailable] = useState(true); // New state to track amenity availability
   const [reservationData, setReservationData] = useState({
     date: "",
     startTime: "",
@@ -50,8 +51,10 @@ function ReservationUser() {
           }
         );
         if (response.ok) {
-          const data = await response.json();
+          const data = await response.json(); 
           setAmenities(data);
+          console.log(data);
+          setAreAmenitiesAvailable(data.length > 0); // Check if amenities are available
           // console.log(amenities[1], "amenities");
         } else {
           console.error("Failed to fetch amenities");
@@ -107,24 +110,27 @@ function ReservationUser() {
     const endTime = new Date(
       `${reservationData.date}T${reservationData.endTime}Z`
     );
+    
+    
     const token = localStorage.getItem("token");
     if (!token) {
       navigate("/login");
       return;
     }
     // Assuming amenities_id is correctly set to the amenity the user selected
-    const amenityId = amenities?.find(
-      (a) =>
-        a.text_id.toLowerCase() ===
-        reservationData.reservationType.toLowerCase()
-    )?.id;
-    if (!amenityId) {
-      alert("Selected amenity is not available.");
-      return;
-    }
+    // Find the amenity ID based on the reservation type selected
+  const amenityId = amenities?.find(
+    a => a.text_id.toLowerCase() === reservationData.reservationType.toLowerCase()
+  )?.id;
+
+  if (!amenityId) {
+    alert("Selected amenity is not available.");
+    return;
+  }
+
 
     try {
-      console.log(reservationData);
+     
       if (!amenities) {
         return;
       }
@@ -158,7 +164,8 @@ function ReservationUser() {
         alert("Reservation successful!");
         navigate("/dashboard");
       } else {
-        alert("Failed to make a reservation. Please try another time slot.");
+        const errorResponse = await response.json();
+        alert(`Failed to make a reservation: ${errorResponse.message}`);
       }
     } catch (error) {
       console.error("Error making a reservation:", error);
@@ -194,6 +201,7 @@ function ReservationUser() {
               alt="Reservation Type"
               sx={{ maxWidth: "100%", height: "auto", mb: 2 }}
             />
+             {areAmenitiesAvailable ? (
             <Box
               component="form"
               noValidate
@@ -238,21 +246,26 @@ function ReservationUser() {
                   Reservation Type
                 </InputLabel>
                 <Select
-                  labelId="reservation-type-label"
-                  name="reservationType"
-                  value={reservationData.reservationType}
-                  onChange={handleSelectChange}
-                  label="Reservation Type"
-                >
-                  <MenuItem value="Spa">Spa</MenuItem>
-                  <MenuItem value="Sky Lounge">Sky Lounge</MenuItem>
-                  <MenuItem value="gym">Gym</MenuItem>
-                </Select>
+                    labelId="reservation-type-label"
+                    name="reservationType"
+                    value={reservationData.reservationType}
+                    onChange={handleSelectChange}
+                    label="Reservation Type"
+                  >
+                    {amenities && amenities.map((amenity) => (
+      <MenuItem key={amenity.id} value={amenity.text_id}>
+        {amenity.text_id} {/* Assuming `text_id` is what you want to show */}
+      </MenuItem>
+    ))}
+                  </Select>
               </FormControl>
               <Button variant="contained" type="submit" sx={{ mt: 2 }}>
                 Submit
               </Button>
-            </Box>
+              </Box>
+            ) : (
+              <Alert severity="info">No amenities available for this property.</Alert>
+            )}
           </CardContent>
         </Card>
       </Container>
