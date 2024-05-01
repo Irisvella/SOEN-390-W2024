@@ -110,23 +110,32 @@ router.get(
             },
           });
 
-          const notification = await prisma.requests.findFirst({
-            include: {
-              notifications: {
-                where: {
-                  id: parseInt(notificationId),
-                },
-                select: {
-                  inserted_at: true,
-                },
-              },
-            },
-          });
+          // const notification = await prisma.requests.findFirst({
+          //   include: {
+          //     notifications: {
+          //       where: {
+          //         id: parseInt(notificationId),
+          //       },
+          //       select: {
+          //         inserted_at: true,
+          //       },
+          //     },
+          //   },
+          // });
+          const notification: any = await prisma.$queryRaw`SELECT * 
+            FROM requests r, notifications n 
+            WHERE r.id = n.request_id AND n.id = ${parseInt(notificationId)} 
+            LIMIT 1`;
+          if (notification.length === 0) {
+            console.log("Unexpected error notification length is 0");
+            return res.status(500);
+          }
+          const firstNotificaiton = notification[0];
 
           return res.status(200).json({
             message: "success",
             data: {
-              notification,
+              notification: firstNotificaiton,
             },
           });
         },
