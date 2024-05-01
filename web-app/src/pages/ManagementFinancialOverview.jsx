@@ -28,7 +28,7 @@ const ManagementFinancialOverview = () => {
       return;
     }
   
-    fetch(`http://localhost:3000/billing/financial-report?startDate=${startDate}&endDate=${endDate}`, {
+    fetch(`https://estate-api-production.up.railway.app/billing/financial-report?startDate=${startDate}&endDate=${endDate}`, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',

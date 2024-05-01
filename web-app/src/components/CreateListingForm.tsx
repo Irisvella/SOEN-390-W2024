@@ -104,8 +104,9 @@ const CreateListingForm = () => {
 
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch("http://localhost:3000/createEditListing", {
-        method: "POST",
+
+      const response = await fetch('https://estate-api-production.up.railway.app/createEditListing', {
+        method: 'POST',
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`, //checking if you are logged in or not

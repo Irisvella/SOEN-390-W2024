@@ -11,7 +11,7 @@ const RequestManagementTable = () => {
   const [employeeId, setEmployeeId] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:3000/CreateRequest/viewRequests', {
+    fetch('https://estate-api-production.up.railway.app/CreateRequest/viewRequests', {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
         'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ const RequestManagementTable = () => {
     console.log("Save changes for request:", selectedRequest, editedStatus, employeeId);
     setOpenEditDialog(false);  // Close the dialog to prevent multiple submissions
   
-    const url = 'http://localhost:3000/CreateRequest/update-request';  // Adjust the URL as necessary
+    const url = 'https://estate-api-production.up.railway.app/CreateRequest/update-request';  // Adjust the URL as necessary
     const token = localStorage.getItem('token');  // Assuming token is stored in localStorage
 
     // Check the status and adjust accordingly
@@ -94,7 +94,7 @@ const RequestManagementTable = () => {
 };
 
 const fetchRequests = () => {
-  fetch('http://localhost:3000/CreateRequest/viewRequests', {
+  fetch('https://estate-api-production.up.railway.app/CreateRequest/viewRequests', {
     headers: {
       Authorization: `Bearer ${localStorage.getItem('token')}`,
       'Content-Type': 'application/json',

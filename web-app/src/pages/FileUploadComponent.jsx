@@ -16,7 +16,7 @@ const FileUploadComponent = () => {
 
     useEffect(() => {
         const fetchProperties = async () => {
-            const response = await fetch('http://localhost:3000/dashboard', {
+            const response = await fetch('https://estate-api-production.up.railway.app/dashboard', {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }

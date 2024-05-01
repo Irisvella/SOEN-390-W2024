@@ -33,7 +33,7 @@ const DashboardCompany = () => {
     }
 
     const fetchProperties = async () => {
-      const res = await fetch("http://localhost:3000/dashboard", {
+      const res = await fetch("https://estate-api-production.up.railway.app/dashboard", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,

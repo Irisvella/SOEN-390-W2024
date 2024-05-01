@@ -1,12 +1,13 @@
 import  { useState } from 'react';
 import { TextField, Button, Box, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom"; 
 
 
 const CompanyLoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [failMessage, setFailMessage] = useState("");
-
+  const navigate = useNavigate();
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const validateEmail = (email: string) => emailRegex.test(email);
 
@@ -14,7 +15,7 @@ const CompanyLoginForm = () => {
   
     try {
       // Replace 'http://localhost:3000' with actual backend endpoint
-      const response = await fetch('http://localhost:3000/login',  {
+      const response = await fetch('https://estate-api-production.up.railway.app/login',  {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -27,7 +28,7 @@ const CompanyLoginForm = () => {
       if (response.ok && data.token) {
         localStorage.setItem('token', data.token);
         localStorage.setItem("role", "company");
-        window.location.href = '/ManagementLanding';
+        navigate('/ManagementLanding');
       } else {
         console.error('Login failed:', data.message);
         setFailMessage(data.message || 'An error occurred. Please try again.');}

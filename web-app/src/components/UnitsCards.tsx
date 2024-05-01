@@ -22,7 +22,7 @@ const UnitsCards: React.FC<UnitsProps> = ({ units }) => {
   
   const token = localStorage.getItem('token'); 
   const generateKey = async (unitId: string) => {
-    const response = await fetch('http://localhost:3000/registration', {
+    const response = await fetch('https://estate-api-production.up.railway.app/registration', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,

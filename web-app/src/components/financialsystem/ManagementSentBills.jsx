@@ -19,7 +19,7 @@ const ManagementSentBills = () => {
   const [editedStatus, setEditedStatus] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:3000/billing/all-bills', {
+    fetch('https://estate-api-production.up.railway.app/billing/all-bills', {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
         'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ const ManagementSentBills = () => {
 
   const handleEditDialogSave = () => {
     // Ensure the endpoint and the data structure are correct
-    fetch(`http://localhost:3000/billing`, {  // Use the correct endpoint as your backend listens to this URL for PATCH
+    fetch(`https://estate-api-production.up.railway.app/billing`, {  // Use the correct endpoint as your backend listens to this URL for PATCH
       method: 'PATCH',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,

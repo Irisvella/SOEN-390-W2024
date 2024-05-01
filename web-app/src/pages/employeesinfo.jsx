@@ -18,7 +18,7 @@ const EmployeesInfo = () => {
     const fetchEmployees = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:3000/employeeList', {
+        const response = await fetch('https://estate-api-production.up.railway.app/employeeList', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,

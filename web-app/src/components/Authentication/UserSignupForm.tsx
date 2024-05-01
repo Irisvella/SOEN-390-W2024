@@ -25,7 +25,7 @@ const UserSignupForm = () => {
 
     try {
       // Replace 'http://localhost:3000' with actual backend endpoint
-      const response = await fetch("http://localhost:3000/signup/public-user", {
+      const response = await fetch("https://estate-api-production.up.railway.app/signup/public-user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
