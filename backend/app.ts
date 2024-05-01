@@ -20,6 +20,7 @@ import notificationsRouter from "./routes/notifications";
 import makeReservation from "./routes/makeReservation";
 import files from "./routes/files";
 import makeReservation from "./routes/makeReservation";
+import myReservations from "./routes/myReservations";
 
 
 declare global {
@@ -51,6 +52,7 @@ app.use("/billing", billingRouter);
 app.use("/registration", registrationRouter);
 app.use("/notifications", notificationsRouter);
 app.use("/makeReservation", makeReservation);
+app.use("/myReservations", myReservations);
 app.use("/files", files);
 
 const port = process.env.PORT || 3000;

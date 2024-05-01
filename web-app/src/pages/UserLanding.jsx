@@ -59,7 +59,7 @@ const UserLanding = () => {
     'Owned Condos': '/dashboard-user',
     'View Bills': '/UserBills',
     'My Request': '/UserRequests',
-    'My Reservation': '/',
+    'My Reservation': '/myReservations',
   };
 
   return (

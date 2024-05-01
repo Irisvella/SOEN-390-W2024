@@ -1,6 +1,10 @@
+// Filename: myReservations.jsx
+// Author: Fatoumata 
+// Description: displaying and making reservation for facilities 
+// Dependencies: React, MUI (Material-UI)
+
 import { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import {
-  SelectChangeEvent,
   Container,
   Card,
   CardContent,
@@ -13,22 +17,55 @@ import {
   Select,
   MenuItem,
   Button,
+  Alert,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
-
+import { SelectChangeEvent } from "@mui/material";
 
 function ReservationUser() {
   const navigate = useNavigate();
-  const { property_id } = useParams();
+  const { propertyId } = useParams();
+  const [amenities, setAmenities] = useState<any[]>([]);
+  const [areAmenitiesAvailable, setAreAmenitiesAvailable] = useState(true); // New state to track amenity availability
   const [reservationData, setReservationData] = useState({
     date: "",
     startTime: "",
     endTime: "",
-    reservationType: "", // Default should be empty to force a selection
+    reservationType: "",
   });
 
-  const { propertyId } = useParams();
+  useEffect(() => {
+    const fetchAmenities = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+      try {
+        const response = await fetch(
+          `http://localhost:3000/makeReservation/${propertyId}`,
+          {
+            method: "GET",
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        if (response.ok) {
+          const data = await response.json(); 
+          setAmenities(data);
+          console.log(data);
+          setAreAmenitiesAvailable(data.length > 0); // Check if amenities are available
+          // console.log(amenities[1], "amenities");
+        } else {
+          console.error("Failed to fetch amenities");
+        }
+      } catch (error) {
+        console.error("Error fetching amenities:", error);
+      }
+    };
+
+    fetchAmenities();
+  }, [navigate, propertyId]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -45,18 +82,16 @@ function ReservationUser() {
       [name]: value,
     }));
   };
-
-  //This make sure we enter all fields before being able to reserve 
-
+  //making sure form is filled before submission and we can not book in the past
   const validateForm = () => {
     const { date, startTime, endTime } = reservationData;
     if (!date || !startTime || !endTime) {
-      console.log("All fields are required.");
+      alert("All fields are required.");
       return false;
     }
-    const selectedDate = new Date(`${date}T${startTime}`);
+    const selectedDate = new Date(`${date}T${startTime}Z`);
     if (selectedDate < new Date()) {
-      console.log("Selected date and time are in the past.");
+      alert("Selected date and time are in the past.");
       return false;
     }
     return true;
@@ -68,38 +103,69 @@ function ReservationUser() {
       alert("Please fill all fields correctly.");
       return;
     }
-    
-    const startTime = new Date(`${reservationData.date}T${reservationData.startTime}`);
-    const endTime = new Date(`${reservationData.date}T${reservationData.endTime}`);
 
+    const startTime = new Date(
+      `${reservationData.date}T${reservationData.startTime}Z`
+    );
+    const endTime = new Date(
+      `${reservationData.date}T${reservationData.endTime}Z`
+    );
+    
+    
     const token = localStorage.getItem("token");
     if (!token) {
       navigate("/login");
       return;
     }
+    // Assuming amenities_id is correctly set to the amenity the user selected
+    // Find the amenity ID based on the reservation type selected
+  const amenityId = amenities?.find(
+    a => a.text_id.toLowerCase() === reservationData.reservationType.toLowerCase()
+  )?.id;
+
+  if (!amenityId) {
+    alert("Selected amenity is not available.");
+    return;
+  }
+
 
     try {
-      const response = await fetch(`http://localhost:3000/${propertyId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          amenities_id: reservationData.reservationType, // Assuming this maps correctly to an ID
-          start_date: startTime.toISOString(),
-          end_date: endTime.toISOString(),
-        
-        }),
-      });
-
+     
+      if (!amenities) {
+        return;
+      }
+      console.log(amenities);
+      console.log(reservationData);
+      // console.log(reservationType);
+      const amenity = amenities.filter((a) =>
+        a.description.startsWith(reservationData.reservationType)
+      );
+      console.log(amenity, "random string");
+      const response = await fetch(
+        `http://localhost:3000/makeReservation/${propertyId}/newReservation`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          //This needs to be changed
+          body: JSON.stringify({
+            amenities_id: amenityId,
+            start_date: startTime.toISOString(),
+            end_date: endTime.toISOString(),
+          }),
+        }
+      );
+      console.log(response);
       if (response.ok) {
         const reservationDetails = await response.json();
         console.log("Reservation successful!", reservationDetails);
         alert("Reservation successful!");
-        navigate("/dashboard"); // Navigate to a confirmation page or dashboard
+        navigate("/dashboard");
       } else {
-        alert("Failed to make a reservation. Please try another time slot.");
+        const errorResponse = await response.json();
+        alert(`Failed to make a reservation: ${errorResponse.message}`);
       }
     } catch (error) {
       console.error("Error making a reservation:", error);
@@ -135,6 +201,7 @@ function ReservationUser() {
               alt="Reservation Type"
               sx={{ maxWidth: "100%", height: "auto", mb: 2 }}
             />
+             {areAmenitiesAvailable ? (
             <Box
               component="form"
               noValidate
@@ -175,24 +242,30 @@ function ReservationUser() {
                 </FormControl>
               </Box>
               <FormControl fullWidth margin="normal" sx={{ mb: 2 }}>
-                <InputLabel id="reservation-type-label">Reservation Type</InputLabel>
+                <InputLabel id="reservation-type-label">
+                  Reservation Type
+                </InputLabel>
                 <Select
-                  labelId="reservation-type-label"
-                  name="reservationType"
-                  value={reservationData.reservationType}
-                  onChange={handleSelectChange}
-                  label="Reservation Type"
-                >
-                  <MenuItem value="spa">Spa</MenuItem>
-                  <MenuItem value="skylounge">Sky Lounge</MenuItem>
-                  <MenuItem value="gym">Gym</MenuItem>
-                  {/* Add other reservation types as MenuItems here */}
-                </Select>
+                    labelId="reservation-type-label"
+                    name="reservationType"
+                    value={reservationData.reservationType}
+                    onChange={handleSelectChange}
+                    label="Reservation Type"
+                  >
+                    {amenities && amenities.map((amenity) => (
+      <MenuItem key={amenity.id} value={amenity.text_id}>
+        {amenity.text_id} {/* Assuming `text_id` is what you want to show */}
+      </MenuItem>
+    ))}
+                  </Select>
               </FormControl>
               <Button variant="contained" type="submit" sx={{ mt: 2 }}>
                 Submit
               </Button>
-            </Box>
+              </Box>
+            ) : (
+              <Alert severity="info">No amenities available for this property.</Alert>
+            )}
           </CardContent>
         </Card>
       </Container>

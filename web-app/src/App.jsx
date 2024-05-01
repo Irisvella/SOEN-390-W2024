@@ -32,6 +32,9 @@ import ViewFilesComponent from './pages/ViewFilesComponent.jsx';
 import FilesUser from './pages/FilesUser.jsx';
 import NotificationsUser from './pages/NotificationsUser.jsx';
 import ReservationUser from './pages/ReservationUser.tsx';
+import MyReservations from './pages/MyReservations.jsx';
+
+
 
 function App() {
   const isAuthenticated = !!localStorage.getItem("token");
@@ -83,8 +86,8 @@ function App() {
             <Route path="/AddOperationalCost" element={<AddOperationalCost/>} />
             <Route path="/UnitsDashboard" element={<UnitsDashboard/>} />
             <Route path="/UnitsDashboard" element={<UnitsDashboard/>} />
-            <Route path="/ReservationUser" element={<ReservationUser/>} />
-           
+            <Route path="/ReservationUser/:propertyId" element={<ReservationUser/>} />
+            <Route path="/MyReservations" element={<MyReservations />} />
             
           </>
         ) : null}
