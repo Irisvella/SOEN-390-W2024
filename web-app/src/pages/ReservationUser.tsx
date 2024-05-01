@@ -162,7 +162,7 @@ function ReservationUser() {
         const reservationDetails = await response.json();
         console.log("Reservation successful!", reservationDetails);
         alert("Reservation successful!");
-        navigate("/dashboard");
+        navigate("/MyReservations");
       } else {
         const errorResponse = await response.json();
         alert(`Failed to make a reservation: ${errorResponse.message}`);
