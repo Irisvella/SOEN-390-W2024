@@ -126,7 +126,7 @@ const NotificationsUser = () => {
                 <Typography variant="h4" sx={{ mb: 4 }}>
                     Notifications
                 </Typography>
-                <Box sx={{ height: '60%', width: '55%' }}>
+                <Box sx={{ height: '60%', width: 'flex' }}>
                     <DataGrid
                         rows={notifications}
                         columns={columns}
