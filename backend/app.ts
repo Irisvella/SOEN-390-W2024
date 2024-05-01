@@ -18,6 +18,7 @@ import billingRouter from "./routes/billing";
 import registrationRouter from "./routes/registration";
 import notificationsRouter from "./routes/notifications";
 import files from "./routes/files";
+import makeReservation from "./routes/makeReservation";
 
 
 declare global {

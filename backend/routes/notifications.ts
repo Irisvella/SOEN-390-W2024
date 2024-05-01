@@ -131,7 +131,7 @@ router.get(
           // });
           const notification: any = await prisma.$queryRaw`SELECT * 
             FROM requests r, notifications n 
-            WHERE r.id = n.request_id AND n.id = ${parseInt(notificationId)} 
+            WHERE r.id = n.request_id AND n.id = ${notificationId} 
             LIMIT 1`;
           if (notification.length === 0) {
             console.log("Unexpected error notification length is 0");
