@@ -201,19 +201,7 @@ router.get("/:propertyId/units", verifyToken, async (req: Request, res: Response
       where: { property_id: parseInt(propertyId) },
       
     });
-    const parking = await prisma.amenities.findFirst({
-      where:{
-          text_id: "Parking",
-          property_id: Number(propertyId),
-      }
-    });
-    const locker = await prisma.amenities.findFirst({
-      where:{
-          text_id: "Locker",
-          property_id: Number(propertyId),
-      }
-    });
-    res.json({units, parking, locker});
+    res.json(units);
     console.log(units);
   } catch (error) {
     console.error('Failed to get units:', error);
