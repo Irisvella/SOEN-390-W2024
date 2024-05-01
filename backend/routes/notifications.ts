@@ -93,7 +93,13 @@ router.get(
           }
 
           const { id, role, email } = (<any>decoded).data;
-          const { notificationId } = req.params;
+          const notificationId = parseInt(req.params.notificationId);
+          if (isNaN(notificationId)) {
+          console.log("Invalid notification ID:", req.params.notificationId);
+          return res.status(400).json({ message: "Invalid notification ID" });
+          }
+
+
           if (role !== "publicUser") {
             console.log(
               `user with email ${email} and role ${role} tried to access /billing POST`,
@@ -101,9 +107,10 @@ router.get(
             return res.status(401).json("Unauthorized");
           }
 
+          
           const updateSeen = await prisma.notifications.update({
             where: {
-              id: parseInt(notificationId),
+              id: notificationId,
             },
             data: {
               seen: true,
@@ -146,5 +153,32 @@ router.get(
     }
   },
 );
+
+
+// Add an endpoint to count unread notifications
+router.get("/unread", verifyToken, async (req: Request, res: Response) => {
+  try {
+    const decoded = jwt.verify(req.token as string, process.env.SECRET as jwt.Secret);
+    const { id, role } = (<any>decoded).data;
+
+    if (role !== "publicUser") {
+      return res.status(401).json({ message: "Unauthorized: Access is limited to public users." });
+    }
+
+    const count = await prisma.notifications.count({
+      where: {
+        requests: {
+          condo_owner_id: id
+        },
+        seen: false
+      }
+    });
+
+    return res.status(200).json({ unreadCount: count });
+  } catch (error) {
+    console.error('Error fetching unread notification count:', error);
+    return res.status(500).json({ message: "Failed to fetch unread notification count due to server error." });
+  }
+});
 
 export default router;
