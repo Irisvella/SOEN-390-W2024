@@ -1,3 +1,8 @@
+// Filename: myReservations.jsx
+// Author: Fatoumata 
+// Description: displaying and making reservation for facilities 
+// Dependencies: React, MUI (Material-UI)
+
 import { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import {
   Container,
@@ -20,7 +25,7 @@ import { SelectChangeEvent } from "@mui/material";
 function ReservationUser() {
   const navigate = useNavigate();
   const { propertyId } = useParams();
-  const [amenities, setAmenities]= useState<any[]>();
+  const [amenities, setAmenities] = useState<any[]>();
 
   const [reservationData, setReservationData] = useState({
     date: "",
@@ -37,10 +42,13 @@ function ReservationUser() {
         return;
       }
       try {
-        const response = await fetch(`http://localhost:3000/makeReservation/${propertyId}`, {
-          method: "GET",
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await fetch(
+          `http://localhost:3000/makeReservation/${propertyId}`,
+          {
+            method: "GET",
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         if (response.ok) {
           const data = await response.json();
           setAmenities(data);
@@ -71,14 +79,14 @@ function ReservationUser() {
       [name]: value,
     }));
   };
-
+  //making sure form is filled before submission and we can not book in the past
   const validateForm = () => {
     const { date, startTime, endTime } = reservationData;
     if (!date || !startTime || !endTime) {
-      console.log("All fields are required.");
+      alert("All fields are required.");
       return false;
     }
-    const selectedDate = new Date(`${date}T${startTime}`);
+    const selectedDate = new Date(`${date}T${startTime}Z`);
     if (selectedDate < new Date()) {
       alert("Selected date and time are in the past.");
       return false;
@@ -94,26 +102,38 @@ function ReservationUser() {
     }
 
     const startTime = new Date(
-      `${reservationData.date}T${reservationData.startTime}`
+      `${reservationData.date}T${reservationData.startTime}Z`
     );
     const endTime = new Date(
-      `${reservationData.date}T${reservationData.endTime}`
+      `${reservationData.date}T${reservationData.endTime}Z`
     );
     const token = localStorage.getItem("token");
     if (!token) {
       navigate("/login");
       return;
     }
+    // Assuming amenities_id is correctly set to the amenity the user selected
+    const amenityId = amenities?.find(
+      (a) =>
+        a.text_id.toLowerCase() ===
+        reservationData.reservationType.toLowerCase()
+    )?.id;
+    if (!amenityId) {
+      alert("Selected amenity is not available.");
+      return;
+    }
 
     try {
       console.log(reservationData);
-      if(!amenities){
+      if (!amenities) {
         return;
       }
       console.log(amenities);
       console.log(reservationData);
       // console.log(reservationType);
-      const amenity= amenities.filter(a=>a.description.startsWith(reservationData.reservationType));
+      const amenity = amenities.filter((a) =>
+        a.description.startsWith(reservationData.reservationType)
+      );
       console.log(amenity, "random string");
       const response = await fetch(
         `http://localhost:3000/makeReservation/${propertyId}/newReservation`,
@@ -123,8 +143,9 @@ function ReservationUser() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
+          //This needs to be changed
           body: JSON.stringify({
-            amenities_id: amenity[0]["id"],
+            amenities_id: amenityId,
             start_date: startTime.toISOString(),
             end_date: endTime.toISOString(),
           }),
