@@ -34,7 +34,7 @@ const bookSlot = async () => {
   console.log(`${selectedDate}T${endTime}`);
   
   try {
-    const response = await fetch(`http://192.168.2.30:3000/makeReservation/${propertyId}/newReservation`, {
+    const response = await fetch(`https://estate-api-production.up.railway.app/makeReservation/${propertyId}/newReservation`, {
       method: "POST",
       headers: {
         'Authorization': `Bearer ${token}`,

@@ -62,7 +62,7 @@ const AmenitiesScreen = () => {
       }
       try {
         const response = await fetch(
-          `http://172.20.10.7:3000/makeReservation/${propertyId}`, 
+          `https://estate-api-production.up.railway.app/makeReservation/${propertyId}`, 
           {
             method: "GET",
             headers: { Authorization: `Bearer ${token}` },

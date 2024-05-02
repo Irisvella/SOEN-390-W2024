@@ -20,8 +20,8 @@ export default function LoginScreen() {
         setFailMessage("");
 
         // URL should be replaced with your actual backend endpoint
-        const url = 'http://192.168.2.30:3000/login';
-         // const url = 'https://estate-api-production.up.railway.app/login'; 
+        // const url = 'http://172.20.10.7:3000/login';
+         const url = 'https://estate-api-production.up.railway.app/login'; 
   
        
         try {

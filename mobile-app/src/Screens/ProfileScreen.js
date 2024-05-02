@@ -41,8 +41,8 @@ export default function App() {
           if (!storedToken) return;
             
 
-           // const url = 'https://estate-api-production.up.railway.app/profile';
-           const url = 'http://192.168.2.30:3000/profile';
+           const url = 'https://estate-api-production.up.railway.app/profile';
+           // const url = 'http://192.168.2.30:3000/profile';
           try {
             const response = await fetch(url, {
               method: 'GET',
@@ -82,9 +82,9 @@ export default function App() {
           });
           return;
         }
-        const url = 'http://192.168.2.30:3000/dashboard';
+        // const url = 'http://192.168.2.30:3000/dashboard';
 
-       //  const url = 'https://estate-api-production.up.railway.app/dashboard'; 
+        const url = 'https://estate-api-production.up.railway.app/dashboard'; 
         try {
           const response = await fetch(url, {
             method: 'GET',

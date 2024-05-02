@@ -26,7 +26,7 @@ const ViewBookings = ({ route, navigation }) => {
       }
       try {
         const response = await fetch(
-          `http://192.168.2.30:3000/makeReservation/${propertyId}`, 
+          `https://estate-api-production.up.railway.app/makeReservation/${propertyId}`, 
           {
             method: "GET",
             headers: { Authorization: `Bearer ${token}` },
@@ -59,7 +59,7 @@ const ViewBookings = ({ route, navigation }) => {
       }
       try {
         const response = await fetch(
-          `http://192.168.2.30:3000/myReservations/`, 
+          `https://estate-api-production.up.railway.app/myReservations/`, 
           {
             method: "GET",
             headers: { Authorization: `Bearer ${token}` },

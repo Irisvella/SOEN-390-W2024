@@ -1,0 +1,25 @@
+{
+  "cli": {
+    "version": ">= 8.0.0"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal"
+    },
+    "production": {
+      "env": {
+        "DATABASE_URL": "postgres://postgres.wvoqgfpyksgruootcynr:Telebase3894!@aws-0-ca-central-1.pooler.supabase.com:6543/postgres?pgbouncer=true",
+        "SECRET":"naijdj2iej2i30939ejdwjdwdnjwnd29293",
+        "SUPABASE_KEY":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind2b3FnZnB5a3NncnVvb3RjeW5yIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcxMDU0NzU3OCwiZXhwIjoyMDI2MTIzNTc4fQ.4kAWgNzWjjb1cmQCgeAXiY9FCHL-1OHjxYfHJHIuNKM",
+        "SUPABASE_URL": "https://wvoqgfpyksgruootcynr.supabase.co/"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

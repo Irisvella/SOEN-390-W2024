@@ -17,8 +17,8 @@ const ActivationScreen = ({ navigation }) => {
     try {
       // Assuming 'token' is saved in localStorage (adjust as needed for React Native)
       const token = await AsyncStorage.getItem('token');
-     //  const url = 'https://estate-api-production.up.railway.app/registration'; 
-      const url = 'http://192.168.2.30:3000/registration';
+      const url = 'https://estate-api-production.up.railway.app/registration'; 
+      //const url = 'http://192.168.2.30:3000/registration';
 
       const response = await fetch(url, {
         method: 'PATCH',
