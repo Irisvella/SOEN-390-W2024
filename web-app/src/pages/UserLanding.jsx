@@ -67,7 +67,8 @@ const UserLanding = () => {
     'Owned Condos': '/dashboard-user',
     'View Bills': '/UserBills',
     'My Request': '/UserRequests',
-    'My Reservation': '/myReservations',
+    'My Reservations': '/myReservations',
+    'Notifications': '/Notifications',
   };
 
   return (
@@ -159,7 +160,7 @@ const UserLanding = () => {
                     </SectionBox>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <SectionBox title="My Reservations" route = "">
+                    <SectionBox title="My Reservations" route = "/myReservations">
                       To view your existing reservations
 
                       <ArrowForwardIosIcon /> 
