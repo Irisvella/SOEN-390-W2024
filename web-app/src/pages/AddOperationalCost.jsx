@@ -54,7 +54,7 @@ const AddOperationalCost = () => {
       return;
     }
 
-    fetch('http://localhost:3000/billing/operational-costs', {
+    fetch('https://estate-api-production.up.railway.app/billing/operational-costs', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -106,7 +106,9 @@ const AddOperationalCost = () => {
         <Typography variant="h6">Add Operational Cost</Typography>
         <Box mt={2} width="80%">
           {errors.general && (
-            <Alert severity={errors.general.includes('successfully') ? 'success' : 'error'} sx={{ mb: 2 }}>
+            <Alert severity={errors.general.includes('successfully') ? 'success' : 'error'} 
+            sx={{ mb: 2 }}
+            data-testid={errors.general.includes('successfully') ? 'success-message' : 'error-message'}>
               {errors.general}
             </Alert>
           )}

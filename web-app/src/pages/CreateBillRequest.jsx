@@ -31,7 +31,7 @@ const CreateBillRequest = () => {
             payBefore: new Date(billingData.payBefore).toISOString() // Convert to ISO string
         };
 
-        fetch('http://localhost:3000/billing', {
+        fetch('https://estate-api-production.up.railway.app/billing', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

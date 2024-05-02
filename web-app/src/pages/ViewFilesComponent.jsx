@@ -24,7 +24,7 @@ const ViewFilesComponent = () => {
     }, []);
 
     const fetchProperties = async () => {
-        const response = await fetch('http://localhost:3000/dashboard', {
+        const response = await fetch('https://estate-api-production.up.railway.app/dashboard', {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         });
         const data = await response.json();
@@ -33,7 +33,7 @@ const ViewFilesComponent = () => {
 
     const handlePropertyChange = async (event) => {
         setSelectedProperty(event.target.value);
-        const response = await fetch(`http://localhost:3000/files/list-files?property_id=${event.target.value}`, {
+        const response = await fetch(`https://estate-api-production.up.railway.app/files/list-files?property_id=${event.target.value}`, {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         });
         if (!response.ok) {

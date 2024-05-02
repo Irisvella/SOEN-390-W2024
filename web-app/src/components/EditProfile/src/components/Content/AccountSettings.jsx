@@ -15,7 +15,9 @@ useEffect(() => {
   const fetchUserProfile = async () => {
     const token = localStorage.getItem('token'); 
     try {
-      const response = await fetch('http://localhost:3000/profile', {
+      //http://localhost:3000/profile
+      const response = await fetch("https://estate-api-production.up.railway.app/profile",
+       {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -54,7 +56,7 @@ const updateProfile = async () => {
   };
   console.log('Sending payload:', payload);
   try {
-    const response = await fetch('http://localhost:3000/profile', { 
+    const response = await fetch('https://estate-api-production.up.railway.app/profile', { 
       method: 'PUT', 
       headers: {
         'Authorization': `Bearer ${token}`,

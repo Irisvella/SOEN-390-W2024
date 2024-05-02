@@ -40,7 +40,7 @@ function CreateRequestForm() {
     e.preventDefault();
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch(`http://localhost:3000/CreateRequest`, {
+      const response = await fetch(`https://estate-api-production.up.railway.app/createRequest`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

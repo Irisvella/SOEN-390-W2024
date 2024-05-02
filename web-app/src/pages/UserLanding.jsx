@@ -3,25 +3,13 @@
 // Description: Landing page for the public-user
 // Dependencies: React, MUI (Material-UI)
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import {
-  createTheme,
-  ThemeProvider,
-  CssBaseline,
-  Box,
-  Typography,
-  Container,
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  Divider,
-  CardActionArea,
-} from '@mui/material';
+import { createTheme, ThemeProvider, CssBaseline, Box, Typography, Container, Grid, List, ListItem, ListItemText, Divider, CardActionArea } from '@mui/material';
 import { Link } from 'react-router-dom'; // Import Link for navigation
 import "../App.css";
+
 
 const defaultTheme = createTheme({});
 
@@ -54,6 +42,26 @@ const SectionBox = ({ title, children, route }) => (
 );
 
 const UserLanding = () => {
+  const [notificationCount, setNotificationCount] = useState(0);
+
+  useEffect(() => {
+    // Fetch the number of unviewed notifications from the server
+    fetch('http://localhost:3000/notifications/count', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}` 
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.message === 'success') {
+        setNotificationCount(data.data.count);
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching notification count:', error);
+    });
+  }, []);
   // Define navigation items with associated routes
   const navigationItems = {
     'Owned Condos': '/dashboard-user',
@@ -65,7 +73,7 @@ const UserLanding = () => {
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
-      <div className="home-background">
+      <div className="home-background" data-testid='content'>
         <Navbar />
         <Box sx={{
           display: 'flex',
@@ -114,8 +122,20 @@ const UserLanding = () => {
                 flexDirection: 'column',
                 alignItems: 'center',
               }}>
+                {/* Display alert if there are unviewed notifications */}
+                {notificationCount > 0 && (
+                  <Box sx={{ marginBottom: 3 }}>
+                    <Typography variant="subtitle1" gutterBottom>
+                      You have {notificationCount} unseen notifications.{' '}
+                      <Link to="/Notifications" style={{ textDecoration: 'none', color: 'blue' }}>
+                        View now
+                      </Link>
+                      .
+                    </Typography>
+                  </Box>
+                )}
                 <Typography variant="h4" sx={{ mb: 4 }}>
-                  Welcome to User Landing!
+                  Welcome
                 </Typography>
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={6}>

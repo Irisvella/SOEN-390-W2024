@@ -4,17 +4,21 @@
 // Dependencies: React, MUI (Material-UI)
 import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Button } from '@mui/material';
 import Navbar from '../components/Navbar';
+import { useNavigate } from 'react-router-dom';  
+
 
 const EmployeesInfo = () => {
   const [employees, setEmployees] = useState([]);
+  const navigate = useNavigate(); 
+
 
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:3000/employeeList', {
+        const response = await fetch('https://estate-api-production.up.railway.app/employeeList', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -44,14 +48,27 @@ const EmployeesInfo = () => {
     { field: 'phone_number', headerName: 'Phone Number', width: 150 },
   ];
 
+  const handleAddEmployee = () => {
+    navigate('/AddEmployee'); 
+  };
+
   return (
     <div>
       <Navbar />
+      
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 12, mb: 10 }}>
         <Typography variant="h4" sx={{ mb: 2 }}>
           Employees Information
         </Typography>
-        <Box sx={{ height: 400, width: '60%' }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleAddEmployee}
+          sx={{ mb: 2 }}
+        >
+        Add Employee
+        </Button>
+        <Box sx={{ height: 'flex', width: 'flex' }}>
           <DataGrid
             rows={employees}
             columns={columns}

@@ -17,7 +17,7 @@ export default function Actions() {
     const fetchUserEmail = async () => {
       const token = localStorage.getItem('token'); 
       try {
-        const response = await fetch('http://localhost:3000/profile', {
+        const response = await fetch('https://estate-api-production.up.railway.app/profile', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,

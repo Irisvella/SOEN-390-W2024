@@ -19,7 +19,7 @@ function UnitsDashboard() {
     const fetchUnits = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await fetch(`http://localhost:3000/createEditListing/${propertyId}/units`, {
+        const res = await fetch(`https://estate-api-production.up.railway.app/createEditListing/${propertyId}/units`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,

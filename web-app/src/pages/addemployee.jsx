@@ -26,7 +26,7 @@ const AddEmployee = () => {
   const handleSubmit = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch('http://localhost:3000/add-employee', {
+      const response = await fetch('https://estate-api-production.up.railway.app/add-employee', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

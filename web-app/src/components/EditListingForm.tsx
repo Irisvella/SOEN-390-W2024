@@ -17,7 +17,7 @@ function EditListingForm() {
       try {
         if (!propertyId) return;
         const response = await fetch(
-          `http://localhost:3000/createEditListing/${propertyId}`,
+          `https://estate-api-production.up.railway.app/createEditListing/${propertyId}`,
           {
             //http://localhost:3000/property/${propertyId}
             method: "GET",
@@ -53,7 +53,7 @@ function EditListingForm() {
     console.log("Sending payload:", payload);
     try {
       const response = await fetch(
-        `http://localhost:3000/createEditListing/${propertyId}`,
+        `https://estate-api-production.up.railway.app/createEditListing/${propertyId}`,
         {
           // Ensuring propertyId is part of the URL
           method: "PUT",

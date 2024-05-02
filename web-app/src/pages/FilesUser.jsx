@@ -24,7 +24,7 @@ const FilesUser = () => {
   }, [propertyId]);
 
   const fetchFiles = async (propertyId) => {
-    const response = await fetch(`http://localhost:3000/files/list-files?property_id=${propertyId}`, {
+    const response = await fetch(`https://estate-api-production.up.railway.appfiles/list-files?property_id=${propertyId}`, {
       headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
     });
     if (!response.ok) {
