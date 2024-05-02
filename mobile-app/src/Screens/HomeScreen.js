@@ -77,8 +77,8 @@ const HomeScreen = ({ navigation }) => {
     if (!storedToken) return;
       
 
-    // const url = 'https://estate-api-production.up.railway.app/profile';
-     const url = 'http://192.168.2.30:3000/profile'; 
+     const url = 'https://estate-api-production.up.railway.app/profile';
+     // const url = 'http://192.168.2.30:3000/profile'; 
     try {
       const response = await fetch(url, {
         method: 'GET',
@@ -120,7 +120,7 @@ const fetchNotifications = async () => {
     return;
   }
   try {
-    const response = await fetch('http://192.168.2.30:3000/notifications', {
+    const response = await fetch('https://estate-api-production.up.railway.app/notifications', {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -145,7 +145,7 @@ const fetchNotifications = async () => {
 
 const markAllNotificationsAsSeen = async () => {
   const token = await AsyncStorage.getItem('token');
-  fetch('http://192.168.2.30:3000/notifications/mark-all-seen', {
+  fetch('https://estate-api-production.up.railway.app/notifications/mark-all-seen', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
